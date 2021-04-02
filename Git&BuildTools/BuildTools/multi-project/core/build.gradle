@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+group 'by.haurylchyk'
+
+repositories {
+    mavenLocal()
+}
+
+dependencies {
+    implementation('by.haurylchyk:utils:1.3.5')
+}

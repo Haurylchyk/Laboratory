@@ -1,0 +1,19 @@
+plugins {
+    id 'application'
+}
+
+application {
+    mainClass = 'by.haurylchyk.api.App'
+}
+
+group 'by.haurylchyk'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    implementation project(':core')
+}
+
