@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd"
+       default-lazy-init="true">
+
+
+                <context:annotation-config/>
+            <context:component-scan base-package="com.epam.esm"/>
+
+
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/gift_certificate_system?serverTimezone=Europe/Moscow"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+
+    <bean id="tagDAOImpl"
+          class="com.epam.esm.dao.impl.TagDAOImpl">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
+
+            <bean id="giftCertificateDAO"
+                  class="com.epam.esm.dao.impl.GiftCertificateDAOImpl">
+                <constructor-arg name="dataSource" ref="dataSource"/>
+            </bean>
+
+            <bean id="tag"
+                  class="com.epam.esm.entity.Tag">
+                <constructor-arg name="name" value="run"/>
+            </bean>
+
+    <bean id="tagService"
+          class="com.epam.esm.impl.TagServiceImpl">
+        <constructor-arg name="tagDAO" ref="tagDAOImpl"/>
+    </bean>
+
+    <bean id="tagConteroller"
+          class="com.epam.esm.TagController">
+        <constructor-arg name="tagService" ref="tagService"/>
+    </bean>
+</beans>
