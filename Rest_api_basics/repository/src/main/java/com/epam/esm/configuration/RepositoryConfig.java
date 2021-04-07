@@ -32,8 +32,4 @@ public class RepositoryConfig {
         dataSourceTransactionManager.setDataSource(dataSource);
         return dataSourceTransactionManager;
     }
-
-//    InitialContext initContext= new InitialContext();
-//    DataSource ds = (DataSource) initContext.lookup("java:comp/env/jdbc/dbconnect");
-//    Connection conn = ds.getConnection();
 }

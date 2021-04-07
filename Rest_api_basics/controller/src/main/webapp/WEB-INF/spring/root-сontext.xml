@@ -10,8 +10,8 @@
        default-lazy-init="true">
 
 
-                <context:annotation-config/>
-            <context:component-scan base-package="com.epam.esm"/>
+    <context:annotation-config/>
+    <context:component-scan base-package="com.epam.esm"/>
 
 
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
@@ -21,20 +21,29 @@
         <property name="password" value="root"/>
     </bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="/WEB-INF/resources/local"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.FixedLocaleResolver">
+        <property name="defaultLocale" value="ru"/>
+    </bean>
+
+    <bean id="tag"
+          class="com.epam.esm.entity.Tag">
+        <constructor-arg name="name" value="run"/>
+    </bean>
+
     <bean id="tagDAOImpl"
           class="com.epam.esm.dao.impl.TagDAOImpl">
         <constructor-arg name="dataSource" ref="dataSource"/>
     </bean>
 
-            <bean id="giftCertificateDAO"
-                  class="com.epam.esm.dao.impl.GiftCertificateDAOImpl">
-                <constructor-arg name="dataSource" ref="dataSource"/>
-            </bean>
-
-            <bean id="tag"
-                  class="com.epam.esm.entity.Tag">
-                <constructor-arg name="name" value="run"/>
-            </bean>
+    <bean id="giftCertificateDAO"
+          class="com.epam.esm.dao.impl.GiftCertificateDAOImpl">
+        <constructor-arg name="dataSource" ref="dataSource"/>
+    </bean>
 
     <bean id="tagService"
           class="com.epam.esm.impl.TagServiceImpl">

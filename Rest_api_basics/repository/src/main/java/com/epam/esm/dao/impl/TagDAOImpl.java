@@ -106,13 +106,13 @@ public class TagDAOImpl implements TagDAO {
      */
     @Override
     public Optional<Tag> getTagByName(String name) {
-
+        final int FIRST_INDEX = 0;
         Optional<Tag> optional = Optional.empty();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Variable.NAME, name);
-        Tag tag = jdbcTemplate.queryForObject(SqlQuery.GET_TAG_BY_NAME, params, tagMapper);
-        if (tag != null) {
-            optional = Optional.of(tag);
+        List<Tag> tagList = jdbcTemplate.query(SqlQuery.GET_TAG_BY_NAME, params, tagMapper);
+        if (!tagList.isEmpty()) {
+            optional = Optional.of(tagList.get(FIRST_INDEX));
         }
         return optional;
     }
