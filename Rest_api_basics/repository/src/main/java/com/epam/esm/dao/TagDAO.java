@@ -61,4 +61,6 @@ public interface TagDAO {
      */
     List<Tag> getTagsByGiftCertificateId(Integer id);
 
+
+
 }

@@ -33,7 +33,7 @@ public class TagDTOMapper {
      * @param tag object of Tag type.
      * @return object of TagDTO type.
      */
-    public static TagDTO toDTO(Tag tag) {
+    public static TagDTO convertToDTO(Tag tag) {
         TagDTO tagDTO = new TagDTO();
         tagDTO.setId(tag.getId());
         tagDTO.setName(tag.getName());
@@ -46,9 +46,9 @@ public class TagDTOMapper {
      * @param tagList list of Tags.
      * @return list of TagDTOs.
      */
-    public static List<TagDTO> toDTO(List<Tag> tagList) {
+    public static List<TagDTO> convertToDTO(List<Tag> tagList) {
         List<TagDTO> tagDTOList = new ArrayList<>();
-        tagList.forEach(tag -> tagDTOList.add(toDTO(tag)));
+        tagList.forEach(tag -> tagDTOList.add(convertToDTO(tag)));
         return tagDTOList;
     }
 

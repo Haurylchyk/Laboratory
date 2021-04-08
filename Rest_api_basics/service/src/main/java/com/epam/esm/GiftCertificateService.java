@@ -1,5 +1,6 @@
 package com.epam.esm;
 
+import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
 import com.epam.esm.dto.GiftCertificateDTO;
 
 import java.util.List;
@@ -46,18 +47,19 @@ public interface GiftCertificateService {
     void deleteGiftCertificate(Integer id);
 
     /**
-     * Accesses the corresponding DAO method to get all GiftCertificates.
-     *
-     * @return List of objects with GiftCertificate data.
-     */
-    List<GiftCertificateDTO> getAllGiftCertificates();
-
-    /**
      * Accesses the corresponding DAO method to get all GiftCertificates
      * that have Tag with specific name.
      *
      * @return List of objects with GiftCertificate data.
      */
     List<GiftCertificateDTO> getGiftCertificatesByTagName(String name);
+
+    /**
+     * Accesses the corresponding DAO method to get GiftCertificates that matches parameters.
+     *
+     * @param giftCertificateCompositeParameter special object containing requested parameters.
+     * @return list of GiftCertificates.
+     */
+    List<GiftCertificateDTO> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
 }
 

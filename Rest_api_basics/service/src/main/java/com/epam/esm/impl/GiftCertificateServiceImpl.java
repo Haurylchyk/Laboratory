@@ -4,6 +4,9 @@ import com.epam.esm.GiftCertificateService;
 import com.epam.esm.constant.ErrorCodeMessage;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
+import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
+import com.epam.esm.dao.query.builder.GiftCertificateQueryBuilder;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.mapper.GiftCertificateDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
@@ -44,9 +47,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * Constructor with parameter.
      *
      * @param giftCertificateDAO interface for working with
-     * the corresponding DAO methods.
-     * @param tagDAO interface for working with
-     * the corresponding DAO methods.
+     *                           the corresponding DAO methods.
+     * @param tagDAO             interface for working with
+     *                           the corresponding DAO methods.
      */
     @Autowired
     public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO) {
@@ -64,15 +67,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO giftCertificateDTO) {
 
-        if (!(GiftCertificateValidator.checkName(giftCertificateDTO.getName())
-                && GiftCertificateValidator.checkDescription(giftCertificateDTO.getDescription())
-                && GiftCertificateValidator.checkPrice(giftCertificateDTO.getPrice())
-                && GiftCertificateValidator.checkDuration(giftCertificateDTO.getDuration()))) {
+        if (!(GiftCertificateValidator.isNameValid(giftCertificateDTO.getName())
+                && GiftCertificateValidator.isDescriptionValid(giftCertificateDTO.getDescription())
+                && GiftCertificateValidator.isPriceValid(giftCertificateDTO.getPrice())
+                && GiftCertificateValidator.isDurationValid(giftCertificateDTO.getDuration()))) {
             throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GС_INVALID_DATA);
         }
 
         GiftCertificate giftCertificate = GiftCertificateDTOMapper.convertToEntity(giftCertificateDTO);
-        GiftCertificate newGiftCertificate = giftCertificateDAO. createGiftCertificate(giftCertificate);
+        GiftCertificate newGiftCertificate = giftCertificateDAO.createGiftCertificate(giftCertificate);
 
         List<String> tagNamesList = giftCertificateDTO.getTagNames();
         for (String tagName : tagNamesList) {
@@ -108,7 +111,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * Accesses the corresponding DAO method to update GiftCertificate with specific id.
      *
      * @param updatedCertificateDTO object with GiftCertificate data.
-     * @param id GiftCertificate id.
+     * @param id                    GiftCertificate id.
      * @return object with GiftCertificate data.
      */
     @Override
@@ -122,14 +125,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         GiftCertificate giftCertificate = GiftCertificateDTOMapper.convertToEntity(updatedCertificateDTO);
 
-        GiftCertificate updatedGiftCertificate = giftCertificateDAO.updateGiftCertificate(giftCertificate, id);
-        giftCertificateDAO.deleteCertificateTagsById(id);
-
+        GiftCertificateQueryBuilder queryBuilder = GiftCertificateQueryBuilder.getInstance();
+        GiftCertificateCompositeQuery compositeQuery = queryBuilder.buildUpdateQuery(giftCertificate);
+        GiftCertificate updatedGiftCertificate = giftCertificateDAO.updateGiftCertificate(compositeQuery, id);
         List<String> tagNamesList = updatedCertificateDTO.getTagNames();
-        for (String tagName : tagNamesList) {
-            Optional<Tag> optionalTag = tagDAO.getTagByName(tagName);
-            Tag tag = optionalTag.orElseGet(() -> tagDAO.createTag(tagName));
-            giftCertificateDAO.putCertificateTag(id, tag.getId());
+        if (!tagNamesList.isEmpty()) {
+            giftCertificateDAO.deleteCertificateTagsById(id);
+            for (String tagName : tagNamesList) {
+                Optional<Tag> optionalTag = tagDAO.getTagByName(tagName);
+                Tag tag = optionalTag.orElseGet(() -> tagDAO.createTag(tagName));
+                giftCertificateDAO.putCertificateTag(id, tag.getId());
+            }
         }
         List<Tag> tagList = tagDAO.getTagsByGiftCertificateId(id);
         updatedGiftCertificate.setTagList(tagList);
@@ -162,8 +168,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      *
      * @return List of objects with GiftCertificate data.
      */
-    @Override
-    public List<GiftCertificateDTO> getAllGiftCertificates() {
+    private List<GiftCertificateDTO> getAllGiftCertificates() {
         List<GiftCertificate> giftCertificates = giftCertificateDAO.getAllGiftCertificates();
 
         if (giftCertificates.isEmpty()) {
@@ -192,6 +197,31 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (giftCertificates.isEmpty()) {
             throw new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND);
         }
+        List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();
+
+        for (GiftCertificate giftCertificate : giftCertificates) {
+            List<Tag> tagList = tagDAO.getTagsByGiftCertificateId(giftCertificate.getId());
+            giftCertificate.setTagList(tagList);
+            giftCertificatesDTO.add(GiftCertificateDTOMapper.convertToDTO(giftCertificate));
+        }
+        return giftCertificatesDTO;
+    }
+
+    /**
+     * Accesses the corresponding DAO method to get GiftCertificates that matches parameters.
+     *
+     * @param giftCertificateCompositeParameter special object containing requested parameters.
+     * @return list of GiftCertificates.
+     */
+    public List<GiftCertificateDTO> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter) {
+        if (giftCertificateCompositeParameter.isEmpty()) {
+            return getAllGiftCertificates();
+        }
+        GiftCertificateCompositeQuery giftCertificateCompositeQuery = GiftCertificateQueryBuilder.getInstance()
+                .buildGetQuery(giftCertificateCompositeParameter);
+
+        List<GiftCertificate> giftCertificates = giftCertificateDAO.getGiftCertificates(giftCertificateCompositeQuery);
+
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();
 
         for (GiftCertificate giftCertificate : giftCertificates) {

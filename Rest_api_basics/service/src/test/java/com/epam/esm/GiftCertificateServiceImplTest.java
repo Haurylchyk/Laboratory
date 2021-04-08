@@ -176,14 +176,14 @@ class GiftCertificateServiceImplTest {
                 () -> giftCertificateService.createGiftCertificate(notFullyValuedGiftCertificateDTO));
     }
 
-    @Test
-    public void getCertificates() {
-        given(giftCertificateDAO.getAllGiftCertificates()).willReturn(giftCertificateList);
-        given(tagDAO.getTagsByGiftCertificateId(TEST_GC_ID)).willReturn(giftTagList);
-
-        List<GiftCertificateDTO> receivedDTOList = giftCertificateService.getAllGiftCertificates();
-        List<GiftCertificateDTO> testDTOList = GiftCertificateDTOMapper.convertToDTO(giftCertificateList);
-
-        assertIterableEquals(testDTOList, receivedDTOList);
-    }
+//    @Test
+//    public void getCertificates() {
+//        given(giftCertificateDAO.getAllGiftCertificates()).willReturn(giftCertificateList);
+//        given(tagDAO.getTagsByGiftCertificateId(TEST_GC_ID)).willReturn(giftTagList);
+//
+//        List<GiftCertificateDTO> receivedDTOList = giftCertificateService.getAllGiftCertificates();
+//        List<GiftCertificateDTO> testDTOList = GiftCertificateDTOMapper.convertToDTO(giftCertificateList);
+//
+//        assertIterableEquals(testDTOList, receivedDTOList);
+//    }
 }

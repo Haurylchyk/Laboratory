@@ -1,6 +1,6 @@
 package com.epam.esm.exception;
 
-import com.epam.esm.constant.ErrorMessage;
+import com.epam.esm.constant.ErrorMessageKey;
 import com.epam.esm.exception.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Locale;
 
-import static com.epam.esm.constant.ErrorMessage.*;
+import static com.epam.esm.constant.ErrorMessageKey.*;
 
 @RestControllerAdvice
 public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
@@ -46,7 +46,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionDescription> processGiftCertificateNotFoundException(
             GiftCertificateNotFoundException e, Locale locale) {
 
-        String errorMessage = messageSource.getMessage(ErrorMessage.GIFT_CERTIFICATE_NOT_FOUND, new Object[]{}, locale);
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.GIFT_CERTIFICATE_NOT_FOUND, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
     }
@@ -54,7 +54,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(TagNotFoundException.class)
     public ResponseEntity<ExceptionDescription> processTagNotFoundException(TagNotFoundException e, Locale locale) {
 
-        String errorMessage = messageSource.getMessage(ErrorMessage.TAG_NOT_FOUND, new Object[]{}, locale);
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.TAG_NOT_FOUND, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
     }

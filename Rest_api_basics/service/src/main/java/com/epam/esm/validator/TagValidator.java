@@ -24,7 +24,7 @@ public class TagValidator {
      * @return true if the name is not empty and doesn't
      * exceed the allowed length, false otherwise.
      */
-    public static boolean checkName(String name) {
-        return !CommonValidator.isEmpty(name) && CommonValidator.checkNameLength(name);
+    public static boolean isNameValid(String name) {
+        return !CommonValidator.isEmpty(name) && CommonValidator.isNameLengthValid(name);
     }
 }

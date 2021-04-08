@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "gift_system/tag")
+@RequestMapping(value = "/tag")
 public class TagController {
 
     private final TagService tagService;
@@ -26,7 +26,7 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody TagDTO getTagById(@PathVariable Integer id) {
+    public TagDTO getTagById(@PathVariable Integer id) {
         return tagService.getTagById(id);
     }
 
@@ -35,18 +35,13 @@ public class TagController {
         tagService.deleteTag(id);
     }
 
-//    @RequestMapping(value = "gift_system/tag/{id}", method = RequestMethod.DELETE)
-//    public void deleteTag(@PathVariable Integer id) {
-//        tagService.deleteTag(id);
-//    }
-
     @GetMapping
     public List<TagDTO> getAllTags() {
         return tagService.getAllTags();
     }
 
-//    @GetMapping("/{name}")
-//    public TagDTO getTagByName(@PathVariable String name) {
-//        return tagService.getTagByName(name);
-//    }
+    @GetMapping("/{name}")
+    public TagDTO getTagByName(@PathVariable String name) {
+        return tagService.getTagByName(name);
+    }
 }

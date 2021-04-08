@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 
+import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.util.List;
@@ -35,11 +36,12 @@ public interface GiftCertificateDAO {
     /**
      * Updates GiftCertificate with specific id.
      *
-     * @param updatedGiftCertificate updated GiftCertificate.
+     * @param giftCertificateCompositeQuery the object containing
+     * the request and its parameters.
      * @param id                 GiftCertificate id.
      * @return updated GiftCertificate entity.
      */
-    GiftCertificate updateGiftCertificate(GiftCertificate updatedGiftCertificate, Integer id);
+    GiftCertificate updateGiftCertificate(GiftCertificateCompositeQuery giftCertificateCompositeQuery, Integer id);
 
     /**
      * Deletes GiftCertificate with specific id from database.
@@ -78,4 +80,12 @@ public interface GiftCertificateDAO {
      * @param id GiftCertificate id.
      */
     void deleteCertificateTagsById(Integer id);
+
+    /**
+     * Returns list of matching GiftCertificates.
+     *
+     * @param giftCertificateCompositeQuery special object containing query and params.
+     * @return list of GiftCertificates.
+     */
+    List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeQuery giftCertificateCompositeQuery);
 }

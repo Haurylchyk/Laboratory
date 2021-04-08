@@ -53,7 +53,7 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public TagDTO createTag(TagDTO tagDTO) {
         String tagName = tagDTO.getName();
-        if (!TagValidator.checkName(tagName)) {
+        if (!TagValidator.isNameValid(tagName)) {
             throw new TagInvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
         }
         Optional<Tag> existingTag = tagDAO.getTagByName(tagName);
@@ -64,7 +64,7 @@ public class TagServiceImpl implements TagService {
 
         Tag tag = tagDAO.createTag(tagName);
 
-        return TagDTOMapper.toDTO(tag);
+        return TagDTOMapper.convertToDTO(tag);
     }
 
     /**
@@ -80,7 +80,7 @@ public class TagServiceImpl implements TagService {
             throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_BY_ID_NOT_FOUND);
         }
         Tag tag = optionalTag.get();
-        return TagDTOMapper.toDTO(tag);
+        return TagDTOMapper.convertToDTO(tag);
     }
 
     /**
@@ -104,7 +104,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> getAllTags() {
         List<Tag> tagList = tagDAO.getAllTags();
-        return TagDTOMapper.toDTO(tagList);
+        return TagDTOMapper.convertToDTO(tagList);
     }
 
     /**
@@ -121,7 +121,7 @@ public class TagServiceImpl implements TagService {
             throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_BY_NAME_NOT_FOUND);
         }
         Tag tag = optionalTag.get();
-        return TagDTOMapper.toDTO(tag);
+        return TagDTOMapper.convertToDTO(tag);
     }
 
     /**
@@ -134,6 +134,6 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> getTagsByGiftCertificateId(Integer id) {
         List<Tag> tagList = tagDAO.getTagsByGiftCertificateId(id);
-        return TagDTOMapper.toDTO(tagList);
+        return TagDTOMapper.convertToDTO(tagList);
     }
 }

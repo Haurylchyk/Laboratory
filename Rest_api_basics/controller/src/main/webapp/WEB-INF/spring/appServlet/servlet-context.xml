@@ -10,6 +10,8 @@
        http://www.springframework.org/schema/mvc
        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <context:component-scan base-package="com.epam.esm"/>
+
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean id="jacksonHttpMessageConverter"
@@ -18,13 +20,5 @@
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    <!--    <mvc:resources mapping="/resources/**" location="/resourсes/"/>-->
-
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
-
-    <context:component-scan base-package="com.epam.esm"/>
 
 </beans>

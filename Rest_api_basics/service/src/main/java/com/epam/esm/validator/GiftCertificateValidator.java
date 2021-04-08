@@ -24,8 +24,8 @@ public class GiftCertificateValidator {
      * @return true if the name is not empty and doesn't
      * exceed the allowed length, false otherwise.
      */
-    public static boolean checkName(String name) {
-        return !CommonValidator.isEmpty(name) && CommonValidator.checkNameLength(name);
+    public static boolean isNameValid(String name) {
+        return !CommonValidator.isEmpty(name) && CommonValidator.isNameLengthValid(name);
     }
 
     /**
@@ -36,7 +36,7 @@ public class GiftCertificateValidator {
      * @return true if the description is not empty and doesn't
      * exceed the allowed length, false otherwise.
      */
-    public static boolean checkDescription(String description) {
+    public static boolean isDescriptionValid(String description) {
         final int MAX_VALID_DESC_LENGTH = 255;
         return !CommonValidator.isEmpty(description) && description.length() <= MAX_VALID_DESC_LENGTH;
     }
@@ -48,7 +48,7 @@ public class GiftCertificateValidator {
      * @return true if the description is not empty and is
      * a positive number, false otherwise.
      */
-    public static boolean checkPrice(Integer price) {
+    public static boolean isPriceValid(Integer price) {
         return !CommonValidator.isEmpty(price) && CommonValidator.isPositiveNumber(price);
     }
 
@@ -59,7 +59,7 @@ public class GiftCertificateValidator {
      * @return true if the duration is not empty and is
      * a positive number, false otherwise.
      */
-    public static boolean checkDuration(Integer duration) {
+    public static boolean isDurationValid(Integer duration) {
         return !CommonValidator.isEmpty(duration) && CommonValidator.isPositiveNumber(duration);
     }
 }

@@ -1,28 +1,26 @@
 package com.epam.esm;
 
-import com.epam.esm.GiftCertificateService;
-import com.epam.esm.TagService;
+import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
 import com.epam.esm.dto.GiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "gift_system/certificate")
+@RequestMapping(value = "/certificate")
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
-    private final TagService tagService;
-
 
     @Autowired
     public GiftCertificateController(GiftCertificateService giftCertificateService, TagService tagService) {
         this.giftCertificateService = giftCertificateService;
-        this.tagService = tagService;
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public GiftCertificateDTO createGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO) {
         return giftCertificateService.createGiftCertificate(giftCertificateDTO);
     }
@@ -33,8 +31,8 @@ public class GiftCertificateController {
     }
 
     @PutMapping("/{id}")
-    public void updateGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO, @PathVariable Integer id) {
-        giftCertificateService.updateGiftCertificate(giftCertificateDTO, id);
+    public GiftCertificateDTO updateGiftCertificate(@RequestBody GiftCertificateDTO giftCertificateDTO, @PathVariable Integer id) {
+        return giftCertificateService.updateGiftCertificate(giftCertificateDTO, id);
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +41,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping
-    public List<GiftCertificateDTO> getCertificates() {
-        return giftCertificateService.getAllGiftCertificates();
+    public List<GiftCertificateDTO> getGiftCertificates(GiftCertificateCompositeParameter parameter) {
+        return giftCertificateService.getGiftCertificates(parameter);
     }
 }

@@ -6,9 +6,9 @@ package com.epam.esm.constant;
  *
  * @author Haurylchyk Aliaksei
  * @version 1.0
- * @since JDK 1.0
+ * @since JDK 1.8
  */
-public class ErrorMessage {
+public class ErrorMessageKey {
     public static final String INVALID_DATA = "invalid_data";
     public static final String ILLEGAL_ARGUMENT = "illegal_argument";
     public static final String GIFT_CERTIFICATE_NOT_FOUND = "gc.not_found";
