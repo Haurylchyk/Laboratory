@@ -67,10 +67,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO createGiftCertificate(GiftCertificateDTO giftCertificateDTO) {
 
-        if (!(GiftCertificateValidator.isNameValid(giftCertificateDTO.getName())
-                && GiftCertificateValidator.isDescriptionValid(giftCertificateDTO.getDescription())
-                && GiftCertificateValidator.isPriceValid(giftCertificateDTO.getPrice())
-                && GiftCertificateValidator.isDurationValid(giftCertificateDTO.getDuration()))) {
+        if (!GiftCertificateValidator.isValidData(giftCertificateDTO)) {
             throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GС_INVALID_DATA);
         }
 

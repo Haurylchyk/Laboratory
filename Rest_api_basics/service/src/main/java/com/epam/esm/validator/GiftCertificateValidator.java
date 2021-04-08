@@ -1,5 +1,7 @@
 package com.epam.esm.validator;
 
+import com.epam.esm.dto.GiftCertificateDTO;
+
 /**
  * Class contains methods for checking field values
  * which describe the details of the GiftCertificate.
@@ -14,6 +16,19 @@ public class GiftCertificateValidator {
      * Private constructor.
      */
     private GiftCertificateValidator() {
+    }
+
+    /**
+     * Checks that the data is valid.
+     *
+     * @param giftCertificateDTO GiftCertificate entity.
+     * @return true if the data is valid, false otherwise.
+     */
+    public static boolean isValidData(GiftCertificateDTO giftCertificateDTO) {
+        return isNameValid(giftCertificateDTO.getName())
+                && isDescriptionValid(giftCertificateDTO.getDescription())
+                && isPriceValid(giftCertificateDTO.getPrice())
+                && isDurationValid(giftCertificateDTO.getDuration());
     }
 
     /**
