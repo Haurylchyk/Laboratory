@@ -126,7 +126,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificateCompositeQuery compositeQuery = queryBuilder.buildUpdateQuery(giftCertificate);
         GiftCertificate updatedGiftCertificate = giftCertificateDAO.updateGiftCertificate(compositeQuery, id);
         List<String> tagNamesList = updatedCertificateDTO.getTagNames();
-        if (!tagNamesList.isEmpty()) {
+        if (tagNamesList != null) {
             giftCertificateDAO.deleteCertificateTagsById(id);
             for (String tagName : tagNamesList) {
                 Optional<Tag> optionalTag = tagDAO.getTagByName(tagName);
