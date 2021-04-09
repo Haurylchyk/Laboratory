@@ -100,8 +100,9 @@ public class GiftCertificateQueryBuilder {
             queryBuilder.append(CLOSE_WHERE);
         }
 
-        SortType sortType = giftCertificateQueryParameter.getSortType();
-        if (sortType != null) {
+        String sortTypeString = giftCertificateQueryParameter.getSortType();
+        if (sortTypeString != null) {
+            SortType sortType = SortType.valueOf(sortTypeString.toUpperCase());
             queryBuilder.append(ORDER_BY_STATEMENT);
 
             if (sortType == SortType.NAME) {
@@ -111,8 +112,9 @@ public class GiftCertificateQueryBuilder {
             }
         }
 
-        SortOrder sortOrder = giftCertificateQueryParameter.getSortOrder();
-        if (sortOrder != null) {
+        String sortOrderString = giftCertificateQueryParameter.getSortOrder();
+        if (sortOrderString != null) {
+            SortOrder sortOrder = SortOrder.valueOf(sortOrderString.toUpperCase());
             switch (sortOrder) {
                 case ASC: {
                     queryBuilder.append(ORDER_ASC);

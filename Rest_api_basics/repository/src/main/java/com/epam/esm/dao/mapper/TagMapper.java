@@ -9,6 +9,10 @@ import java.sql.SQLException;
 
 /**
  * Class is implementation interface RowMapper. Associates Tag entity with ResultSet.
+ *
+ * @author Haurylchyk Aliaksei
+ * @version 1.0
+ * @since JDK 1.8
  */
 public class TagMapper implements RowMapper<Tag> {
 

@@ -3,7 +3,9 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.constant.Variable;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
+import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
 import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
+import com.epam.esm.dao.query.builder.GiftCertificateQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -33,8 +35,6 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     private static final String CREATE_CERTIFICATE = "INSERT INTO gift_certificate (name, description, price, duration, create_date) " +
             "VALUES (:name, :description, :price, :duration, :create_date)";
     private static final String GET_CERTIFICATE_BY_ID = "SELECT * FROM gift_certificate WHERE (id=:id)";
-    private static final String UPDATE_CERTIFICATE = "UPDATE gift_certificate SET " +
-            "name =:name, description =:description, price =:price, duration =:duration, last_update_date =:last_update_date WHERE id =:id";
     private static final String DELETE_CERTIFICATE = "DELETE FROM gift_certificate WHERE id = ?";
     private static final String GET_ALL_CERTIFICATES = "SELECT * FROM gift_certificate";
     private static final String GET_CERTIFICATES_BY_TAG_NAME = "SELECT gift_certificate.id, gift_certificate.name, description, " +
@@ -45,12 +45,12 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     private static final String DELETE_CERTIFICATE_TAGS_BY_CERTIFICATE_ID = "DELETE FROM certificate_tag WHERE (cert_id = ?)";
 
     /**
-     * Object of the NamedParameterJdbcTemplate type.
+     * Object responsible for data (database) access.
      */
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     /**
-     * Object of the GiftCertificateMapper type.
+     * Object that links the GiftCertificate entity to the ResultSet.
      */
     private final static GiftCertificateMapper giftCertificateMapper = GiftCertificateMapper.getInstance();
 
@@ -71,7 +71,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @return GiftCertificate entity.
      */
     @Override
-    public GiftCertificate createGiftCertificate(GiftCertificate giftCertificate) {
+    public GiftCertificate create(GiftCertificate giftCertificate) {
         final KeyHolder keyHolder = new GeneratedKeyHolder();
         final Timestamp CURRENT_DATE = Timestamp.from(Instant.now());
 
@@ -84,7 +84,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
         jdbcTemplate.update(CREATE_CERTIFICATE, params, keyHolder, new String[]{Variable.ID});
 
         Integer id = keyHolder.getKey().intValue();
-        return getGiftCertificateById(id).get();
+        return read(id).get();
     }
 
     /**
@@ -94,26 +94,27 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @return Optional of GiftCertificate entity stored in the database.
      */
     @Override
-    public Optional<GiftCertificate> getGiftCertificateById(Integer id) {
-        final int FIRST_INDEX = 0;
+    public Optional<GiftCertificate> read(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(Variable.ID, id);
         List<GiftCertificate> listGiftCertificate = jdbcTemplate.query(GET_CERTIFICATE_BY_ID, params, giftCertificateMapper);
-        return listGiftCertificate.isEmpty() ? Optional.empty() : Optional.of(listGiftCertificate.get(FIRST_INDEX));
+        return listGiftCertificate.isEmpty() ? Optional.empty() : Optional.of(listGiftCertificate.get(0));
     }
 
     /**
      * Updates GiftCertificate with specific id.
      *
-     * @param giftCertificateCompositeQuery the object containing
-     * the request and its parameters.
-     * @param id                 GiftCertificate id.
+     * @param giftCertificate updated object of the GiftCertificate type.
+     * @param id              GiftCertificate id.
      * @return updated GiftCertificate entity.
      */
     @Override
-    public GiftCertificate updateGiftCertificate(GiftCertificateCompositeQuery giftCertificateCompositeQuery, Integer id) {
-        jdbcTemplate.getJdbcOperations().update(giftCertificateCompositeQuery.getQuery(), giftCertificateCompositeQuery.getParams());
-        return getGiftCertificateById(id).get();
+    public GiftCertificate update(GiftCertificate giftCertificate, Integer id) {
+        GiftCertificateQueryBuilder queryBuilder = GiftCertificateQueryBuilder.getInstance();
+        GiftCertificateCompositeQuery compositeQuery = queryBuilder.buildUpdateQuery(giftCertificate);
+
+        jdbcTemplate.getJdbcOperations().update(compositeQuery.getQuery(), compositeQuery.getParams());
+        return read(id).get();
     }
 
     /**
@@ -122,7 +123,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @param id GiftCertificate id.
      */
     @Override
-    public void deleteGiftCertificate(Integer id) {
+    public void delete(Integer id) {
         jdbcTemplate.getJdbcOperations().update(DELETE_CERTIFICATE, id);
     }
 
@@ -136,6 +137,20 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     public List<GiftCertificate> getAllGiftCertificates() {
         List<GiftCertificate> giftCertificates = jdbcTemplate.query(GET_ALL_CERTIFICATES, giftCertificateMapper);
         return giftCertificates;
+    }
+
+    /**
+     * Returns list of matching GiftCertificates.
+     *
+     * @param giftCertificateCompositeParameter special object containing params.
+     * @return list of GiftCertificates.
+     */
+    @Override
+    public List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter) {
+
+        GiftCertificateCompositeQuery giftCertificateCompositeQuery = GiftCertificateQueryBuilder.getInstance()
+                .buildGetQuery(giftCertificateCompositeParameter);
+        return jdbcTemplate.getJdbcOperations().query(giftCertificateCompositeQuery.getQuery(), giftCertificateCompositeQuery.getParams(), giftCertificateMapper);
     }
 
     /**
@@ -155,7 +170,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * specific GiftCertificate with specific Tag.
      *
      * @param giftCertificateId GiftCertificate id.
-     * @param tagId  Tag id.
+     * @param tagId             Tag id.
      */
     @Override
     public void putCertificateTag(Integer giftCertificateId, Integer tagId) {
@@ -171,17 +186,6 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     @Override
     public void deleteCertificateTagsById(Integer id) {
         jdbcTemplate.getJdbcOperations().update(DELETE_CERTIFICATE_TAGS_BY_CERTIFICATE_ID, id);
-    }
-
-    /**
-     * Returns list of matching GiftCertificates.
-     *
-     * @param giftCertificateCompositeQuery special object containing query and params.
-     * @return list of GiftCertificates.
-     */
-    @Override
-    public List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeQuery giftCertificateCompositeQuery) {
-        return jdbcTemplate.getJdbcOperations().query(giftCertificateCompositeQuery.getQuery(), giftCertificateCompositeQuery.getParams(), giftCertificateMapper);
     }
 
 }

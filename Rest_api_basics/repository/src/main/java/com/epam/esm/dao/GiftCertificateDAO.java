@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-
+import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
 import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
 import com.epam.esm.entity.GiftCertificate;
 
@@ -15,40 +15,7 @@ import java.util.Optional;
  * @version 1.0
  * @since JDK 1.8
  */
-public interface GiftCertificateDAO {
-
-    /**
-     * Adds new object GiftCertificate to database.
-     *
-     * @param giftCertificate object of the GiftCertificate type.
-     * @return GiftCertificate entity.
-     */
-    GiftCertificate createGiftCertificate(GiftCertificate giftCertificate);
-
-    /**
-     * Returns GiftCertificate with specific id.
-     *
-     * @param id GiftCertificate id.
-     * @return Optional of GiftCertificate entity stored in the database.
-     */
-    Optional<GiftCertificate> getGiftCertificateById(Integer id);
-
-    /**
-     * Updates GiftCertificate with specific id.
-     *
-     * @param giftCertificateCompositeQuery the object containing
-     * the request and its parameters.
-     * @param id                 GiftCertificate id.
-     * @return updated GiftCertificate entity.
-     */
-    GiftCertificate updateGiftCertificate(GiftCertificateCompositeQuery giftCertificateCompositeQuery, Integer id);
-
-    /**
-     * Deletes GiftCertificate with specific id from database.
-     *
-     * @param id GiftCertificate id.
-     */
-    void deleteGiftCertificate(Integer id);
+public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
 
     /**
      * Returns all GiftCertificates stored in the database.
@@ -84,8 +51,8 @@ public interface GiftCertificateDAO {
     /**
      * Returns list of matching GiftCertificates.
      *
-     * @param giftCertificateCompositeQuery special object containing query and params.
+     * @param giftCertificateCompositeParameter special object containing params.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeQuery giftCertificateCompositeQuery);
+    List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
 }

@@ -9,6 +9,10 @@ import java.sql.SQLException;
 
 /**
  * Class is implementation interface RowMapper. Associates GiftCertificate entity with ResultSet.
+ *
+ * @author Haurylchyk Aliaksei
+ * @version 1.0
+ * @since JDK 1.8
  */
 public class GiftCertificateMapper implements RowMapper<GiftCertificate> {
 
