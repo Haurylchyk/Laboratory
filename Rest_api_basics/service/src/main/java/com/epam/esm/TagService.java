@@ -19,7 +19,7 @@ public interface TagService {
      * @param tagDTO object with Tag data.
      * @return created object with Tag data.
      */
-    TagDTO createTag(TagDTO tagDTO);
+    TagDTO create(TagDTO tagDTO);
 
     /**
      * Accesses the corresponding DAO method to get Tag object with specific id.
@@ -27,36 +27,19 @@ public interface TagService {
      * @param id Tag id.
      * @return object with Tag data.
      */
-    TagDTO getTagById(Integer id);
+    TagDTO read(Integer id);
 
     /**
      * Accesses the corresponding DAO method to delete Tag object with specific id.
      *
      * @param id Tag id.
      */
-    void deleteTag(Integer id);
+    void delete(Integer id);
 
     /**
      * Accesses the corresponding DAO method to get all Tags.
      *
      * @return List of objects with Tag data.
      */
-    List<TagDTO> getAllTags();
-
-    /**
-     * Accesses the corresponding DAO method to get Tag object with specific name.
-     *
-     * @param name Tag name.
-     * @return object with Tag data.
-     */
-    TagDTO getTagByName(String name);
-
-    /**
-     * Accesses the corresponding DAO method to get List of all Tags
-     * that linked with specific GiftCertificate.
-     *
-     * @param id GiftCertificate id.
-     * @return List of objects with tag data.
-     */
-    List<TagDTO> getTagsByGiftCertificateId(Integer id);
+    List<TagDTO> readAllTags();
 }

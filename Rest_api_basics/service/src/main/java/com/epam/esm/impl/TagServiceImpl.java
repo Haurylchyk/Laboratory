@@ -51,20 +51,18 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     @Transactional
-    public TagDTO createTag(TagDTO tagDTO) {
+    public TagDTO create(TagDTO tagDTO) {
+        Tag tag = TagDTOMapper.convertToEntity(tagDTO);
         String tagName = tagDTO.getName();
         if (!TagValidator.isNameValid(tagName)) {
             throw new TagInvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
         }
-        Optional<Tag> existingTag = tagDAO.getTagByName(tagName);
-
-        if (existingTag.isPresent()) {
+        Optional<Tag> optionalExistingTag = tagDAO.readTagByName(tagName);
+        if (optionalExistingTag.isPresent()) {
             throw new ExistingTagException(ErrorCodeMessage.ERROR_CODE_TAG_EXISTS);
         }
-
-        Tag tag = tagDAO.createTag(tagName);
-
-        return TagDTOMapper.convertToDTO(tag);
+        Tag newTag = tagDAO.create(tag);
+        return TagDTOMapper.convertToDTO(newTag);
     }
 
     /**
@@ -74,12 +72,10 @@ public class TagServiceImpl implements TagService {
      * @return object with Tag data.
      */
     @Override
-    public TagDTO getTagById(Integer id) {
-        Optional<Tag> optionalTag = tagDAO.getTagById(id);
-        if (!optionalTag.isPresent()) {
-            throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_BY_ID_NOT_FOUND);
-        }
-        Tag tag = optionalTag.get();
+    public TagDTO read(Integer id) {
+        Optional<Tag> optionalTag = tagDAO.read(id);
+        Tag tag = optionalTag.orElseThrow(() -> new TagNotFoundException(
+                ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
         return TagDTOMapper.convertToDTO(tag);
     }
 
@@ -89,11 +85,11 @@ public class TagServiceImpl implements TagService {
      * @param id Tag id.
      */
     @Override
-    public void deleteTag(Integer id) {
-        if (!tagDAO.getTagById(id).isPresent()) {
-            throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_BY_ID_NOT_FOUND);
-        }
-        tagDAO.deleteTag(id);
+    public void delete(Integer id) {
+        Optional<Tag> optionalTag = tagDAO.read(id);
+        optionalTag.orElseThrow(() -> new TagNotFoundException(
+                ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
+        tagDAO.delete(id);
     }
 
     /**
@@ -102,38 +98,11 @@ public class TagServiceImpl implements TagService {
      * @return List of objects with Tag data.
      */
     @Override
-    public List<TagDTO> getAllTags() {
-        List<Tag> tagList = tagDAO.getAllTags();
-        return TagDTOMapper.convertToDTO(tagList);
-    }
-
-    /**
-     * Accesses the corresponding DAO method to get Tag object with specific name.
-     *
-     * @param name Tag name.
-     * @return object with Tag data.
-     */
-    @Override
-    public TagDTO getTagByName(String name) {
-        Optional<Tag> optionalTag = tagDAO.getTagByName(name);
-
-        if (!optionalTag.isPresent()) {
-            throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_BY_NAME_NOT_FOUND);
+    public List<TagDTO> readAllTags() {
+        List<Tag> tagList = tagDAO.readAllTags();
+        if (tagList.isEmpty()) {
+            throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND);
         }
-        Tag tag = optionalTag.get();
-        return TagDTOMapper.convertToDTO(tag);
-    }
-
-    /**
-     * Accesses the corresponding DAO method to get List of all Tags
-     * that linked with specific GiftCertificate.
-     *
-     * @param id GiftCertificate id.
-     * @return List of objects with tag data.
-     */
-    @Override
-    public List<TagDTO> getTagsByGiftCertificateId(Integer id) {
-        List<Tag> tagList = tagDAO.getTagsByGiftCertificateId(id);
         return TagDTOMapper.convertToDTO(tagList);
     }
 }

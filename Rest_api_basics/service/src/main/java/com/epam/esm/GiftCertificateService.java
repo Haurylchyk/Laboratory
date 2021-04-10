@@ -1,7 +1,7 @@
 package com.epam.esm;
 
-import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
 import com.epam.esm.dto.GiftCertificateDTO;
+import com.epam.esm.dto.GiftCertificateCompositeParameterDTO;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface GiftCertificateService {
      * @param giftCertificateDTO object with GiftCertificate data.
      * @return created object with GiftCertificate data.
      */
-    GiftCertificateDTO createGiftCertificate(GiftCertificateDTO giftCertificateDTO);
+    GiftCertificateDTO create(GiftCertificateDTO giftCertificateDTO);
 
     /**
      * Accesses the corresponding DAO method to get GiftCertificate object with specific id.
@@ -28,38 +28,31 @@ public interface GiftCertificateService {
      * @param id GiftCertificate id.
      * @return object with GiftCertificate data.
      */
-    GiftCertificateDTO getGiftCertificateById(Integer id);
+    GiftCertificateDTO read(Integer id);
 
     /**
      * Accesses the corresponding DAO method to update GiftCertificate with specific id.
      *
      * @param updatedCertificateDTO object with GiftCertificate data.
-     * @param id GiftCertificate id.
+     * @param id                    GiftCertificate id.
      * @return object with GiftCertificate data.
      */
-    GiftCertificateDTO updateGiftCertificate(GiftCertificateDTO updatedCertificateDTO, Integer id);
+    GiftCertificateDTO update(GiftCertificateDTO updatedCertificateDTO, Integer id);
 
     /**
      * Accesses the corresponding DAO method to delete GiftCertificate object with specific id.
      *
      * @param id GiftCertificate id.
      */
-    void deleteGiftCertificate(Integer id);
-
-    /**
-     * Accesses the corresponding DAO method to get all GiftCertificates
-     * that have Tag with specific name.
-     *
-     * @return List of objects with GiftCertificate data.
-     */
-    List<GiftCertificateDTO> getGiftCertificatesByTagName(String name);
+    void delete(Integer id);
 
     /**
      * Accesses the corresponding DAO method to get GiftCertificates that matches parameters.
      *
-     * @param giftCertificateCompositeParameter special object containing requested parameters.
+     * @param giftCertificateCompositeParameterDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificateDTO> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
+    List<GiftCertificateDTO> readByParameter(GiftCertificateCompositeParameterDTO
+                                                     giftCertificateCompositeParameterDTO);
 }
 

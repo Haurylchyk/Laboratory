@@ -1,4 +1,4 @@
-package com.epam.esm.request;
+package com.epam.esm.dto;
 
 public class GiftCertificateCompositeParameterDTO {
     private String tagName;

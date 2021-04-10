@@ -1,7 +1,7 @@
-package com.epam.esm.request.mapper;
+package com.epam.esm.dto.mapper;
 
 import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
-import com.epam.esm.request.GiftCertificateCompositeParameterDTO;
+import com.epam.esm.dto.GiftCertificateCompositeParameterDTO;
 
 public class CompositeParameterDTOMapper {
 
@@ -20,8 +20,8 @@ public class CompositeParameterDTOMapper {
         parameter.setTagName(parameterDTO.getTagName());
         parameter.setName(parameterDTO.getName());
         parameter.setDescription(parameterDTO.getDescription());
-        parameter.setSortType(parameterDTO.getSortType().toString());
-        parameter.setSortOrder(parameterDTO.getSortOrder().toString());
+        parameter.setSortType(parameterDTO.getSortType());
+        parameter.setSortOrder(parameterDTO.getSortOrder());
 
         return parameter;
     }
