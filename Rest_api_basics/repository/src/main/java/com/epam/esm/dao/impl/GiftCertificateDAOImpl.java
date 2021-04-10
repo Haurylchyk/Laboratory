@@ -1,6 +1,6 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.constant.Variable;
+import com.epam.esm.constant.ParameterNameСonstant;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.mapper.GiftCertificateMapper;
 import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
@@ -76,12 +76,12 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
         final Timestamp CURRENT_DATE = Timestamp.from(Instant.now());
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.NAME, giftCertificate.getName());
-        params.addValue(Variable.DESCRIPTION, giftCertificate.getDescription());
-        params.addValue(Variable.PRICE, giftCertificate.getPrice());
-        params.addValue(Variable.DURATION, giftCertificate.getDuration());
-        params.addValue(Variable.CREATE_DATE, CURRENT_DATE);
-        jdbcTemplate.update(CREATE_CERTIFICATE, params, keyHolder, new String[]{Variable.ID});
+        params.addValue(ParameterNameСonstant.NAME, giftCertificate.getName());
+        params.addValue(ParameterNameСonstant.DESCRIPTION, giftCertificate.getDescription());
+        params.addValue(ParameterNameСonstant.PRICE, giftCertificate.getPrice());
+        params.addValue(ParameterNameСonstant.DURATION, giftCertificate.getDuration());
+        params.addValue(ParameterNameСonstant.CREATE_DATE, CURRENT_DATE);
+        jdbcTemplate.update(CREATE_CERTIFICATE, params, keyHolder, new String[]{ParameterNameСonstant.ID});
 
         Integer id = keyHolder.getKey().intValue();
         return read(id).get();
@@ -96,7 +96,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     @Override
     public Optional<GiftCertificate> read(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.ID, id);
+        params.addValue(ParameterNameСonstant.ID, id);
         List<GiftCertificate> listGiftCertificate = jdbcTemplate.query(GET_CERTIFICATE_BY_ID, params, giftCertificateMapper);
         return listGiftCertificate.isEmpty() ? Optional.empty() : Optional.of(listGiftCertificate.get(0));
     }
@@ -134,7 +134,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      */
     @Override
     @Transactional
-    public List<GiftCertificate> getAllGiftCertificates() {
+    public List<GiftCertificate> readAllGiftCertificates() {
         List<GiftCertificate> giftCertificates = jdbcTemplate.query(GET_ALL_CERTIFICATES, giftCertificateMapper);
         return giftCertificates;
     }
@@ -146,7 +146,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @return list of GiftCertificates.
      */
     @Override
-    public List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter) {
+    public List<GiftCertificate> readGiftCertificatesByParam(GiftCertificateCompositeParameter giftCertificateCompositeParameter) {
 
         GiftCertificateCompositeQuery giftCertificateCompositeQuery = GiftCertificateQueryBuilder.getInstance()
                 .buildGetQuery(giftCertificateCompositeParameter);
@@ -159,9 +159,9 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @return list of GiftCertificates.
      */
     @Override
-    public List<GiftCertificate> getGiftCertificatesByTagName(String name) {
+    public List<GiftCertificate> readGiftCertificatesByTagName(String name) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.NAME, name);
+        params.addValue(ParameterNameСonstant.NAME, name);
         return jdbcTemplate.query(GET_CERTIFICATES_BY_TAG_NAME, params, giftCertificateMapper);
     }
 

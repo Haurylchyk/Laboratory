@@ -22,14 +22,14 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
      *
      * @return all GiftCertificate stored in the database.
      */
-    List<GiftCertificate> getAllGiftCertificates();
+    List<GiftCertificate> readAllGiftCertificates();
 
     /**
      * Returns GiftCertificates that have Tag with specific name.
      *
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> getGiftCertificatesByTagName(String name);
+    List<GiftCertificate> readGiftCertificatesByTagName(String name);
 
     /**
      * Makes an record (to the database) that associates
@@ -54,5 +54,5 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
      * @param giftCertificateCompositeParameter special object containing params.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> getGiftCertificates(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
+    List<GiftCertificate> readGiftCertificatesByParam(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
 }

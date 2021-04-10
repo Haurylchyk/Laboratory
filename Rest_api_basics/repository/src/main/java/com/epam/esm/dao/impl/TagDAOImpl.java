@@ -1,6 +1,6 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.constant.Variable;
+import com.epam.esm.constant.ParameterNameСonstant;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
@@ -62,7 +62,7 @@ public class TagDAOImpl implements TagDAO {
     @Override
     public Tag create(Tag tag) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.NAME, tag.getName());
+        params.addValue(ParameterNameСonstant.NAME, tag.getName());
         jdbcTemplate.update(CREATE_TAG, params);
         return readTagByName(tag.getName()).get();
     }
@@ -77,7 +77,7 @@ public class TagDAOImpl implements TagDAO {
     public Optional<Tag> read(Integer id) {
         Optional<Tag> optional = Optional.empty();
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.ID, id);
+        params.addValue(ParameterNameСonstant.ID, id);
         Tag tag = jdbcTemplate.queryForObject(GET_TAG_BY_ID, params, tagMapper);
         if (tag != null) {
             optional = Optional.of(tag);
@@ -95,8 +95,8 @@ public class TagDAOImpl implements TagDAO {
     @Override
     public Tag update(Tag tag, Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.ID, id);
-        params.addValue(Variable.NAME, tag.getName());
+        params.addValue(ParameterNameСonstant.ID, id);
+        params.addValue(ParameterNameСonstant.NAME, tag.getName());
         jdbcTemplate.getJdbcOperations().update(UPDATE_TAG, params);
         return read(id).get();
     }
@@ -131,7 +131,7 @@ public class TagDAOImpl implements TagDAO {
     public Optional<Tag> readTagByName(String name) {
         Optional<Tag> optional = Optional.empty();
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.NAME, name);
+        params.addValue(ParameterNameСonstant.NAME, name);
         List<Tag> tagList = jdbcTemplate.query(GET_TAG_BY_NAME, params, tagMapper);
         if (!tagList.isEmpty()) {
             optional = Optional.of(tagList.get(0));
@@ -148,7 +148,7 @@ public class TagDAOImpl implements TagDAO {
     @Override
     public List<Tag> readTagsByGiftCertificateId(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(Variable.ID, id);
+        params.addValue(ParameterNameСonstant.ID, id);
         return jdbcTemplate.query(GET_TAGS_BY_CERTIFICATE_ID, params, tagMapper);
     }
 }

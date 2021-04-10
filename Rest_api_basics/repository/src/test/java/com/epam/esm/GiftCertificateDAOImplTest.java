@@ -3,8 +3,6 @@ package com.epam.esm;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.impl.GiftCertificateDAOImpl;
 import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
-import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
-import com.epam.esm.dao.query.builder.GiftCertificateQueryBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -105,7 +103,7 @@ public class GiftCertificateDAOImplTest {
     @Test
     public void getAllCertificates() {
         final int EXIST_GС_NUMBER = 3;
-        final List<GiftCertificate> giftCertificateList = giftCertificateDAO.getAllGiftCertificates();
+        final List<GiftCertificate> giftCertificateList = giftCertificateDAO.readAllGiftCertificates();
 
         assertNotNull(giftCertificateList);
         assertEquals(EXIST_GС_NUMBER, giftCertificateList.size());
@@ -117,7 +115,7 @@ public class GiftCertificateDAOImplTest {
         GiftCertificateCompositeParameter compositeParameter = new GiftCertificateCompositeParameter(
                 TAG_NAME, null, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.getGiftCertificates(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.readGiftCertificatesByParam(compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -128,7 +126,7 @@ public class GiftCertificateDAOImplTest {
         GiftCertificateCompositeParameter compositeParameter = new GiftCertificateCompositeParameter(
                 null, NAME, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.getGiftCertificates(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.readGiftCertificatesByParam(compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -139,7 +137,7 @@ public class GiftCertificateDAOImplTest {
         GiftCertificateCompositeParameter compositeParameter = new GiftCertificateCompositeParameter(
                 null, null, DESCRIPTION, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.getGiftCertificates(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.readGiftCertificatesByParam(compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
