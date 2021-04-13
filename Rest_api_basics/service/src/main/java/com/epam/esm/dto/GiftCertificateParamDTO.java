@@ -1,21 +1,24 @@
 package com.epam.esm.dto;
 
-public class GiftCertificateCompositeParameterDTO {
+import com.epam.esm.dao.query.sort.SortOrder;
+import com.epam.esm.dao.query.sort.SortType;
+
+public class GiftCertificateParamDTO {
     private String tagName;
     private String name;
     private String description;
     private String sortType;
     private String sortOrder;
 
-    public GiftCertificateCompositeParameterDTO() {
+    public GiftCertificateParamDTO() {
     }
 
-    public GiftCertificateCompositeParameterDTO(String tagName, String name, String description, String sortType, String sortOrder) {
+    public GiftCertificateParamDTO(String tagName, String name, String description, String sortType, String sortOrder) {
         this.tagName = tagName;
         this.name = name;
         this.description = description;
         this.sortType = sortType;
-        this.sortType = sortOrder;
+        this.sortOrder = sortOrder;
     }
 
     public String getTagName() {

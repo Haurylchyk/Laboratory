@@ -57,7 +57,7 @@ public class TagServiceImpl implements TagService {
         if (!TagValidator.isNameValid(tagName)) {
             throw new TagInvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
         }
-        Optional<Tag> optionalExistingTag = tagDAO.readTagByName(tagName);
+        Optional<Tag> optionalExistingTag = tagDAO.findByName(tagName);
         if (optionalExistingTag.isPresent()) {
             throw new ExistingTagException(ErrorCodeMessage.ERROR_CODE_TAG_EXISTS);
         }
@@ -72,8 +72,8 @@ public class TagServiceImpl implements TagService {
      * @return object with Tag data.
      */
     @Override
-    public TagDTO read(Integer id) {
-        Optional<Tag> optionalTag = tagDAO.read(id);
+    public TagDTO finById(Integer id) {
+        Optional<Tag> optionalTag = tagDAO.find(id);
         Tag tag = optionalTag.orElseThrow(() -> new TagNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
         return TagDTOMapper.convertToDTO(tag);
@@ -86,7 +86,7 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public void delete(Integer id) {
-        Optional<Tag> optionalTag = tagDAO.read(id);
+        Optional<Tag> optionalTag = tagDAO.find(id);
         optionalTag.orElseThrow(() -> new TagNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
         tagDAO.delete(id);
@@ -98,8 +98,8 @@ public class TagServiceImpl implements TagService {
      * @return List of objects with Tag data.
      */
     @Override
-    public List<TagDTO> readAllTags() {
-        List<Tag> tagList = tagDAO.readAllTags();
+    public List<TagDTO> findAll() {
+        List<Tag> tagList = tagDAO.findAll();
         if (tagList.isEmpty()) {
             throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND);
         }

@@ -27,7 +27,7 @@ public interface TagService {
      * @param id Tag id.
      * @return object with Tag data.
      */
-    TagDTO read(Integer id);
+    TagDTO finById(Integer id);
 
     /**
      * Accesses the corresponding DAO method to delete Tag object with specific id.
@@ -41,5 +41,5 @@ public interface TagService {
      *
      * @return List of objects with Tag data.
      */
-    List<TagDTO> readAllTags();
+    List<TagDTO> findAll();
 }

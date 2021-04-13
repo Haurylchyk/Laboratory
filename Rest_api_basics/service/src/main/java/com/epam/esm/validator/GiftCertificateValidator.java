@@ -13,6 +13,11 @@ import com.epam.esm.dto.GiftCertificateDTO;
 public class GiftCertificateValidator {
 
     /**
+     * The maximum permitted length of the description.
+     */
+    private static final int MAX_VALID_DESC_LENGTH = 255;
+
+    /**
      * Private constructor.
      */
     private GiftCertificateValidator() {
@@ -52,7 +57,6 @@ public class GiftCertificateValidator {
      * exceed the allowed length, false otherwise.
      */
     public static boolean isDescriptionValid(String description) {
-        final int MAX_VALID_DESC_LENGTH = 255;
         return !CommonValidator.isEmpty(description) && description.length() <= MAX_VALID_DESC_LENGTH;
     }
 

@@ -4,10 +4,10 @@ import com.epam.esm.GiftCertificateService;
 import com.epam.esm.constant.ErrorCodeMessage;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
-import com.epam.esm.dto.GiftCertificateCompositeParameterDTO;
+import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dto.GiftCertificateParamDTO;
 import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.mapper.CompositeParameterDTOMapper;
+import com.epam.esm.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.dto.mapper.GiftCertificateDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
@@ -78,9 +78,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (tagNamesList != null) {
             putNewOrExistingTags(newGiftCertificate.getId(), tagNamesList);
         }
-        List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(newGiftCertificate.getId());
-        giftCertificate.setTagList(tagList);
-        return GiftCertificateDTOMapper.convertToDTO(giftCertificate);
+        List<Tag> tagList = tagDAO.findByGiftCertificateId(newGiftCertificate.getId());
+        newGiftCertificate.setTagList(tagList);
+        return GiftCertificateDTOMapper.convertToDTO(newGiftCertificate);
     }
 
     /**
@@ -90,11 +90,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @return object with GiftCertificate data.
      */
     @Override
-    public GiftCertificateDTO read(Integer id) {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.read(id);
+    public GiftCertificateDTO findById(Integer id) {
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
                 () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
-        List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(id);
+        List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
         giftCertificate.setTagList(tagList);
         return GiftCertificateDTOMapper.convertToDTO(giftCertificate);
     }
@@ -109,7 +109,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public GiftCertificateDTO update(GiftCertificateDTO updatedCertificateDTO, Integer id) {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.read(id);
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         optionalGiftCertificate.orElseThrow(() -> new GiftCertificateNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
         updatedCertificateDTO.setId(id);
@@ -119,12 +119,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate updatedGiftCertificate = giftCertificateDAO.update(giftCertificate, id);
         List<String> tagNamesList = updatedCertificateDTO.getTagNames();
         if (tagNamesList != null) {
-            List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(id);
+            List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
             giftCertificateDAO.deleteCertificateTagsById(id);
             deleteTagsIfNotUsed(tagList);
             putNewOrExistingTags(id, tagNamesList);
         }
-        List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(id);
+        List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
         updatedGiftCertificate.setTagList(tagList);
 
         return GiftCertificateDTOMapper.convertToDTO(updatedGiftCertificate);
@@ -138,10 +138,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.read(id);
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         optionalGiftCertificate.orElseThrow(() -> new GiftCertificateNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
-        List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(id);
+        List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
         giftCertificateDAO.delete(id);
         deleteTagsIfNotUsed(tagList);
     }
@@ -153,10 +153,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      * @return list of GiftCertificates.
      */
     @Override
-    public List<GiftCertificateDTO> readByParameter(GiftCertificateCompositeParameterDTO parameterDTO) {
-        GiftCertificateCompositeParameter parameter = CompositeParameterDTOMapper.convertToEntity(parameterDTO);
+    public List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO parameterDTO) {
+        GiftCertificateParam parameter = GiftCertificateParamDTOMapper.convertToEntity(parameterDTO);
 
-        List<GiftCertificate> giftCertificates = giftCertificateDAO.readGiftCertificatesByParam(parameter);
+        List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(parameter);
 
         if (giftCertificates.isEmpty()) {
             throw new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND);
@@ -165,7 +165,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();
 
         for (GiftCertificate giftCertificate : giftCertificates) {
-            List<Tag> tagList = tagDAO.readTagsByGiftCertificateId(giftCertificate.getId());
+            List<Tag> tagList = tagDAO.findByGiftCertificateId(giftCertificate.getId());
             giftCertificate.setTagList(tagList);
             giftCertificatesDTO.add(GiftCertificateDTOMapper.convertToDTO(giftCertificate));
         }
@@ -174,7 +174,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void putNewOrExistingTags(Integer GiftCertificateId, List<String> tagNamesList) {
         for (String tagName : tagNamesList) {
-            Optional<Tag> optionalTag = tagDAO.readTagByName(tagName);
+            Optional<Tag> optionalTag = tagDAO.findByName(tagName);
             Tag newTag = optionalTag.orElseGet(() -> tagDAO.create(new Tag(tagName)));
             giftCertificateDAO.putCertificateTag(GiftCertificateId, newTag.getId());
         }
@@ -182,7 +182,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void deleteTagsIfNotUsed(List<Tag> tagList) {
         for (Tag tag : tagList) {
-            if (giftCertificateDAO.readGiftCertificatesByTagName(tag.getName()).isEmpty()) {
+            if (giftCertificateDAO.findByTagName(tag.getName()).isEmpty()) {
                 tagDAO.delete(tag.getId());
             }
         }

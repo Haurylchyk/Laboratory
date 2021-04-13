@@ -1,7 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.GiftCertificateCompositeParameterDTO;
+import com.epam.esm.dto.GiftCertificateParamDTO;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface GiftCertificateService {
      * @param id GiftCertificate id.
      * @return object with GiftCertificate data.
      */
-    GiftCertificateDTO read(Integer id);
+    GiftCertificateDTO findById(Integer id);
 
     /**
      * Accesses the corresponding DAO method to update GiftCertificate with specific id.
@@ -49,10 +49,10 @@ public interface GiftCertificateService {
     /**
      * Accesses the corresponding DAO method to get GiftCertificates that matches parameters.
      *
-     * @param giftCertificateCompositeParameterDTO special object containing requested parameters.
+     * @param giftCertificateParamDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificateDTO> readByParameter(GiftCertificateCompositeParameterDTO
-                                                     giftCertificateCompositeParameterDTO);
+    List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO
+                                                 giftCertificateParamDTO);
 }
 

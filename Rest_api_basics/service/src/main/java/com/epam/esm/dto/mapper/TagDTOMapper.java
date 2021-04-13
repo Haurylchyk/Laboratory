@@ -5,6 +5,7 @@ import com.epam.esm.entity.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The class converts Tag to TagDTO and vice versa.
@@ -47,9 +48,7 @@ public class TagDTOMapper {
      * @return list of TagDTOs.
      */
     public static List<TagDTO> convertToDTO(List<Tag> tagList) {
-        List<TagDTO> tagDTOList = new ArrayList<>();
-        tagList.forEach(tag -> tagDTOList.add(convertToDTO(tag)));
-        return tagDTOList;
+        return tagList.stream().map(tag -> convertToDTO(tag)).collect(Collectors.toList());
     }
 
     /**
@@ -59,8 +58,7 @@ public class TagDTOMapper {
      * @return list of Tags.
      */
     public static List<Tag> convertToEntity(List<TagDTO> tagDTOList) {
-        List<Tag> tagList = new ArrayList<>();
-        tagDTOList.forEach(tagDTO -> tagList.add(convertToEntity(tagDTO)));
-        return tagList;
+        return tagDTOList.stream().map(tagDTO -> convertToEntity(tagDTO)).collect(Collectors.toList());
+
     }
 }
