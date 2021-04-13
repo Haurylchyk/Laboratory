@@ -34,6 +34,11 @@ public class TagDAOImpl implements TagDAO {
             "tag.id = cert_tag.tag_id WHERE cert_tag.cert_id =:id";
 
     /**
+     * The index of the first item in the list.
+     */
+    private static final int FIRST_ELEMENT_INDEX = 0;
+
+    /**
      * Object responsible for data (database) access.
      */
     private final NamedParameterJdbcTemplate jdbcTemplate;
@@ -64,7 +69,7 @@ public class TagDAOImpl implements TagDAO {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ParameterNameСonstant.NAME, tag.getName());
         jdbcTemplate.update(CREATE_TAG, params);
-        return readTagByName(tag.getName()).get();
+        return findByName(tag.getName()).get();
     }
 
     /**
@@ -74,15 +79,11 @@ public class TagDAOImpl implements TagDAO {
      * @return Optional of Tag entity stored in the database.
      */
     @Override
-    public Optional<Tag> read(Integer id) {
-        Optional<Tag> optional = Optional.empty();
+    public Optional<Tag> find(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ParameterNameСonstant.ID, id);
-        Tag tag = jdbcTemplate.queryForObject(GET_TAG_BY_ID, params, tagMapper);
-        if (tag != null) {
-            optional = Optional.of(tag);
-        }
-        return optional;
+        List<Tag> listTag = jdbcTemplate.query(GET_TAG_BY_ID, params, tagMapper);
+        return listTag.isEmpty() ? Optional.empty() : Optional.of(listTag.get(0));
     }
 
     /**
@@ -98,7 +99,7 @@ public class TagDAOImpl implements TagDAO {
         params.addValue(ParameterNameСonstant.ID, id);
         params.addValue(ParameterNameСonstant.NAME, tag.getName());
         jdbcTemplate.getJdbcOperations().update(UPDATE_TAG, params);
-        return read(id).get();
+        return find(id).get();
     }
 
     /**
@@ -117,7 +118,7 @@ public class TagDAOImpl implements TagDAO {
      * @return all Tags stored in the database.
      */
     @Override
-    public List<Tag> readAllTags() {
+    public List<Tag> findAll() {
         return jdbcTemplate.query(GET_ALL_TAGS, tagMapper);
     }
 
@@ -128,13 +129,13 @@ public class TagDAOImpl implements TagDAO {
      * @return Optional of Tag entity stored in the database.
      */
     @Override
-    public Optional<Tag> readTagByName(String name) {
+    public Optional<Tag> findByName(String name) {
         Optional<Tag> optional = Optional.empty();
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ParameterNameСonstant.NAME, name);
         List<Tag> tagList = jdbcTemplate.query(GET_TAG_BY_NAME, params, tagMapper);
         if (!tagList.isEmpty()) {
-            optional = Optional.of(tagList.get(0));
+            optional = Optional.of(tagList.get(FIRST_ELEMENT_INDEX));
         }
         return optional;
     }
@@ -146,7 +147,7 @@ public class TagDAOImpl implements TagDAO {
      * @return List of Tags.
      */
     @Override
-    public List<Tag> readTagsByGiftCertificateId(Integer id) {
+    public List<Tag> findByGiftCertificateId(Integer id) {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue(ParameterNameСonstant.ID, id);
         return jdbcTemplate.query(GET_TAGS_BY_CERTIFICATE_ID, params, tagMapper);

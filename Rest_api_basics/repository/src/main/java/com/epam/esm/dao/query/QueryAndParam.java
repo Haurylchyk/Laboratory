@@ -11,11 +11,11 @@ import java.util.Objects;
  * @version 1.0
  * @since JDK 1.8
  */
-public class GiftCertificateCompositeQuery {
+public class QueryAndParam {
     private final String query;
     private final Object[] params;
 
-    public GiftCertificateCompositeQuery(String query, Object[] params) {
+    public QueryAndParam(String query, Object[] params) {
         this.params = params;
         this.query = query;
     }
@@ -32,7 +32,7 @@ public class GiftCertificateCompositeQuery {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        GiftCertificateCompositeQuery that = (GiftCertificateCompositeQuery) o;
+        QueryAndParam that = (QueryAndParam) o;
         return Arrays.equals(params, that.params) &&
                 Objects.equals(query, that.query);
     }

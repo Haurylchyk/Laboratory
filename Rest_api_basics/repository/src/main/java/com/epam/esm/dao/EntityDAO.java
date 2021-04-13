@@ -30,7 +30,7 @@ public interface EntityDAO<T extends Entity> {
      *
      * @return Optional of T entity stored in the database.
      */
-    Optional<T> read(Integer id);
+    Optional<T> find(Integer id);
 
     /**
      * Update information about entity into database.

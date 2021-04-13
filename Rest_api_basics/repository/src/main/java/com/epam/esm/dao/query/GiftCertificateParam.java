@@ -1,5 +1,8 @@
 package com.epam.esm.dao.query;
 
+import com.epam.esm.dao.query.sort.SortOrder;
+import com.epam.esm.dao.query.sort.SortType;
+
 /**
  * Class describes a composite parameter
  * that contains a set of different parameters.
@@ -8,22 +11,22 @@ package com.epam.esm.dao.query;
  * @version 1.0
  * @since JDK 1.8
  */
-public class GiftCertificateCompositeParameter {
+public class GiftCertificateParam {
     private String tagName;
     private String name;
     private String description;
-    private String sortType;
-    private String sortOrder;
+    private SortType sortType;
+    private SortOrder sortOrder;
 
-    public GiftCertificateCompositeParameter() {
+    public GiftCertificateParam() {
     }
 
-    public GiftCertificateCompositeParameter(String tagName, String name, String description, String sortType, String sortOrder) {
+    public GiftCertificateParam(String tagName, String name, String description, SortType sortType, SortOrder sortOrder) {
         this.tagName = tagName;
         this.name = name;
         this.description = description;
         this.sortType = sortType;
-        this.sortType = sortOrder;
+        this.sortOrder = sortOrder;
     }
 
     public String getTagName() {
@@ -50,19 +53,19 @@ public class GiftCertificateCompositeParameter {
         this.description = description;
     }
 
-    public String getSortType() {
+    public SortType getSortType() {
         return sortType;
     }
 
-    public void setSortType(String sortType) {
+    public void setSortType(SortType sortType) {
         this.sortType = sortType;
     }
 
-    public String getSortOrder() {
+    public SortOrder getSortOrder() {
         return sortOrder;
     }
 
-    public void setSortOrder(String sortOrder) {
+    public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
     }
 }

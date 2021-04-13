@@ -1,11 +1,9 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
-import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
+import com.epam.esm.dao.query.GiftCertificateParam;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface describes the interaction with the database
@@ -22,14 +20,14 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
      *
      * @return all GiftCertificate stored in the database.
      */
-    List<GiftCertificate> readAllGiftCertificates();
+    List<GiftCertificate> findAll();
 
     /**
      * Returns GiftCertificates that have Tag with specific name.
      *
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> readGiftCertificatesByTagName(String name);
+    List<GiftCertificate> findByTagName(String name);
 
     /**
      * Makes an record (to the database) that associates
@@ -51,8 +49,8 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
     /**
      * Returns list of matching GiftCertificates.
      *
-     * @param giftCertificateCompositeParameter special object containing params.
+     * @param giftCertificateParam special object containing params.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> readGiftCertificatesByParam(GiftCertificateCompositeParameter giftCertificateCompositeParameter);
+    List<GiftCertificate> findByParam(GiftCertificateParam giftCertificateParam);
 }

@@ -1,7 +1,7 @@
 package com.epam.esm.dao.query.builder;
 
-import com.epam.esm.dao.query.GiftCertificateCompositeQuery;
-import com.epam.esm.dao.query.GiftCertificateCompositeParameter;
+import com.epam.esm.dao.query.QueryAndParam;
+import com.epam.esm.dao.query.GiftCertificateParam;
 import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
 import com.epam.esm.entity.GiftCertificate;
@@ -64,7 +64,7 @@ public class GiftCertificateQueryBuilder {
      * @param giftCertificateQueryParameter object with parameters from request.
      * @return object, that contains SQL query and array of parameters.
      */
-    public GiftCertificateCompositeQuery buildGetQuery(GiftCertificateCompositeParameter giftCertificateQueryParameter) {
+    public QueryAndParam buildGetQuery(GiftCertificateParam giftCertificateQueryParameter) {
         StringBuilder queryBuilder = new StringBuilder();
         List<String> conditionList = new ArrayList<>();
         List<Object> params = new ArrayList<>();
@@ -100,9 +100,8 @@ public class GiftCertificateQueryBuilder {
             queryBuilder.append(CLOSE_WHERE);
         }
 
-        String sortTypeString = giftCertificateQueryParameter.getSortType();
-        if (sortTypeString != null) {
-            SortType sortType = SortType.valueOf(sortTypeString.toUpperCase());
+        SortType sortType = giftCertificateQueryParameter.getSortType();
+        if (sortType != null) {
             queryBuilder.append(ORDER_BY_STATEMENT);
 
             if (sortType == SortType.NAME) {
@@ -112,9 +111,8 @@ public class GiftCertificateQueryBuilder {
             }
         }
 
-        String sortOrderString = giftCertificateQueryParameter.getSortOrder();
-        if (sortOrderString != null) {
-            SortOrder sortOrder = SortOrder.valueOf(sortOrderString.toUpperCase());
+        SortOrder sortOrder = giftCertificateQueryParameter.getSortOrder();
+        if (sortOrder != null) {
             switch (sortOrder) {
                 case ASC: {
                     queryBuilder.append(ORDER_ASC);
@@ -126,7 +124,7 @@ public class GiftCertificateQueryBuilder {
             }
         }
 
-        return new GiftCertificateCompositeQuery(queryBuilder.toString(), params.toArray());
+        return new QueryAndParam(queryBuilder.toString(), params.toArray());
     }
 
     /**
@@ -135,7 +133,7 @@ public class GiftCertificateQueryBuilder {
      * @param giftCertificate GiftCertificate entity.
      * @return object, that contains SQL query and array of parameters.
      */
-    public GiftCertificateCompositeQuery buildUpdateQuery(GiftCertificate giftCertificate) {
+    public QueryAndParam buildUpdateQuery(GiftCertificate giftCertificate) {
         List<String> conditionList = new ArrayList<>();
         List<Object> paramList = new ArrayList<>();
 
@@ -174,6 +172,6 @@ public class GiftCertificateQueryBuilder {
         String paramsQuery = String.join(COMMA, conditionList);
         String query = START_UPDATE_QUERY + paramsQuery + END_UPDATE_QUERY;
 
-        return new GiftCertificateCompositeQuery(query, paramArray);
+        return new QueryAndParam(query, paramArray);
     }
 }

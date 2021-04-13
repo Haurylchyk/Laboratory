@@ -20,7 +20,7 @@ public interface TagDAO extends EntityDAO<Tag> {
      *
      * @return all Tags stored in the database.
      */
-    List<Tag> readAllTags();
+    List<Tag> findAll();
 
     /**
      * Returns Tag with specific name.
@@ -28,7 +28,7 @@ public interface TagDAO extends EntityDAO<Tag> {
      * @param name Tag name.
      * @return Optional of Tag entity stored in the database.
      */
-    Optional<Tag> readTagByName(String name);
+    Optional<Tag> findByName(String name);
 
     /**
      * Returns list of Tags of GiftCertificate with specific id.
@@ -36,6 +36,6 @@ public interface TagDAO extends EntityDAO<Tag> {
      * @param id GiftCertificate id.
      * @return List of Tags.
      */
-    List<Tag> readTagsByGiftCertificateId(Integer id);
+    List<Tag> findByGiftCertificateId(Integer id);
 
 }
