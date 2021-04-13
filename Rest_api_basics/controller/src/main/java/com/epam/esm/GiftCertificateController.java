@@ -1,7 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.GiftCertificateCompositeParameterDTO;
+import com.epam.esm.dto.GiftCertificateParamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +26,8 @@ public class GiftCertificateController {
     }
 
     @GetMapping("/{id}")
-    public GiftCertificateDTO read(@PathVariable Integer id) {
-        return giftCertificateService.read(id);
+    public GiftCertificateDTO findById(@PathVariable Integer id) {
+        return giftCertificateService.findById(id);
     }
 
     @PutMapping("/{id}")
@@ -41,7 +41,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping
-    public List<GiftCertificateDTO> readByParameter(GiftCertificateCompositeParameterDTO parameterDTO) {
-        return giftCertificateService.readByParameter(parameterDTO);
+    public List<GiftCertificateDTO> findByParameter(GiftCertificateParamDTO parameterDTO) {
+        return giftCertificateService.findByParam(parameterDTO);
     }
 }

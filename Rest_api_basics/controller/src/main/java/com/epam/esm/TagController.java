@@ -25,8 +25,8 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public TagDTO read(@PathVariable Integer id) {
-        return tagService.read(id);
+    public TagDTO findById(@PathVariable Integer id) {
+        return tagService.finById(id);
     }
 
     @DeleteMapping("/{id}")
@@ -35,8 +35,8 @@ public class TagController {
     }
 
     @GetMapping
-    public List<TagDTO> readAllTags() {
-        return tagService.readAllTags();
+    public List<TagDTO> findAll() {
+        return tagService.findAll();
     }
 
 }
