@@ -1,6 +1,5 @@
 package com.epam.esm;
 
-import com.epam.esm.TagService;
 import com.epam.esm.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "gift_system/tag")
+@RequestMapping(value = "/tags")
 public class TagController {
 
     private final TagService tagService;
@@ -21,32 +20,23 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO createTag(@RequestBody TagDTO tagDTO) {
-        return tagService.createTag(tagDTO);
+    public TagDTO create(@RequestBody TagDTO tagDTO) {
+        return tagService.create(tagDTO);
     }
 
     @GetMapping("/{id}")
-    public @ResponseBody TagDTO getTagById(@PathVariable Integer id) {
-        return tagService.getTagById(id);
+    public TagDTO findById(@PathVariable Integer id) {
+        return tagService.finById(id);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteTag(@PathVariable Integer id) {
-        tagService.deleteTag(id);
+    public void delete(@PathVariable Integer id) {
+        tagService.delete(id);
     }
-
-//    @RequestMapping(value = "gift_system/tag/{id}", method = RequestMethod.DELETE)
-//    public void deleteTag(@PathVariable Integer id) {
-//        tagService.deleteTag(id);
-//    }
 
     @GetMapping
-    public List<TagDTO> getAllTags() {
-        return tagService.getAllTags();
+    public List<TagDTO> findAll() {
+        return tagService.findAll();
     }
 
-//    @GetMapping("/{name}")
-//    public TagDTO getTagByName(@PathVariable String name) {
-//        return tagService.getTagByName(name);
-//    }
 }

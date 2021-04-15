@@ -1,10 +1,9 @@
 package com.epam.esm.dao;
 
-
+import com.epam.esm.dao.query.GiftCertificateParam;
 import com.epam.esm.entity.GiftCertificate;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Interface describes the interaction with the database
@@ -14,53 +13,21 @@ import java.util.Optional;
  * @version 1.0
  * @since JDK 1.8
  */
-public interface GiftCertificateDAO {
-
-    /**
-     * Adds new object GiftCertificate to database.
-     *
-     * @param giftCertificate object of the GiftCertificate type.
-     * @return GiftCertificate entity.
-     */
-    GiftCertificate createGiftCertificate(GiftCertificate giftCertificate);
-
-    /**
-     * Returns GiftCertificate with specific id.
-     *
-     * @param id GiftCertificate id.
-     * @return Optional of GiftCertificate entity stored in the database.
-     */
-    Optional<GiftCertificate> getGiftCertificateById(Integer id);
-
-    /**
-     * Updates GiftCertificate with specific id.
-     *
-     * @param updatedGiftCertificate updated GiftCertificate.
-     * @param id                 GiftCertificate id.
-     * @return updated GiftCertificate entity.
-     */
-    GiftCertificate updateGiftCertificate(GiftCertificate updatedGiftCertificate, Integer id);
-
-    /**
-     * Deletes GiftCertificate with specific id from database.
-     *
-     * @param id GiftCertificate id.
-     */
-    void deleteGiftCertificate(Integer id);
+public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
 
     /**
      * Returns all GiftCertificates stored in the database.
      *
      * @return all GiftCertificate stored in the database.
      */
-    List<GiftCertificate> getAllGiftCertificates();
+    List<GiftCertificate> findAll();
 
     /**
      * Returns GiftCertificates that have Tag with specific name.
      *
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> getGiftCertificatesByTagName(String name);
+    List<GiftCertificate> findByTagName(String name);
 
     /**
      * Makes an record (to the database) that associates
@@ -78,4 +45,12 @@ public interface GiftCertificateDAO {
      * @param id GiftCertificate id.
      */
     void deleteCertificateTagsById(Integer id);
+
+    /**
+     * Returns list of matching GiftCertificates.
+     *
+     * @param giftCertificateParam special object containing params.
+     * @return list of GiftCertificates.
+     */
+    List<GiftCertificate> findByParam(GiftCertificateParam giftCertificateParam);
 }

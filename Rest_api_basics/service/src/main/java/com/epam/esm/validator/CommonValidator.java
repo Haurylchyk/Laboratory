@@ -45,7 +45,7 @@ public class CommonValidator {
      * @param str string for verification.
      * @return true if the string meets the requirements, false otherwise.
      */
-    public static boolean checkNameLength(String str) {
+    public static boolean isNameLengthValid(String str) {
         return str.length() <= MAX_VALID_NAME_LENGTH;
     }
 

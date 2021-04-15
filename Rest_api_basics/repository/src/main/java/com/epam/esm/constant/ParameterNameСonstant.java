@@ -7,7 +7,7 @@ package com.epam.esm.constant;
  * @version 1.0
  * @since JDK 1.8
  */
-public class Variable {
+public class ParameterNameСonstant {
     public static final String ID = "id";
     public static final String NAME = "name";
     public static final String DESCRIPTION = "description";

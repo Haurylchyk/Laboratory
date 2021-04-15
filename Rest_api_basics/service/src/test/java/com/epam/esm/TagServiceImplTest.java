@@ -6,7 +6,6 @@ import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ServiceException;
 import com.epam.esm.impl.TagServiceImpl;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,121 +17,117 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-//@ExtendWith(MockitoExtension.class)
-//class TagServiceImplTest {
-//
-//    private static final int TEST_ID = 1;
-//    private static final String TEST_NAME = "Tag";
-//
-//    @InjectMocks
-//    private TagServiceImpl tagService;
-//
-//    @Mock
-//    private TagDAO tagDAO;
-//
-//    private Tag tag;
-//    private TagDTO tagDTO;
-//    private TagDTO emptyTagDTO;
-//
-//    private List<Tag> tagList;
-//
-//    @BeforeEach
-//    public void setUp() {
-//        tag = new Tag();
-//        tag.setId(TEST_ID);
-//        tag.setName(TEST_NAME);
-//
-//        tagList = new ArrayList<>();
-//        tagList.add(tag);
-//
-//        tag = new Tag();
-//        tag.setId(TEST_ID);
-//        tag.setName(TEST_NAME);
-//
-//        emptyTagDTO = new TagDTO();
-//
-//        tagDTO = new TagDTO();
-//        tagDTO.setName(TEST_NAME);
-//
-//        tagService = new TagServiceImpl(tagDAO);
-//    }
-//
-//    @AfterEach
-//    public void tearDown() {
-//    }
-//
-//    @Test
-//    public void deleteTag() {
-//        given(tagDAO.getTagById(TEST_ID)).willReturn(Optional.of(tag));
-//
-//        tagService.deleteTag(TEST_ID);
-//
-//        verify(tagDAO, times(1)).deleteTag(TEST_ID);
-//    }
-//
-//    @Test
-//    public void deleteCertificateShouldException() {
-//        given(tagDAO.getTagById(TEST_ID)).willReturn(Optional.empty());
-//
-//        assertThrows(ServiceException.class, () -> tagService.deleteTag(TEST_ID));
-//    }
-//
-//    @Test
-//    public void getTagByID() {
-//        given(tagDAO.getTagById(TEST_ID)).willReturn(Optional.of(tag));
-//        TagDTO receivedTagDTO = tagService.getTagById(TEST_ID);
-//
-//        TagDTO testedDTO = TagDTOMapper.toDTO(tag);
-//        assertEquals(testedDTO, receivedTagDTO);
-//    }
-//
-//
-//    @Test
-//    public void getTagByIDShouldException() {
-//        given(tagDAO.getTagById(TEST_ID)).willReturn(Optional.empty());
-//
-//        assertThrows(ServiceException.class, () -> tagService.getTagById(TEST_ID));
-//    }
-//
-//    @Test
-//    public void createTag() {
-//        given(tagDAO.createTag(any())).willReturn(tag);
-//
-//        TagDTO receivedDTO = tagService.createTag(tagDTO);
-//
-//        assertEquals(TEST_NAME, receivedDTO.getName());
-//    }
-//
-//    @Test
-//    public void createTagShouldValidationException() {
-//        assertThrows(ServiceException.class,
-//                () -> tagService.createTag(emptyTagDTO));
-//    }
-//
-//    @Test
-//    public void createTagShouldAlreadyExistsException() {
-//        given(tagDAO.getTagByName(TEST_NAME)).willReturn(Optional.of(tag));
-//
-//        assertThrows(ServiceException.class,
-//                () -> tagService.createTag(tagDTO));
-//    }
-//
-//    @Test
-//    public void getCertificates() {
-//        given(tagDAO.getAllTags()).willReturn(tagList);
-//
-//        List<TagDTO> receivedDTOList = tagService.getAllTags();
-//        List<TagDTO> testDTOList = TagDTOMapper.toDTO(tagList);
-//
-//        assertIterableEquals(testDTOList, receivedDTOList);
-//    }
-//
-//}
+@ExtendWith(MockitoExtension.class)
+class TagServiceImplTest {
+
+    private static final Integer TEST_FIRST_ID = 3;
+    private final Integer TEST_SECOND_ID = 5;
+    private final String TEST_FIRST_NAME = "Test First Tag";
+    private final String TEST_SECOND_NAME = "Test Second Tag";
+
+
+    @InjectMocks
+    private TagServiceImpl tagService;
+
+    @Mock
+    private TagDAO tagDAO;
+
+    private Tag tagFirst;
+    private Tag tagSecond;
+    private TagDTO tagDTO;
+    private TagDTO emptyTagDTO;
+    private List<Tag> tagList;
+    private List<Tag> emptyTagList;
+
+    @BeforeEach
+    public void setUp() {
+        tagService = new TagServiceImpl(tagDAO);
+
+        tagFirst = new Tag();
+        tagFirst.setId(TEST_FIRST_ID);
+        tagFirst.setName(TEST_FIRST_NAME);
+        tagSecond = new Tag();
+        tagSecond.setId(TEST_SECOND_ID);
+        tagSecond.setName(TEST_SECOND_NAME);
+
+        emptyTagList = new ArrayList<>();
+        tagList = new ArrayList<>();
+        tagList.add(tagFirst);
+        tagList.add(tagSecond);
+
+        emptyTagDTO = new TagDTO();
+        tagDTO = new TagDTO();
+        tagDTO.setName(TEST_FIRST_NAME);
+    }
+
+    @Test
+    public void createShouldReturnCreatedTag() {
+        given(tagDAO.create(any())).willReturn(tagFirst);
+        TagDTO createdTagDTO = tagService.create(tagDTO);
+        assertEquals(TEST_FIRST_NAME, createdTagDTO.getName());
+    }
+
+    @Test
+    public void createShouldValidationException() {
+        assertThrows(ServiceException.class,
+                () -> tagService.create(emptyTagDTO));
+    }
+
+    @Test
+    public void createShouldExistingTagException() {
+        given(tagDAO.readTagByName(TEST_FIRST_NAME)).willReturn(Optional.of(tagFirst));
+        assertThrows(ServiceException.class,
+                () -> tagService.create(tagDTO));
+    }
+
+    @Test
+    public void readShouldSuccessfully() {
+        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
+        TagDTO readTagDTO = tagService.read(TEST_FIRST_ID);
+        TagDTO testedDTO = TagDTOMapper.convertToDTO(tagFirst);
+        assertEquals(testedDTO, readTagDTO);
+    }
+
+    @Test
+    public void readShouldException() {
+        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.empty());
+        assertThrows(ServiceException.class, () -> tagService.read(TEST_FIRST_ID));
+    }
+
+    @Test
+    public void deleteShouldSuccessfully() {
+        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
+        tagService.delete(TEST_FIRST_ID);
+        verify(tagDAO, times(1)).delete(TEST_FIRST_ID);
+    }
+
+    @Test
+    public void deleteShouldException() {
+        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.empty());
+        assertThrows(ServiceException.class,
+                () -> tagService.delete(TEST_FIRST_ID));
+    }
+
+    @Test
+    public void readAllTagsShouldSuccessfully() {
+        given(tagDAO.readAllTags()).willReturn(tagList);
+
+        List<TagDTO> readTagDTOList = tagService.readAllTags();
+        List<TagDTO> testTagDTOList = TagDTOMapper.convertToDTO(tagList);
+
+        assertIterableEquals(testTagDTOList, readTagDTOList);
+    }
+
+    @Test
+    public void readAllTagsShouldException() {
+        given(tagDAO.readAllTags()).willReturn(emptyTagList);
+        assertThrows(ServiceException.class,
+                () -> tagService.readAllTags());
+    }
+}

@@ -13,9 +13,8 @@ import java.util.Objects;
  * @see LocalDateTime
  * @since JDK 1.8
  */
-public class GiftCertificate {
+public class GiftCertificate extends Entity {
 
-    private Integer id;
     private String name;
     private String description;
     private Integer price;
@@ -24,14 +23,6 @@ public class GiftCertificate {
     private LocalDateTime lastsUpdateDate;
 
     private List<Tag> tagList;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -93,26 +84,26 @@ public class GiftCertificate {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         GiftCertificate that = (GiftCertificate) o;
-        return id == that.id &&
-                price == that.price &&
-                duration == that.duration &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(createDate, that.createDate) &&
-                Objects.equals(lastsUpdateDate, that.lastsUpdateDate) &&
-                Objects.equals(tagList, that.tagList);
+        return name.equals(that.name) &&
+                description.equals(that.description) &&
+                price.equals(that.price) &&
+                duration.equals(that.duration) &&
+                createDate.equals(that.createDate) &&
+                lastsUpdateDate.equals(that.lastsUpdateDate) &&
+                tagList.equals(that.tagList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastsUpdateDate, tagList);
+        return Objects.hash(super.hashCode(), name, description, price, duration, createDate, lastsUpdateDate, tagList);
     }
 
     @Override
     public String toString() {
         return "GiftCertificate{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +

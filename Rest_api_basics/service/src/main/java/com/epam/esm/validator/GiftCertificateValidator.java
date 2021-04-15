@@ -1,5 +1,7 @@
 package com.epam.esm.validator;
 
+import com.epam.esm.dto.GiftCertificateDTO;
+
 /**
  * Class contains methods for checking field values
  * which describe the details of the GiftCertificate.
@@ -11,9 +13,27 @@ package com.epam.esm.validator;
 public class GiftCertificateValidator {
 
     /**
+     * The maximum permitted length of the description.
+     */
+    private static final int MAX_VALID_DESC_LENGTH = 255;
+
+    /**
      * Private constructor.
      */
     private GiftCertificateValidator() {
+    }
+
+    /**
+     * Checks that the data is valid.
+     *
+     * @param giftCertificateDTO GiftCertificate entity.
+     * @return true if the data is valid, false otherwise.
+     */
+    public static boolean isValidData(GiftCertificateDTO giftCertificateDTO) {
+        return isNameValid(giftCertificateDTO.getName())
+                && isDescriptionValid(giftCertificateDTO.getDescription())
+                && isPriceValid(giftCertificateDTO.getPrice())
+                && isDurationValid(giftCertificateDTO.getDuration());
     }
 
     /**
@@ -24,8 +44,8 @@ public class GiftCertificateValidator {
      * @return true if the name is not empty and doesn't
      * exceed the allowed length, false otherwise.
      */
-    public static boolean checkName(String name) {
-        return !CommonValidator.isEmpty(name) && CommonValidator.checkNameLength(name);
+    public static boolean isNameValid(String name) {
+        return !CommonValidator.isEmpty(name) && CommonValidator.isNameLengthValid(name);
     }
 
     /**
@@ -36,8 +56,7 @@ public class GiftCertificateValidator {
      * @return true if the description is not empty and doesn't
      * exceed the allowed length, false otherwise.
      */
-    public static boolean checkDescription(String description) {
-        final int MAX_VALID_DESC_LENGTH = 255;
+    public static boolean isDescriptionValid(String description) {
         return !CommonValidator.isEmpty(description) && description.length() <= MAX_VALID_DESC_LENGTH;
     }
 
@@ -48,7 +67,7 @@ public class GiftCertificateValidator {
      * @return true if the description is not empty and is
      * a positive number, false otherwise.
      */
-    public static boolean checkPrice(Integer price) {
+    public static boolean isPriceValid(Integer price) {
         return !CommonValidator.isEmpty(price) && CommonValidator.isPositiveNumber(price);
     }
 
@@ -59,7 +78,7 @@ public class GiftCertificateValidator {
      * @return true if the duration is not empty and is
      * a positive number, false otherwise.
      */
-    public static boolean checkDuration(Integer duration) {
+    public static boolean isDurationValid(Integer duration) {
         return !CommonValidator.isEmpty(duration) && CommonValidator.isPositiveNumber(duration);
     }
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.dao.mapper;
 
-import com.epam.esm.constant.Variable;
+import com.epam.esm.constant.ParameterNameСonstant;
 import com.epam.esm.entity.Tag;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -9,6 +9,10 @@ import java.sql.SQLException;
 
 /**
  * Class is implementation interface RowMapper. Associates Tag entity with ResultSet.
+ *
+ * @author Haurylchyk Aliaksei
+ * @version 1.0
+ * @since JDK 1.8
  */
 public class TagMapper implements RowMapper<Tag> {
 
@@ -43,8 +47,8 @@ public class TagMapper implements RowMapper<Tag> {
     @Override
     public Tag mapRow(ResultSet rs, int rowNum) throws SQLException {
         Tag tag = new Tag();
-        tag.setId(rs.getInt(Variable.ID));
-        tag.setName(rs.getString(Variable.NAME));
+        tag.setId(rs.getInt(ParameterNameСonstant.ID));
+        tag.setName(rs.getString(ParameterNameСonstant.NAME));
         return tag;
     }
 

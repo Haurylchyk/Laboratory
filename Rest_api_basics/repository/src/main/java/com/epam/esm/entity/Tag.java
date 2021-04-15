@@ -10,9 +10,8 @@ import java.util.Objects;
  * @version 1.0
  * @since JDK 1.8
  */
-public class Tag {
+public class Tag extends Entity{
 
-    private Integer id;
     private String name;
 
     public Tag() {
@@ -20,14 +19,6 @@ public class Tag {
 
     public Tag(String name) {
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -42,20 +33,20 @@ public class Tag {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         Tag tag = (Tag) o;
-        return id == tag.id &&
-                Objects.equals(name, tag.name);
+        return name.equals(tag.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(super.hashCode(), name);
     }
 
     @Override
     public String toString() {
         return "Tag{" +
-                "id=" + id +
+                "id=" + super.getId() +
                 ", name='" + name + '\'' +
                 '}';
     }
