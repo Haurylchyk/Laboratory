@@ -1,8 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.dao.query.sort.SortOrder;
-import com.epam.esm.dao.query.sort.SortType;
-
 public class GiftCertificateParamDTO {
     private String tagName;
     private String name;

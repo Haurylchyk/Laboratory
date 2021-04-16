@@ -84,7 +84,6 @@ public class GiftCertificate extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         GiftCertificate that = (GiftCertificate) o;
         return name.equals(that.name) &&
                 description.equals(that.description) &&

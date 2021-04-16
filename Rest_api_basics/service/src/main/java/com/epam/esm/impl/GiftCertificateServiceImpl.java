@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class implements interface GiftCertificateService. Describes the service
@@ -76,6 +77,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         List<String> tagNamesList = giftCertificateDTO.getTagNames();
         if (tagNamesList != null) {
+            tagNamesList = tagNamesList.stream().distinct().collect(Collectors.toList());
             putNewOrExistingTags(newGiftCertificate.getId(), tagNamesList);
         }
         List<Tag> tagList = tagDAO.findByGiftCertificateId(newGiftCertificate.getId());
@@ -118,7 +120,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         GiftCertificate updatedGiftCertificate = giftCertificateDAO.update(giftCertificate, id);
         List<String> tagNamesList = updatedCertificateDTO.getTagNames();
+
         if (tagNamesList != null) {
+            tagNamesList = tagNamesList.stream().distinct().collect(Collectors.toList());
             List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
             giftCertificateDAO.deleteCertificateTagsById(id);
             deleteTagsIfNotUsed(tagList);

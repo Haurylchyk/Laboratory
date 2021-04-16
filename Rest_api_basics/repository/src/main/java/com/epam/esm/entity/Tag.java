@@ -33,7 +33,6 @@ public class Tag extends Entity{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         Tag tag = (Tag) o;
         return name.equals(tag.name);
     }
