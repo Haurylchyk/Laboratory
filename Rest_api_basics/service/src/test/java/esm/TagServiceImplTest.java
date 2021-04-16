@@ -1,4 +1,4 @@
-package com.epam.esm;
+package esm;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dto.TagDTO;
@@ -74,51 +74,51 @@ class TagServiceImplTest {
     }
 
     @Test
-    public void createShouldValidationException() {
+    public void createShouldInvalidDataException() {
         assertThrows(ServiceException.class,
                 () -> tagService.create(emptyTagDTO));
     }
 
     @Test
     public void createShouldExistingTagException() {
-        given(tagDAO.readTagByName(TEST_FIRST_NAME)).willReturn(Optional.of(tagFirst));
+        given(tagDAO.findByName(TEST_FIRST_NAME)).willReturn(Optional.of(tagFirst));
         assertThrows(ServiceException.class,
                 () -> tagService.create(tagDTO));
     }
 
     @Test
     public void readShouldSuccessfully() {
-        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
-        TagDTO readTagDTO = tagService.read(TEST_FIRST_ID);
+        given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
+        TagDTO readTagDTO = tagService.finById(TEST_FIRST_ID);
         TagDTO testedDTO = TagDTOMapper.convertToDTO(tagFirst);
         assertEquals(testedDTO, readTagDTO);
     }
 
     @Test
     public void readShouldException() {
-        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.empty());
-        assertThrows(ServiceException.class, () -> tagService.read(TEST_FIRST_ID));
+        given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.empty());
+        assertThrows(ServiceException.class, () -> tagService.finById(TEST_FIRST_ID));
     }
 
     @Test
     public void deleteShouldSuccessfully() {
-        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
+        given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
         tagService.delete(TEST_FIRST_ID);
         verify(tagDAO, times(1)).delete(TEST_FIRST_ID);
     }
 
     @Test
     public void deleteShouldException() {
-        given(tagDAO.read(TEST_FIRST_ID)).willReturn(Optional.empty());
+        given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.empty());
         assertThrows(ServiceException.class,
                 () -> tagService.delete(TEST_FIRST_ID));
     }
 
     @Test
     public void readAllTagsShouldSuccessfully() {
-        given(tagDAO.readAllTags()).willReturn(tagList);
+        given(tagDAO.findAll()).willReturn(tagList);
 
-        List<TagDTO> readTagDTOList = tagService.readAllTags();
+        List<TagDTO> readTagDTOList = tagService.findAll();
         List<TagDTO> testTagDTOList = TagDTOMapper.convertToDTO(tagList);
 
         assertIterableEquals(testTagDTOList, readTagDTOList);
@@ -126,8 +126,8 @@ class TagServiceImplTest {
 
     @Test
     public void readAllTagsShouldException() {
-        given(tagDAO.readAllTags()).willReturn(emptyTagList);
+        given(tagDAO.findAll()).willReturn(emptyTagList);
         assertThrows(ServiceException.class,
-                () -> tagService.readAllTags());
+                () -> tagService.findAll());
     }
 }
