@@ -1,8 +1,8 @@
--- DROP DATABASE IF EXISTS `gift_certificate_system`;
+DROP DATABASE IF EXISTS `gift_certificate_system`;
 
--- CREATE DATABASE gift_certificate_system DEFAULT CHARACTER SET utf8;
+CREATE DATABASE gift_certificate_system DEFAULT CHARACTER SET utf8;
 
--- USE gift_certificate_system;
+USE gift_certificate_system;
 
 -- -----------------------------------------------------
 -- Table `gift_certificate`
@@ -32,13 +32,55 @@ CREATE TABLE certificate_tag (
     cert_id INT NOT NULL,
     tag_id  INT NOT NULL,
     PRIMARY KEY (cert_id, tag_id),
-    CONSTRAINT fk_cert_id
+    CONSTRAINT fk_cert_1
         FOREIGN KEY (cert_id)
             REFERENCES gift_certificate (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
-    CONSTRAINT fk_tag_id
+    CONSTRAINT fk_tag
         FOREIGN KEY (tag_id)
             REFERENCES tag (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE);
+
+-- -----------------------------------------------------
+-- Table `user`
+-- -----------------------------------------------------
+CREATE TABLE user (
+    id   INT          NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    login VARCHAR(100) NOT NULL,
+     PRIMARY KEY (id));
+
+-- -----------------------------------------------------
+-- Table `order`
+-- -----------------------------------------------------
+CREATE TABLE `order` (
+    id               INT          NOT NULL AUTO_INCREMENT,
+    user_id          INT          NOT NULL,
+    cost             INT          NOT NULL,
+    date             TIMESTAMP    NOT NULL DEFAULT NOW(),
+	 PRIMARY KEY (id),
+	     CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+            REFERENCES user (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE);
+
+-- -----------------------------------------------------
+-- Table `order_certificate`
+-- -----------------------------------------------------
+CREATE TABLE order_certificate (
+    order_id INT NOT NULL,
+    cert_id  INT NOT NULL,
+    PRIMARY KEY (order_id, cert_id),
+    CONSTRAINT fk_order
+        FOREIGN KEY (order_id)
+            REFERENCES `order` (id)
+            ON DELETE CASCADE
+            ON UPDATE CASCADE,
+    CONSTRAINT fk_cert_2
+        FOREIGN KEY (cert_id)
+            REFERENCES gift_certificate (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE);
