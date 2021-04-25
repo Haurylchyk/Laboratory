@@ -1,16 +1,23 @@
 package com.epam.esm.entity;
 
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
 import java.util.Objects;
 
-public class Entity {
+@MappedSuperclass
+@Audited
+public class BaseEntity {
 
-    public Entity() {
+    public BaseEntity() {
     }
 
-    public Entity(Integer id) {
+    public BaseEntity(Integer id) {
         this.id = id;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     public Integer getId() {
@@ -25,8 +32,8 @@ public class Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Entity entity = (Entity) o;
-        return Objects.equals(id, entity.id);
+        BaseEntity baseEntity = (BaseEntity) o;
+        return Objects.equals(id, baseEntity.id);
     }
 
     @Override

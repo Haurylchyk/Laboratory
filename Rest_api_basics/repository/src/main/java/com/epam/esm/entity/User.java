@@ -1,12 +1,23 @@
 package com.epam.esm.entity;
 
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
-public class User extends Entity {
+@Entity
+@Audited
+public class User extends BaseEntity {
 
+    @Column(nullable = false)
     private String name;
-    private List<Order> orders;
+
+    @Column(nullable = false, unique = true)
+    private String login;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Order> orderList;
 
     public String getName() {
         return name;
@@ -16,34 +27,35 @@ public class User extends Entity {
         this.name = name;
     }
 
-    public List<Order> getOrders() {
-        return orders;
+    public String getLogin() {
+        return login;
     }
 
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public List<Order> getOrderList() {
+        return orderList;
+    }
+
+    public void setOrderList(List<Order> orders) {
+        this.orderList = orders;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         User user = (User) o;
         return name.equals(user.name) &&
-                orders.equals(user.orders);
+                login.equals(user.login) &&
+                orderList.equals(user.orderList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, orders);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + super.getId() +
-                ", name='" + name + '\'' +
-                ", orders=" + orders +
-                '}';
+        return Objects.hash(super.hashCode(), name, login, orderList);
     }
 }

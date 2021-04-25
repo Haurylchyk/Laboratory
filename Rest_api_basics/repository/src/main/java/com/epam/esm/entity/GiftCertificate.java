@@ -1,5 +1,10 @@
 package com.epam.esm.entity;
 
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.UniqueElements;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -13,15 +18,35 @@ import java.util.Objects;
  * @see LocalDateTime
  * @since JDK 1.8
  */
-public class GiftCertificate extends Entity {
-
+@Entity
+@Table(name = "GIFT_CERTIFICATE")
+@Audited
+@DynamicUpdate
+public class GiftCertificate extends BaseEntity {
+    @Column(nullable = false)
     private String name;
-    private String description;
-    private Integer price;
-    private Integer duration;
-    private LocalDateTime createDate;
-    private LocalDateTime lastsUpdateDate;
 
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private Integer price;
+
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(name = "CREATE_DATE", insertable = false, updatable = false)
+    private LocalDateTime createDate;
+
+    @Column(name = "LAST_UPDATE_DATE")
+    private LocalDateTime lastUpdateDate;
+
+    @UniqueElements
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "CERTIFICATE_TAG",
+            joinColumns = {@JoinColumn(name = "CERT_ID", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "TAG_ID", nullable = false)})
     private List<Tag> tagList;
 
     public String getName() {
@@ -65,11 +90,11 @@ public class GiftCertificate extends Entity {
     }
 
     public LocalDateTime getLastUpdateDate() {
-        return lastsUpdateDate;
+        return lastUpdateDate;
     }
 
     public void setLastUpdateDate(LocalDateTime lastsUpdateDate) {
-        this.lastsUpdateDate = lastsUpdateDate;
+        this.lastUpdateDate = lastsUpdateDate;
     }
 
     public List<Tag> getTagList() {
@@ -84,20 +109,19 @@ public class GiftCertificate extends Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
         GiftCertificate that = (GiftCertificate) o;
         return name.equals(that.name) &&
                 description.equals(that.description) &&
                 price.equals(that.price) &&
                 duration.equals(that.duration) &&
                 createDate.equals(that.createDate) &&
-                lastsUpdateDate.equals(that.lastsUpdateDate) &&
+                lastUpdateDate.equals(that.lastUpdateDate) &&
                 tagList.equals(that.tagList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, price, duration, createDate, lastsUpdateDate, tagList);
+        return Objects.hash(super.hashCode(), name, description, price, duration, createDate, lastUpdateDate, tagList);
     }
 
     @Override
@@ -109,7 +133,7 @@ public class GiftCertificate extends Entity {
                 ", price=" + price +
                 ", duration=" + duration +
                 ", createDate=" + createDate +
-                ", lastsUpdateDate=" + lastsUpdateDate +
+                ", lastsUpdateDate=" + lastUpdateDate +
                 ", tagList=" + tagList +
                 '}';
     }

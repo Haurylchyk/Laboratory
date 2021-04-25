@@ -1,13 +1,32 @@
 package com.epam.esm.entity;
 
+import org.hibernate.envers.Audited;
+
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class Order extends Entity {
+@Entity
+@Table(name = "GIFT_ORDER")
+@Audited
+public class Order extends BaseEntity {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    @Column(nullable = false)
     private Integer cost;
+
+    @Column(nullable = false)
     private LocalDateTime date;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "ORDER_CERTIFICATE",
+            joinColumns = @JoinColumn(name = "ORDER_ID", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "CERT_ID", nullable = false))
     private List<GiftCertificate> giftCertificateList;
 
     public User getUser() {
