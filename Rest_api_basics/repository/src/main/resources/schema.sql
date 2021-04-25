@@ -53,9 +53,9 @@ CREATE TABLE user (
      PRIMARY KEY (id));
 
 -- -----------------------------------------------------
--- Table `order`
+-- Table `gift_order`
 -- -----------------------------------------------------
-CREATE TABLE `order` (
+CREATE TABLE gift_order (
     id               INT          NOT NULL AUTO_INCREMENT,
     user_id          INT          NOT NULL,
     cost             INT          NOT NULL,
@@ -73,10 +73,9 @@ CREATE TABLE `order` (
 CREATE TABLE order_certificate (
     order_id INT NOT NULL,
     cert_id  INT NOT NULL,
-    PRIMARY KEY (order_id, cert_id),
     CONSTRAINT fk_order
         FOREIGN KEY (order_id)
-            REFERENCES `order` (id)
+            REFERENCES gift_order (id)
             ON DELETE CASCADE
             ON UPDATE CASCADE,
     CONSTRAINT fk_cert_2

@@ -1,15 +1,17 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.constant.ParameterNameСonstant;
+import com.epam.esm.constant.PaginationConstant;
+import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.mapper.TagMapper;
 import com.epam.esm.entity.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,39 +26,21 @@ import java.util.Optional;
 @Repository
 public class TagDAOImpl implements TagDAO {
 
-    private static final String CREATE_TAG = "INSERT INTO tag (name) VALUES (:name)";
-    private static final String GET_TAG_BY_ID = "SELECT * FROM tag WHERE id =:id";
-    private static final String UPDATE_TAG = "UPDATE tag SET name =:name WHERE id =:id";
-    private static final String DELETE_TAG = "DELETE FROM tag WHERE id = ?";
-    private static final String GET_ALL_TAGS = "SELECT * FROM tag";
-    private static final String GET_TAG_BY_NAME = "SELECT * FROM tag WHERE name =:name";
-    private static final String GET_TAGS_BY_CERTIFICATE_ID = "SELECT id, name FROM tag JOIN certificate_tag AS cert_tag ON " +
-            "tag.id = cert_tag.tag_id WHERE cert_tag.cert_id =:id";
+    @PersistenceContext
+    private EntityManager em;
+
+    private static final String FIND_TAG_BY_ID = "SELECT DISTINCT e FROM Tag e WHERE e.id = :id";
+    private static final String DELETE_TAG = "DELETE FROM Tag e WHERE e.id = :id";
+    private static final String FIND_ALL_TAGS = "SELECT DISTINCT e FROM Tag e";
+    private static final String FIND_TAG_BY_NAME = "SELECT DISTINCT e FROM Tag e WHERE e.name = :name";
+    private static final String FIND_BY_CERTIFICATE_ID = "SELECT DISTINCT e FROM Tag e INNER JOIN e.certificates c WHERE c.id = :id";
+    private static final String FIND_MOST_WIDELY_USED_TAG = "SELECT DISTINCT t FROM Order e INNER JOIN e.giftCertificateList c " +
+            "INNER JOIN c.tagList t INNER JOIN e.user u WHERE u.id = :id GROUP BY t.name ORDER BY COUNT(t) DESC ";
 
     /**
      * The index of the first item in the list.
      */
     private static final int FIRST_ELEMENT_INDEX = 0;
-
-    /**
-     * Object responsible for data (database) access.
-     */
-    private final NamedParameterJdbcTemplate jdbcTemplate;
-
-    /**
-     * Object that links the Tag entity to the ResultSet.
-     */
-    private final static TagMapper tagMapper = TagMapper.getInstance();
-
-    /**
-     * Constructor with parameter.
-     *
-     * @param dataSource object that manages connections.
-     */
-    @Autowired
-    public TagDAOImpl(DataSource dataSource) {
-        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-    }
 
     /**
      * Adds new Tag to database.
@@ -65,10 +49,8 @@ public class TagDAOImpl implements TagDAO {
      * @return Tag entity.
      */
     @Override
-    public Tag create(Tag tag) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.NAME, tag.getName());
-        jdbcTemplate.update(CREATE_TAG, params);
+    public Tag save(Tag tag) {
+        em.persist(tag);
         return findByName(tag.getName()).get();
     }
 
@@ -80,26 +62,9 @@ public class TagDAOImpl implements TagDAO {
      */
     @Override
     public Optional<Tag> find(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.ID, id);
-        List<Tag> listTag = jdbcTemplate.query(GET_TAG_BY_ID, params, tagMapper);
-        return listTag.isEmpty() ? Optional.empty() : Optional.of(listTag.get(0));
-    }
-
-    /**
-     * Updates Tag with specific id.
-     *
-     * @param tag updated object of the Tag type.
-     * @param id  GiftCertificate id.
-     * @return updated GiftCertificate entity.
-     */
-    @Override
-    public Tag update(Tag tag, Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.ID, id);
-        params.addValue(ParameterNameСonstant.NAME, tag.getName());
-        jdbcTemplate.getJdbcOperations().update(UPDATE_TAG, params);
-        return find(id).get();
+        List<Tag> tagList = em.createQuery(FIND_TAG_BY_ID, Tag.class).
+                setParameter(ParamNameConstant.ID, id).getResultList();
+        return tagList.isEmpty() ? Optional.empty() : Optional.of(tagList.get(FIRST_ELEMENT_INDEX));
     }
 
     /**
@@ -108,8 +73,10 @@ public class TagDAOImpl implements TagDAO {
      * @param id Tag id.
      */
     @Override
+    @Transactional
     public void delete(Integer id) {
-        jdbcTemplate.getJdbcOperations().update(DELETE_TAG, id);
+        em.createQuery(DELETE_TAG).setParameter(ParamNameConstant.ID, id).
+                executeUpdate();
     }
 
     /**
@@ -118,8 +85,10 @@ public class TagDAOImpl implements TagDAO {
      * @return all Tags stored in the database.
      */
     @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(GET_ALL_TAGS, tagMapper);
+    public List<Tag> findAll(Integer pageNumber) {
+        int numberOnPage = PaginationConstant.NUMBER_TAGS_ON_PAGE;
+        return em.createQuery(FIND_ALL_TAGS, Tag.class).setMaxResults(numberOnPage)
+                .setFirstResult(numberOnPage * (pageNumber - 1)).getResultList();
     }
 
     /**
@@ -130,14 +99,9 @@ public class TagDAOImpl implements TagDAO {
      */
     @Override
     public Optional<Tag> findByName(String name) {
-        Optional<Tag> optional = Optional.empty();
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.NAME, name);
-        List<Tag> tagList = jdbcTemplate.query(GET_TAG_BY_NAME, params, tagMapper);
-        if (!tagList.isEmpty()) {
-            optional = Optional.of(tagList.get(FIRST_ELEMENT_INDEX));
-        }
-        return optional;
+        List<Tag> tagList = em.createQuery(FIND_TAG_BY_NAME, Tag.class).
+                setParameter(ParamNameConstant.NAME, name).getResultList();
+        return tagList.isEmpty() ? Optional.empty() : Optional.of(tagList.get(FIRST_ELEMENT_INDEX));
     }
 
     /**
@@ -148,8 +112,36 @@ public class TagDAOImpl implements TagDAO {
      */
     @Override
     public List<Tag> findByGiftCertificateId(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.ID, id);
-        return jdbcTemplate.query(GET_TAGS_BY_CERTIFICATE_ID, params, tagMapper);
+        return em.createQuery(FIND_BY_CERTIFICATE_ID, Tag.class).
+                setParameter(ParamNameConstant.ID, id).getResultList();
     }
+
+    /**
+     * Returns the most widely used tag for
+     * the user with with specific id.
+     *
+     * @return the most widely used tag for
+     * the user with with specific id.
+     */
+    public Tag findMostWidelyUsedTagByUserId(Integer id) {
+        List<Tag> tagList = em.createQuery(FIND_MOST_WIDELY_USED_TAG, Tag.class).
+                setParameter(ParamNameConstant.ID, id).getResultList();
+        return tagList.get(FIRST_ELEMENT_INDEX);
+    }
+
+    /**
+     * Returns the number of all tags in the database.
+     *
+     * @return the number of all tags in the database.
+     */
+    public Long findTotalNumberTags() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery criteria = cb.createQuery();
+        criteria.select(cb.count(criteria.from(Tag.class)));
+        Query query = em.createQuery(criteria);
+
+        return (Long) query.getSingleResult();
+    }
+
+
 }

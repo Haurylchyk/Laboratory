@@ -47,9 +47,9 @@ VALUES
 ('Alex','dartagnan');
 
 -- -----------------------------------------------------
--- Data for the table `order`
+-- Data for the table `gift_order`
 -- -----------------------------------------------------
-INSERT INTO `order` (user_id, cost)
+INSERT INTO gift_order (user_id, cost)
 VALUES
 (1, 150),
 (2, 350),

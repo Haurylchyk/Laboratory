@@ -20,7 +20,7 @@ public interface TagDAO extends EntityDAO<Tag> {
      *
      * @return all Tags stored in the database.
      */
-    List<Tag> findAll();
+    List<Tag> findAll(Integer pageNumber);
 
     /**
      * Returns Tag with specific name.
@@ -38,4 +38,19 @@ public interface TagDAO extends EntityDAO<Tag> {
      */
     List<Tag> findByGiftCertificateId(Integer id);
 
+    /**
+     * Returns the most widely used tag for
+     * the user with with specific.
+     *
+     * @return the most widely used tag for
+     * the user with with specific.
+     */
+    Tag findMostWidelyUsedTagByUserId(Integer id);
+
+    /**
+     * Returns the number of all tags in the database.
+     *
+     * @return the number of all tags in the database.
+     */
+    Long findTotalNumberTags();
 }
