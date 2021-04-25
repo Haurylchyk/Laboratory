@@ -20,49 +20,9 @@ import java.util.Properties;
 
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm")
-@EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.epam.esm")
+@EnableTransactionManagement
 public class RepositoryConfig {
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
-
-        LocalContainerEntityManagerFactoryBean lef = new LocalContainerEntityManagerFactoryBean();
-
-        lef.setDataSource(dataSource);
-        lef.setPackagesToScan("com.epam.esm.entity");
-        lef.setJpaVendorAdapter(jpaVendorAdapter);
-        lef.setJpaProperties(hibernateProperties());
-
-        return lef;
-    }
-
-    @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
-
-        hibernateJpaVendorAdapter.setShowSql(false);
-        hibernateJpaVendorAdapter.setGenerateDdl(true);
-        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
-
-        return hibernateJpaVendorAdapter;
-    }
-
-    @Bean
-    public PlatformTransactionManager transactionManager(
-            LocalContainerEntityManagerFactoryBean entityManagerFactory) {
-
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
-
-        return transactionManager;
-    }
-
-    @Bean
-    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
-        return new PersistenceExceptionTranslationPostProcessor();
-    }
 
     @Bean(name = "dataSource")
     @Profile("prod")
@@ -86,12 +46,54 @@ public class RepositoryConfig {
         return dataSource;
     }
 
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter() {
+        HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
+
+        hibernateJpaVendorAdapter.setShowSql(false);
+        hibernateJpaVendorAdapter.setGenerateDdl(true);
+        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
+
+        return hibernateJpaVendorAdapter;
+    }
+
+    @Bean
+    public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(
+            LocalContainerEntityManagerFactoryBean entityManagerFactory) {
+
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory.getObject());
+
+        return transactionManager;
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
+
+        LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+
+        emf.setDataSource(dataSource);
+        emf.setPackagesToScan("com.epam.esm.entity");
+        emf.setJpaVendorAdapter(jpaVendorAdapter);
+        emf.setJpaProperties(hibernateProperties());
+
+        return emf;
+    }
+
     private Properties hibernateProperties() {
         Properties hibernateProperties = new Properties();
 
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
         hibernateProperties.setProperty("hibernate.show_sql", "true");
+        hibernateProperties.setProperty("hibernate.format_sql", "true");
+        hibernateProperties.setProperty("hibernate.highlight_sql", "true");
         hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true");
 
         return hibernateProperties;
