@@ -42,7 +42,7 @@ public class TagController {
         return tagModelAssembler.toModel(tagService.findAll(pageNumber));
     }
 
-    @GetMapping("/most")
+    @GetMapping("/most_rich_user/most_used_tag")
     public TagDTO findMostUsedTagUserWithHighestAmountOrders() {
         return tagModelAssembler.toModel(tagService.findMostUsedTagUserWithHighestAmountOrders());
     }
