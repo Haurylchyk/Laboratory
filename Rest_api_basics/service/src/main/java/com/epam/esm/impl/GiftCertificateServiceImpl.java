@@ -1,6 +1,6 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.GiftCertificateFieldSetter;
+import com.epam.esm.filler.GiftCertificateUpdatedFieldFiller;
 import com.epam.esm.GiftCertificateService;
 import com.epam.esm.constant.ErrorCodeMessage;
 import com.epam.esm.dao.GiftCertificateDAO;
@@ -120,7 +120,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<Tag> tagList = returnCreatedOrExistingTags(updatedCertificateDTO.getTagNames());
         giftCertificateFromDTO.setTagList(tagList);
 
-        GiftCertificate giftCertificate = GiftCertificateFieldSetter.
+        GiftCertificate giftCertificate = GiftCertificateUpdatedFieldFiller.
                 update(giftCertificateFromDTO, giftCertificateFromDB);
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
 
