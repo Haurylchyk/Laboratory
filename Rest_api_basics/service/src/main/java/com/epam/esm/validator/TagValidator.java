@@ -25,6 +25,8 @@ public class TagValidator {
      * exceed the allowed length, false otherwise.
      */
     public static boolean isNameValid(String name) {
-        return !CommonValidator.isEmpty(name) && CommonValidator.isNameLengthValid(name);
+        return !CommonValidator.isEmpty(name)
+                && CommonValidator.isStringLengthValid(name)
+                && CommonValidator.isNameFormatValid(name);
     }
 }

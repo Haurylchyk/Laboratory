@@ -69,7 +69,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO create(GiftCertificateDTO giftCertificateDTO) {
         if (!GiftCertificateValidator.isValidDataForCreate(giftCertificateDTO)) {
-            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GС_INVALID_DATA);
+            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
         }
         List<Tag> tagList = returnCreatedOrExistingTags(giftCertificateDTO.getTagNames());
 
@@ -93,7 +93,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDTO findById(Integer id) {
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
-                () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
+                () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         return GiftCertificateDTOMapper.convertToDTO(giftCertificate);
     }
 
@@ -108,11 +108,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO update(GiftCertificateDTO updatedCertificateDTO, Integer id) {
         if (!GiftCertificateValidator.isValidDataForUpdate(updatedCertificateDTO)) {
-            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GС_INVALID_DATA);
+            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
         }
         Optional<GiftCertificate> optionalGiftCertificateFromDB = giftCertificateDAO.find(id);
         GiftCertificate giftCertificateFromDB = optionalGiftCertificateFromDB.orElseThrow(() -> new GiftCertificateNotFoundException(
-                ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
+                ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         updatedCertificateDTO.setId(id);
 
         GiftCertificate giftCertificateFromDTO = GiftCertificateDTOMapper.convertToEntity(updatedCertificateDTO);
@@ -139,7 +139,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public void delete(Integer id) {
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         optionalGiftCertificate.orElseThrow(() -> new GiftCertificateNotFoundException(
-                ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
+                ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
         giftCertificateDAO.delete(id);
         deleteTagsIfNotUsed(tagList);
@@ -158,7 +158,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(parameter);
 
         if (giftCertificates.isEmpty()) {
-            throw new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND);
+            throw new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND);
         }
 
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();

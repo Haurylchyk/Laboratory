@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService {
             Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(giftCertificateId);
 
             GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
-                    () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GС_NOT_FOUND));
+                    () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
 
             cost += giftCertificate.getPrice();
             giftCertificateList.add(giftCertificate);
