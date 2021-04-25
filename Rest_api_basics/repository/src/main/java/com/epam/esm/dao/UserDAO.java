@@ -30,4 +30,10 @@ public interface UserDAO extends EntityDAO<User> {
      */
     Optional<User> findByLogin(String login);
 
+    /**
+     * Returns the user with the highest order amount.
+     *
+     * @return the user with the highest order amount.
+     */
+    User findUserWithHighestAmountOrders();
 }
