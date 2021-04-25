@@ -14,4 +14,7 @@ public class ErrorMessageKey {
     public static final String GIFT_CERTIFICATE_NOT_FOUND = "gc.not_found";
     public static final String TAG_NOT_FOUND = "tag.not_found";
     public static final String TAG_EXISTS = "tag_exists";
+    public static final String USER_NOT_FOUND = "user.not_found";
+    public static final String USER_EXISTS = "user_exists";
+    public static final String ORDER_NOT_FOUND = "order.not_found";
 }
