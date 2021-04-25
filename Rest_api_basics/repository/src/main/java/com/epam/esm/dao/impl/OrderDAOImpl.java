@@ -3,6 +3,7 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.entity.Order;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -18,6 +19,7 @@ import java.util.Optional;
  * @version 1.0
  * @since JDK 1.8
  */
+@Repository
 public class OrderDAOImpl implements OrderDAO {
 
     @PersistenceContext
@@ -88,6 +90,6 @@ public class OrderDAOImpl implements OrderDAO {
      * @return list of Orders.
      */
     public List<Order> findOrdersByUserId(Integer id) {
-        return em.createQuery(FIND_ORDERS_BY_USER_ID, Order.class).getResultList();
+        return em.createQuery(FIND_ORDERS_BY_USER_ID, Order.class).setParameter(ParamNameConstant.ID, id).getResultList();
     }
 }

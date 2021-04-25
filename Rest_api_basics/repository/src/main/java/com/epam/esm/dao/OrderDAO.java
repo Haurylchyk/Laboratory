@@ -22,7 +22,7 @@ public interface OrderDAO extends EntityDAO<Order> {
     List<Order> findAll();
 
     /**
-     * Returns all orders for user with a specific id.
+     * Returns all Orders for User with a specific id.
      *
      * @param id User id.
      * @return list of Orders.
