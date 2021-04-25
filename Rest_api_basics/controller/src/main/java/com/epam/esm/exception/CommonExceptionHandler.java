@@ -42,6 +42,24 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserInvalidDataException.class)
+    public ResponseEntity<ExceptionDescription> processUserInvalidDataException(
+            UserInvalidDataException e, Locale locale) {
+
+        String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
+        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
+        return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OrderInvalidDataException.class)
+    public ResponseEntity<ExceptionDescription> processOrderInvalidDataException(
+            OrderInvalidDataException e, Locale locale) {
+
+        String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
+        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
+        return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(GiftCertificateNotFoundException.class)
     public ResponseEntity<ExceptionDescription> processGiftCertificateNotFoundException(
             GiftCertificateNotFoundException e, Locale locale) {
@@ -59,10 +77,34 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ExceptionDescription> processUserNotFoundException(UserNotFoundException e, Locale locale) {
+
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.USER_NOT_FOUND, new Object[]{}, locale);
+        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
+        return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ExceptionDescription> processOrderNotFoundException(OrderNotFoundException e, Locale locale) {
+
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.ORDER_NOT_FOUND, new Object[]{}, locale);
+        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
+        return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(ExistingTagException.class)
     public ResponseEntity<ExceptionDescription> processExistingTagException(ExistingTagException e, Locale locale) {
 
         String errorMessage = messageSource.getMessage(TAG_EXISTS, new Object[]{}, locale);
+        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
+        return new ResponseEntity<>(exceptionDescription, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(ExistingUserException.class)
+    public ResponseEntity<ExceptionDescription> processExistingUserException(ExistingUserException e, Locale locale) {
+
+        String errorMessage = messageSource.getMessage(USER_EXISTS, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.CONFLICT);
     }
