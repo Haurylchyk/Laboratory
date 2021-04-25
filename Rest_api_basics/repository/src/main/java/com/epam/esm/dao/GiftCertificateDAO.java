@@ -30,23 +30,6 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
     List<GiftCertificate> findByTagName(String name);
 
     /**
-     * Makes an record (to the database) that associates
-     * specific GiftCertificate with specific Tag.
-     *
-     * @param giftCertificateId GiftCertificate id.
-     * @param tagId  Tag id.
-     */
-    void putCertificateTag(Integer giftCertificateId, Integer tagId);
-
-    /**
-     * Deletes records (from the database) that associates
-     * specific GiftCertificate with its Tags.
-     *
-     * @param id GiftCertificate id.
-     */
-    void deleteCertificateTagsById(Integer id);
-
-    /**
      * Returns list of matching GiftCertificates.
      *
      * @param giftCertificateParam special object containing params.

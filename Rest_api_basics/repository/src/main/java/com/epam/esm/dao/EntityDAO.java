@@ -1,6 +1,6 @@
 package com.epam.esm.dao;
 
-import com.epam.esm.entity.Entity;
+import com.epam.esm.entity.BaseEntity;
 
 import java.util.Optional;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @version 1.0
  * @since JDK 1.8
  */
-public interface EntityDAO<T extends Entity> {
+public interface EntityDAO<T extends BaseEntity> {
 
     /**
      * Creates entity into database.
@@ -21,7 +21,7 @@ public interface EntityDAO<T extends Entity> {
      *
      * @return id of the inserted record.
      */
-    T create(T entity);
+    T save(T entity);
 
     /**
      * Returns entity with specific id.
@@ -31,16 +31,6 @@ public interface EntityDAO<T extends Entity> {
      * @return Optional of T entity stored in the database.
      */
     Optional<T> find(Integer id);
-
-    /**
-     * Update information about entity into database.
-     *
-     * @param entity object of type T.
-     * @param id entity id.
-     *
-     * @return updated T entity.
-     */
-    T update(T entity, Integer id);
 
     /**
      * Deletes entity (object of type T) from database.
