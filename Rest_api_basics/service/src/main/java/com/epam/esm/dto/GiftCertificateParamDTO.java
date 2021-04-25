@@ -1,32 +1,30 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.dao.query.sort.SortOrder;
-import com.epam.esm.dao.query.sort.SortType;
+import java.util.List;
 
 public class GiftCertificateParamDTO {
-    private String tagName;
+
     private String name;
     private String description;
+    private List<String> price;
+    private List<String> duration;
+    private List<String> tagName;
     private String sortType;
     private String sortOrder;
+
 
     public GiftCertificateParamDTO() {
     }
 
-    public GiftCertificateParamDTO(String tagName, String name, String description, String sortType, String sortOrder) {
-        this.tagName = tagName;
+    public GiftCertificateParamDTO(String name, String description, List<String> price, List<String> duration,
+                                   List<String> tagName, String sortType, String sortOrder) {
         this.name = name;
         this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.tagName = tagName;
         this.sortType = sortType;
         this.sortOrder = sortOrder;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
     }
 
     public String getName() {
@@ -43,6 +41,30 @@ public class GiftCertificateParamDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getPrice() {
+        return price;
+    }
+
+    public void setPrice(List<String> price) {
+        this.price = price;
+    }
+
+    public List<String> getDuration() {
+        return duration;
+    }
+
+    public void setDuration(List<String> duration) {
+        this.duration = duration;
+    }
+
+    public List<String> getTagName() {
+        return tagName;
+    }
+
+    public void setTagName(List<String> tagName) {
+        this.tagName = tagName;
     }
 
     public String getSortType() {
