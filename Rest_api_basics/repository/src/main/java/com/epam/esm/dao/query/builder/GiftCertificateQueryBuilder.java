@@ -2,14 +2,14 @@ package com.epam.esm.dao.query.builder;
 
 import com.epam.esm.dao.query.QueryAndParam;
 import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.filter.Filter;
 import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
-import com.epam.esm.entity.GiftCertificate;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class is used to convert parameters obtained
@@ -23,28 +23,24 @@ public class GiftCertificateQueryBuilder {
 
     private static final GiftCertificateQueryBuilder instance = new GiftCertificateQueryBuilder();
 
-    private static final String START_SELECT_QUERY = "SELECT * from gift_certificate ";
-    private static final String JOIN_TAG_TABLE = "JOIN certificate_tag ct ON " +
-            "gift_certificate.id = ct.cert_id JOIN tag ON ct.tag_id = tag.id ";
-    private static final String WHERE_STATEMENT = "WHERE (";
-    private static final String NAME_REGEXP_PARAM = "gift_certificate.name REGEXP ?";
-    private static final String DESCRIPTION_REGEXP_PARAM = "description REGEXP ?";
-    private static final String TAG_NAME_PARAM = "tag.name = ?";
-    private static final String CLOSE_WHERE = ")";
+    private static final String START_SELECT_QUERY = "SELECT DISTINCT e FROM GiftCertificate e ";
+    private static final String JOIN_TAG_TABLE = "INNER JOIN e.tagList t ";
+    private static final String WHERE_STATEMENT = "WHERE ";
+    private static final String NAME_REGEXP_STATEMENT = "e.name LIKE :nameRegex ";
+    private static final String DESCRIPTION_REGEXP_STATEMENT = "e.description LIKE :descriptionRegex";
+    private static final String TAG_NAME_STATEMENT = "t.name IN (:tagNames)";
+    private static final String NAME_FIELD = "e.name";
+    private static final String PRICE_FIELD = " e.price ";
+    private static final String DURATION_FIELD = " e.duration ";
+    private static final String TAG_NAMES_PARAM = "tagNames";
+    private static final String NAME_PARAM = "nameRegex";
+    private static final String DESCR_PARAM = "descriptionRegex";
+    private static final String GROUP_AND_HEAVING_STATEMENT = " GROUP BY 1 HAVING COUNT(t.name) = ";
     private static final String ORDER_BY_STATEMENT = " ORDER BY ";
-    private static final String NAME = "gift_certificate.name";
-    private static final String LAST_UPDATE_DATE = "gift_certificate.last_update_date";
+    private static final String LAST_UPDATE_DATE = "e.lastUpdateDate";
     private static final String ORDER_ASC = " ASC";
     private static final String ORDER_DESC = " DESC";
     private static final String SPLIT_STATEMENT = " AND ";
-    private static final String START_UPDATE_QUERY = "UPDATE gift_certificate SET ";
-    private static final String NAME_PARAM = "name = ?";
-    private static final String DESCRIPTION_PARAM = "description = ?";
-    private static final String PRICE_PARAM = "price = ?";
-    private static final String DURATION_PARAM = "duration = ?";
-    private static final String END_UPDATE_QUERY = " WHERE id = ?";
-    private static final String LAST_UPDATE_DATE_PARAM = "last_update_date = ?";
-    private static final String COMMA = ", ";
 
     private GiftCertificateQueryBuilder() {
     }
@@ -66,38 +62,62 @@ public class GiftCertificateQueryBuilder {
      */
     public QueryAndParam buildGetQuery(GiftCertificateParam giftCertificateQueryParameter) {
         StringBuilder queryBuilder = new StringBuilder();
-        List<String> conditionList = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+        List<String> whereList = new ArrayList<>();
+        Map<String, Object> params = new HashMap<>();
         boolean isUsed = false;
-
+        boolean isUsedTagList = false;
+        int tagListSize = 0;
         queryBuilder.append(START_SELECT_QUERY);
 
-        String tagName = giftCertificateQueryParameter.getTagName();
-        if (tagName != null) {
+        List<String> tagNameList = giftCertificateQueryParameter.getTagName();
+        if (tagNameList != null) {
             isUsed = true;
+            isUsedTagList = true;
             queryBuilder.append(JOIN_TAG_TABLE);
-            conditionList.add(TAG_NAME_PARAM);
-            params.add(tagName);
+            whereList.add(TAG_NAME_STATEMENT);
+            params.put(TAG_NAMES_PARAM, tagNameList);
+            tagListSize = tagNameList.size();
         }
 
         String name = giftCertificateQueryParameter.getName();
         if (name != null) {
             isUsed = true;
-            conditionList.add(NAME_REGEXP_PARAM);
-            params.add(name);
+            whereList.add(NAME_REGEXP_STATEMENT);
+            params.put(NAME_PARAM, produceRegex(name));
         }
 
         String description = giftCertificateQueryParameter.getDescription();
         if (description != null) {
             isUsed = true;
-            conditionList.add(DESCRIPTION_REGEXP_PARAM);
-            params.add(description);
+            whereList.add(DESCRIPTION_REGEXP_STATEMENT);
+            params.put(DESCR_PARAM, produceRegex(description));
+        }
+
+        List<Filter> priceFilterList = giftCertificateQueryParameter.getPrice();
+        if (priceFilterList != null) {
+            isUsed = true;
+            for (Filter priceFilter : priceFilterList) {
+                String priceParam = PRICE_FIELD + priceFilter.getType().getOperation() + priceFilter.getValue();
+                whereList.add(priceParam);
+            }
+        }
+
+        List<Filter> durationFilterList = giftCertificateQueryParameter.getDuration();
+        if (durationFilterList != null) {
+            isUsed = true;
+            for (Filter priceFilter : durationFilterList) {
+                String durationParam = DURATION_FIELD + priceFilter.getType().getOperation() + priceFilter.getValue();
+                whereList.add(durationParam);
+            }
         }
 
         if (isUsed) {
             queryBuilder.append(WHERE_STATEMENT);
-            queryBuilder.append(String.join(SPLIT_STATEMENT, conditionList));
-            queryBuilder.append(CLOSE_WHERE);
+            queryBuilder.append(String.join(SPLIT_STATEMENT, whereList));
+            if (isUsedTagList) {
+                queryBuilder.append(GROUP_AND_HEAVING_STATEMENT);
+                queryBuilder.append(tagListSize);
+            }
         }
 
         SortType sortType = giftCertificateQueryParameter.getSortType();
@@ -105,7 +125,7 @@ public class GiftCertificateQueryBuilder {
             queryBuilder.append(ORDER_BY_STATEMENT);
 
             if (sortType == SortType.NAME) {
-                queryBuilder.append(NAME);
+                queryBuilder.append(NAME_FIELD);
             } else if (sortType == SortType.DATE) {
                 queryBuilder.append(LAST_UPDATE_DATE);
             }
@@ -124,54 +144,11 @@ public class GiftCertificateQueryBuilder {
             }
         }
 
-        return new QueryAndParam(queryBuilder.toString(), params.toArray());
+        return new QueryAndParam(queryBuilder.toString(), params);
     }
 
-    /**
-     * Converts parameters from request into SQL query and array of parameters.
-     *
-     * @param giftCertificate GiftCertificate entity.
-     * @return object, that contains SQL query and array of parameters.
-     */
-    public QueryAndParam buildUpdateQuery(GiftCertificate giftCertificate) {
-        List<String> conditionList = new ArrayList<>();
-        List<Object> paramList = new ArrayList<>();
+    private String produceRegex(String str) {
+        return "%" + str + "%";
 
-        String name = giftCertificate.getName();
-        if (name != null) {
-            conditionList.add(NAME_PARAM);
-            paramList.add(name);
-        }
-
-        String description = giftCertificate.getDescription();
-        if (description != null) {
-            conditionList.add(DESCRIPTION_PARAM);
-            paramList.add(description);
-        }
-
-        Integer price = giftCertificate.getPrice();
-        if (price != null) {
-            conditionList.add(PRICE_PARAM);
-            paramList.add(price);
-        }
-
-        Integer duration = giftCertificate.getDuration();
-        if (duration != null) {
-            conditionList.add(DURATION_PARAM);
-            paramList.add(duration);
-        }
-
-        conditionList.add(LAST_UPDATE_DATE_PARAM);
-        paramList.add(Timestamp.from(Instant.now()));
-
-        Integer id = giftCertificate.getId();
-        paramList.add(id);
-
-        Object[] paramArray = paramList.toArray();
-
-        String paramsQuery = String.join(COMMA, conditionList);
-        String query = START_UPDATE_QUERY + paramsQuery + END_UPDATE_QUERY;
-
-        return new QueryAndParam(query, paramArray);
     }
 }

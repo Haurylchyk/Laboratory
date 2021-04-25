@@ -1,6 +1,6 @@
 package com.epam.esm.dao.query;
 
-import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -13,14 +13,14 @@ import java.util.Objects;
  */
 public class QueryAndParam {
     private final String query;
-    private final Object[] params;
+    private final Map<String, Object> params;
 
-    public QueryAndParam(String query, Object[] params) {
+    public QueryAndParam(String query, Map<String, Object> params) {
         this.params = params;
         this.query = query;
     }
 
-    public Object[] getParams() {
+    public Map<String, Object> getParams() {
         return params;
     }
 
@@ -33,22 +33,20 @@ public class QueryAndParam {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         QueryAndParam that = (QueryAndParam) o;
-        return Arrays.equals(params, that.params) &&
-                Objects.equals(query, that.query);
+        return query.equals(that.query) &&
+                params.equals(that.params);
     }
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(query);
-        result = 31 * result + Arrays.hashCode(params);
-        return result;
+        return Objects.hash(query, params);
     }
 
     @Override
     public String toString() {
-        return "GiftCertificateCompositeQuery{" +
-                "params=" + Arrays.toString(params) +
-                ", request='" + query + '\'' +
+        return "QueryAndParam{" +
+                "query='" + query + '\'' +
+                ", params=" + params +
                 '}';
     }
 }
