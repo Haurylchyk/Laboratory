@@ -23,7 +23,7 @@ public interface GiftCertificateService {
     GiftCertificateDTO create(GiftCertificateDTO giftCertificateDTO);
 
     /**
-     * Accesses the corresponding DAO method to get GiftCertificate object with specific id.
+     * Accesses the corresponding DAO method to find GiftCertificate object with specific id.
      *
      * @param id GiftCertificate id.
      * @return object with GiftCertificate data.
@@ -47,12 +47,12 @@ public interface GiftCertificateService {
     void delete(Integer id);
 
     /**
-     * Accesses the corresponding DAO method to get GiftCertificates that matches parameters.
+     * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
      * @param giftCertificateParamDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO
-                                                 giftCertificateParamDTO);
+    List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO giftCertificateParamDTO);
+
 }
 
