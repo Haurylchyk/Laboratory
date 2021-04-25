@@ -65,4 +65,35 @@ public class GiftCertificateDTOMapper {
 
         return giftCertificateDTO;
     }
+
+    /**
+     * Converts list of GiftCertificateDTO to list of GiftCertificate.
+     *
+     * @param giftCertificateDTOList list of objects of GiftCertificateDTO type.
+     * @return list of objects of GiftCertificate type.
+     */
+    public static List<GiftCertificate> convertToEntity(List<GiftCertificateDTO> giftCertificateDTOList) {
+        List<GiftCertificate> giftCertificateList = new ArrayList<>();
+        giftCertificateDTOList.forEach(giftCertificateDTO -> {
+            giftCertificateList.add(convertToEntity(giftCertificateDTO));
+        });
+
+        return giftCertificateList;
+    }
+
+    /**
+     * Converts list of GiftCertificate to list of GiftCertificateDTO.
+     *
+     * @param giftCertificateList list of objects of GiftCertificate type.
+     * @return list of objects of GiftCertificateDTO type.
+     */
+    public static List<GiftCertificateDTO> convertToDTO(List<GiftCertificate> giftCertificateList) {
+        List<GiftCertificateDTO> giftCertificateDTOList = new ArrayList<>();
+
+        giftCertificateList.forEach(giftCertificate -> {
+            giftCertificateDTOList.add(convertToDTO(giftCertificate));
+        });
+
+        return giftCertificateDTOList;
+    }
 }
