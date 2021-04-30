@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class OrderDTO {
     private Integer id;
-    private UserInOrderDTO user;
     private List<GiftCertificateDTO> giftCertificateList;
     private Integer cost;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
@@ -20,14 +19,6 @@ public class OrderDTO {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public UserInOrderDTO getUser() {
-        return user;
-    }
-
-    public void setUser(UserInOrderDTO user) {
-        this.user = user;
     }
 
     public List<GiftCertificateDTO> getGiftCertificateList() {
@@ -60,7 +51,6 @@ public class OrderDTO {
         if (o == null || getClass() != o.getClass()) return false;
         OrderDTO orderDTO = (OrderDTO) o;
         return id.equals(orderDTO.id) &&
-                user.equals(orderDTO.user) &&
                 giftCertificateList.equals(orderDTO.giftCertificateList) &&
                 cost.equals(orderDTO.cost) &&
                 date.equals(orderDTO.date);
@@ -68,14 +58,13 @@ public class OrderDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, user, giftCertificateList, cost, date);
+        return Objects.hash(id, giftCertificateList, cost, date);
     }
 
     @Override
     public String toString() {
         return "OrderDTO{" +
                 "id=" + id +
-                ", user=" + user +
                 ", giftCertificateList=" + giftCertificateList +
                 ", cost=" + cost +
                 ", date=" + date +

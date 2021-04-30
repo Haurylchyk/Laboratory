@@ -92,8 +92,6 @@ public class GiftCertificateDTO {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
-                Objects.equals(createDate, that.createDate) &&
-                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
                 Objects.equals(tagNames, that.tagNames);
     }
 

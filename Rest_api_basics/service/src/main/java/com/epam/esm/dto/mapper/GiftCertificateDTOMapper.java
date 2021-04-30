@@ -6,13 +6,14 @@ import com.epam.esm.entity.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The class converts GiftCertificate to GiftCertificateDTO and vice versa.
  */
 public class GiftCertificateDTOMapper {
 
-    private GiftCertificateDTOMapper() {}
+//    private GiftCertificateDTOMapper() {}
 
     /**
      * Converts GiftCertificateDTO to GiftCertificate.
@@ -74,9 +75,8 @@ public class GiftCertificateDTOMapper {
      */
     public static List<GiftCertificate> convertToEntity(List<GiftCertificateDTO> giftCertificateDTOList) {
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
-        giftCertificateDTOList.forEach(giftCertificateDTO -> {
-            giftCertificateList.add(convertToEntity(giftCertificateDTO));
-        });
+        giftCertificateDTOList.stream().map(giftCertificateDTO -> convertToEntity(giftCertificateDTO))
+                .collect(Collectors.toList());
 
         return giftCertificateList;
     }
@@ -89,10 +89,7 @@ public class GiftCertificateDTOMapper {
      */
     public static List<GiftCertificateDTO> convertToDTO(List<GiftCertificate> giftCertificateList) {
         List<GiftCertificateDTO> giftCertificateDTOList = new ArrayList<>();
-
-        giftCertificateList.forEach(giftCertificate -> {
-            giftCertificateDTOList.add(convertToDTO(giftCertificate));
-        });
+        giftCertificateList.stream().map(giftCertificate -> convertToDTO(giftCertificate)).collect(Collectors.toList());
 
         return giftCertificateDTOList;
     }

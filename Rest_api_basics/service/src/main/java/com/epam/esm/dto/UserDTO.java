@@ -1,15 +1,11 @@
 package com.epam.esm.dto;
 
-import java.util.List;
 import java.util.Objects;
 
 public class UserDTO {
-
     private Integer id;
     private String name;
     private String login;
-
-    private List<OrderInUserDTO> orderList;
 
     public Integer getId() {
         return id;
@@ -35,37 +31,27 @@ public class UserDTO {
         this.login = login;
     }
 
-    public List<OrderInUserDTO> getOrderList() {
-        return orderList;
-    }
-
-    public void setOrderList(List<OrderInUserDTO> orderList) {
-        this.orderList = orderList;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return id.equals(userDTO.id) &&
-                name.equals(userDTO.name) &&
-                login.equals(userDTO.login) &&
-                orderList.equals(userDTO.orderList);
+        UserDTO that = (UserDTO) o;
+        return id.equals(that.id) &&
+                name.equals(that.name) &&
+                login.equals(that.login);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, login, orderList);
+        return Objects.hash(id, name, login);
     }
 
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "UserInOrderDTO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", login='" + login + '\'' +
-                ", orderList=" + orderList +
                 '}';
     }
 }

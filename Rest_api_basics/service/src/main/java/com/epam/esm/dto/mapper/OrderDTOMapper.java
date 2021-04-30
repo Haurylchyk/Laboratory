@@ -2,13 +2,12 @@ package com.epam.esm.dto.mapper;
 
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.OrderDTO;
-import com.epam.esm.dto.UserInOrderDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The class converts Order to OrderDTO and vice versa.
@@ -47,9 +46,6 @@ public class OrderDTOMapper {
 
         orderDTO.setId(order.getId());
 
-        UserInOrderDTO userInOrder = toUserInOrderDTO(order.getUser());
-        orderDTO.setUser(userInOrder);
-
         List<GiftCertificateDTO> giftCertificateDTOList = GiftCertificateDTOMapper
                 .convertToDTO(order.getGiftCertificateList());
         orderDTO.setGiftCertificateList(giftCertificateDTOList);
@@ -67,21 +63,6 @@ public class OrderDTOMapper {
      * @return list of objects of OrderDTO type.
      */
     public static List<OrderDTO> convertToDTO(List<Order> orderList) {
-        List<OrderDTO> orderDTOList = new ArrayList<>();
-        orderList.forEach(tag -> orderDTOList.add(convertToDTO(tag)));
-
-        return orderDTOList;
+        return orderList.stream().map(order -> convertToDTO(order)).collect(Collectors.toList());
     }
-
-    private static UserInOrderDTO toUserInOrderDTO(User user) {
-        UserInOrderDTO userInOrder = new UserInOrderDTO();
-
-        userInOrder.setId(user.getId());
-        userInOrder.setName(user.getName());
-        userInOrder.setLogin(user.getLogin());
-
-        return userInOrder;
-    }
-
-
 }

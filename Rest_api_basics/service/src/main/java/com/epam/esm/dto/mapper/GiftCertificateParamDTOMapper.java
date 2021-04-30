@@ -1,5 +1,5 @@
 package com.epam.esm.dto.mapper;
-import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.filter.FilterBuilder;
 import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
@@ -24,12 +24,12 @@ public class GiftCertificateParamDTOMapper {
         parameter.setDescription(parameterDTO.getDescription());
 
         if (parameterDTO.getPrice() != null) {
-            parameter.setPrice(FilterBuilder.build(parameterDTO.getPrice()));
+            parameter.setPriceFilterList(FilterBuilder.build(parameterDTO.getPrice()));
         }
         if (parameterDTO.getDuration() != null) {
-            parameter.setDuration(FilterBuilder.build(parameterDTO.getDuration()));
+            parameter.setDurationFilterList(FilterBuilder.build(parameterDTO.getDuration()));
         }
-        parameter.setTagName(parameterDTO.getTagName());
+        parameter.setTagNameList(parameterDTO.getTagName());
 
         if (parameterDTO.getSortType() != null) {
             parameter.setSortType(SortType.valueOf(parameterDTO.getSortType().toUpperCase()));
