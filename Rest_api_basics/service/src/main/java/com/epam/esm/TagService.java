@@ -49,7 +49,7 @@ public interface TagService {
      *
      * @return object with Tag data.
      */
-    TagDTO findMostUsedTagUserWithHighestAmountOrders();
+    TagDTO findMostWidelyUsedOfTopOrderUser();
 
     /**
      * Calculates the total number of pages required to display all Tags.

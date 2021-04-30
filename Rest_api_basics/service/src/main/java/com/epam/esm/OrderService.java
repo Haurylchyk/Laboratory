@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.dto.OrderDTO;
-import com.epam.esm.dto.OrderParamDTO;
 
 import java.util.List;
 
@@ -17,10 +16,11 @@ public interface OrderService {
     /**
      * Accesses the corresponding DAO method to create a new Order object.
      *
-     * @param orderParamDTO .
+     * @param userId                 id of the User who made the Order.
+     * @param giftCertificatesIdList list of GiftCertificate IDs in the Order.
      * @return created object with Order data.
      */
-    OrderDTO create(OrderParamDTO orderParamDTO);
+    OrderDTO create(Integer userId,  List<Integer> giftCertificatesIdList);
 
     /**
      * Accesses the corresponding DAO method to find Order object with specific id.

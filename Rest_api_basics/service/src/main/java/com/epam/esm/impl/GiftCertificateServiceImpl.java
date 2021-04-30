@@ -1,11 +1,10 @@
 package com.epam.esm.impl;
 
-import com.epam.esm.filler.GiftCertificateUpdatedFieldFiller;
 import com.epam.esm.GiftCertificateService;
 import com.epam.esm.constant.ErrorCodeMessage;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.GiftCertificateParamDTO;
 import com.epam.esm.dto.mapper.GiftCertificateDTOMapper;
@@ -15,6 +14,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.impl.GiftCertificateInvalidDataException;
 import com.epam.esm.exception.impl.GiftCertificateNotFoundException;
 import com.epam.esm.validator.GiftCertificateValidator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +45,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     private final TagDAO tagDAO;
 
+    private ModelMapper modelMapper;
+
     /**
      * Constructor with parameter.
      *
@@ -54,9 +56,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      *                           the corresponding DAO methods.
      */
     @Autowired
-    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO) {
+    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO, ModelMapper modelMapper) {
         this.giftCertificateDAO = giftCertificateDAO;
         this.tagDAO = tagDAO;
+        this.modelMapper = modelMapper;
     }
 
     /**
@@ -120,11 +123,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<Tag> tagList = returnCreatedOrExistingTags(updatedCertificateDTO.getTagNames());
         giftCertificateFromDTO.setTagList(tagList);
 
-        GiftCertificate giftCertificate = GiftCertificateUpdatedFieldFiller.
-                update(giftCertificateFromDTO, giftCertificateFromDB);
-        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+        modelMapper.map(giftCertificateFromDTO, giftCertificateFromDB);
+        giftCertificateFromDB.setLastUpdateDate(LocalDateTime.now());
 
-        GiftCertificate updatedGiftCertificate = giftCertificateDAO.save(giftCertificate);
+        GiftCertificate updatedGiftCertificate = giftCertificateDAO.save(giftCertificateFromDB);
 
         return GiftCertificateDTOMapper.convertToDTO(updatedGiftCertificate);
     }

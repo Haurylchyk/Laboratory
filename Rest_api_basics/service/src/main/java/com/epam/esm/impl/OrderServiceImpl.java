@@ -6,7 +6,6 @@ import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dto.OrderDTO;
-import com.epam.esm.dto.OrderParamDTO;
 import com.epam.esm.dto.mapper.OrderDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
@@ -66,18 +65,16 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Accesses the corresponding DAO method to create a new Order object.
      *
-//     * @param userId                 id of the User who made the Order.
-//     * @param giftCertificatesIdList list of GiftCertificate IDs in the Order.
+     * @param userId                 id of the User who made the Order.
+     * @param giftCertificatesIdList list of GiftCertificate IDs in the Order.
      * @return created object with Order data.
      */
     @Override
     @Transactional
-    public OrderDTO create(OrderParamDTO orderParamDTO) {
-        List<Integer> giftCertificatesIdList = orderParamDTO.getCertificates();
+    public OrderDTO create(Integer userId,  List<Integer> giftCertificatesIdList) {
         if (CommonValidator.isEmpty(giftCertificatesIdList)) {
             throw new OrderInvalidDataException(ErrorCodeMessage.ERROR_CODE_ORDER_INVALID_DATA);
         }
-        Integer userId = orderParamDTO.getUser();
         Optional<User> optionalUser = userDAO.find(userId);
         User user = optionalUser.orElseThrow(() -> new UserNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));

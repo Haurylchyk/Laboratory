@@ -2,7 +2,7 @@ package com.epam.esm;
 
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.TagDAO;
-import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.GiftCertificateParamDTO;
 import com.epam.esm.dto.mapper.GiftCertificateParamDTOMapper;

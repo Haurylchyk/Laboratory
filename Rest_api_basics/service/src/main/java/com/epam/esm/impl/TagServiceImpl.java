@@ -122,9 +122,9 @@ public class TagServiceImpl implements TagService {
      *
      * @return object with Tag data.
      */
-    public TagDTO findMostUsedTagUserWithHighestAmountOrders() {
-        User mostRichUser = userDAO.findUserWithHighestAmountOrders();
-        Tag mostWidelyUsedTag = tagDAO.findMostWidelyUsedTagByUserId(mostRichUser.getId());
+    public TagDTO findMostWidelyUsedOfTopOrderUser() {
+        User mostRichUser = userDAO.findUserWithTopOrders();
+        Tag mostWidelyUsedTag = tagDAO.findMostWidelyUsedByUserId(mostRichUser.getId());
 
         return TagDTOMapper.convertToDTO(mostWidelyUsedTag);
     }
@@ -136,7 +136,7 @@ public class TagServiceImpl implements TagService {
      */
     public Long findNumberPagesForAllTags() {
         Long totalNumberTags = tagDAO.findTotalNumberTags();
-        int number = PaginationConstant.NUMBER_TAGS_ON_PAGE;
+        int number = PaginationConstant.TAG_NUMBER_ON_PAGE;
         return totalNumberTags % number == 0 ? totalNumberTags / number : totalNumberTags / number + 1;
     }
 }
