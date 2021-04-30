@@ -1,5 +1,6 @@
 package com.epam.esm.config;
 
+import com.epam.esm.entity.BaseEntity;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -47,6 +48,7 @@ public class RepositoryConfig {
     }
 
     @Bean
+    @Profile("prod")
     public JpaVendorAdapter jpaVendorAdapter() {
         HibernateJpaVendorAdapter hibernateJpaVendorAdapter = new HibernateJpaVendorAdapter();
 
@@ -73,13 +75,14 @@ public class RepositoryConfig {
     }
 
     @Bean
+    @Profile("prod")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {
 
         LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 
         emf.setDataSource(dataSource);
-        emf.setPackagesToScan("com.epam.esm.entity");
+        emf.setPackagesToScan(BaseEntity.class.getPackage().getName());
         emf.setJpaVendorAdapter(jpaVendorAdapter);
         emf.setJpaProperties(hibernateProperties());
 
@@ -98,4 +101,5 @@ public class RepositoryConfig {
 
         return hibernateProperties;
     }
+
 }
