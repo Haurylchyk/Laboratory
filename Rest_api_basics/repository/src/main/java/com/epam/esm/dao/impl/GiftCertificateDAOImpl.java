@@ -2,18 +2,18 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.query.GiftCertificateParam;
-import com.epam.esm.dao.query.QueryAndParam;
-import com.epam.esm.dao.query.builder.GiftCertificateQueryBuilder;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
+import com.epam.esm.dao.query.builder.GiftCertificatePredicateBuilder;
+import com.epam.esm.dao.query.sort.OrderBy;
+import com.epam.esm.dao.query.builder.PredicateBuilder;
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.persistence.criteria.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -48,6 +48,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @return GiftCertificate entity.
      */
     @Override
+    @Transactional
     public GiftCertificate save(GiftCertificate giftCertificate) {
         em.persist(giftCertificate);
         return find(giftCertificate.getId()).get();
@@ -73,6 +74,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      * @param id GiftCertificate id.
      */
     @Override
+    @Transactional
     public void delete(Integer id) {
         em.createQuery(DELETE_CERTIFICATE).setParameter(ParamNameConstant.ID, id).executeUpdate();
     }
@@ -102,18 +104,26 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
     /**
      * Returns list of matching GiftCertificates.
      *
-     * @param giftCertificateParam special object containing params.
+     * @param param special object containing params.
      * @return list of GiftCertificates.
      */
     @Override
-    public List<GiftCertificate> findByParam(GiftCertificateParam giftCertificateParam) {
-        QueryAndParam queryAndParam = GiftCertificateQueryBuilder.getInstance().buildGetQuery(giftCertificateParam);
-        Query query = em.createQuery(queryAndParam.getQuery(), GiftCertificate.class);
-        if (!queryAndParam.getParams().isEmpty()) {
-            for (Map.Entry<String, Object> entry : queryAndParam.getParams().entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
+    public List<GiftCertificate> findByParam(GiftCertificateParam param) {
+        PredicateBuilder predicateBuilder = GiftCertificatePredicateBuilder.getInstance().build(param);
+
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
+
+        Predicate predicate = predicateBuilder.toPredicate(root, criteriaBuilder, param);
+        criteriaQuery.where(predicate);
+
+        if (param.getSortType() != null && param.getSortOrder() != null) {
+            OrderBy orderBy = new OrderBy();
+            Order order = orderBy.toOrderBy(root, criteriaBuilder, param);
+            criteriaQuery.orderBy(order);
         }
-        return query.getResultList();
+
+        return em.createQuery(criteriaQuery).getResultList();
     }
 }
