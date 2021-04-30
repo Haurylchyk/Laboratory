@@ -16,6 +16,12 @@ import java.util.regex.Pattern;
 public class UserValidator {
 
     /**
+     * The valid login format.
+     */
+    private static final String LOGIN_FORMAT_REGEX = "^[A-z0-9_]+$";
+
+
+    /**
      * Checks that the data is valid.
      *
      * @param userDTO User entity.
@@ -59,7 +65,7 @@ public class UserValidator {
      * @return true if the login matches the format, false otherwise.
      */
     public static boolean isLoginFormatValid(String login) {
-        Pattern p = Pattern.compile("^[A-z0-9_]+$");
+        Pattern p = Pattern.compile(LOGIN_FORMAT_REGEX);
         Matcher m = p.matcher(login);
         return m.matches();
     }

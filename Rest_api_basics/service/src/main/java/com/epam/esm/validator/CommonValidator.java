@@ -32,6 +32,12 @@ public class CommonValidator {
     private static final int MAX_VALID_NAME_LENGTH = 100;
 
     /**
+     * The valid name format.
+     */
+    private static final String NAME_FORMAT_REGEX = "^[A-zА-я_]+$";
+
+
+    /**
      * Checks if the object is not empty.
      *
      * @param object object for verification.
@@ -79,7 +85,7 @@ public class CommonValidator {
      * @return true if the name meets the requirements, false otherwise.
      */
     public static boolean isNameFormatValid(String name) {
-        Pattern p = Pattern.compile("^[A-zА-я_]+$");
+        Pattern p = Pattern.compile(NAME_FORMAT_REGEX);
         Matcher m = p.matcher(name);
         return m.matches();
     }
