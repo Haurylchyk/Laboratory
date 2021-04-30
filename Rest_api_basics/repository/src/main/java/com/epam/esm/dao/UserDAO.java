@@ -35,5 +35,5 @@ public interface UserDAO extends EntityDAO<User> {
      *
      * @return the user with the highest order amount.
      */
-    User findUserWithHighestAmountOrders();
+    User findUserWithTopOrders();
 }

@@ -3,7 +3,7 @@ package com.epam.esm;
 import com.epam.esm.config.RepositoryConfigTest;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.impl.GiftCertificateDAOImpl;
-import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.filter.Filter;
 import com.epam.esm.dao.query.filter.FilterType;
 import com.epam.esm.entity.GiftCertificate;

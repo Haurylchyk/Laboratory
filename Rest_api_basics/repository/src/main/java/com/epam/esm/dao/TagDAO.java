@@ -45,7 +45,7 @@ public interface TagDAO extends EntityDAO<Tag> {
      * @return the most widely used tag for
      * the user with with specific.
      */
-    Tag findMostWidelyUsedTagByUserId(Integer id);
+    Tag findMostWidelyUsedByUserId(Integer id);
 
     /**
      * Returns the number of all tags in the database.

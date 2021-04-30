@@ -9,6 +9,6 @@ package com.epam.esm.constant;
  */
 public class PaginationConstant {
 
-    public static final int NUMBER_TAGS_ON_PAGE = 3;
+    public static final int TAG_NUMBER_ON_PAGE = 3;
 
 }

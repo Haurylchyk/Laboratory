@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String DELETE_USER = "DELETE FROM User e WHERE e.id = :id";
     private static final String FIND_ALL_USERS = "SELECT DISTINCT e FROM User e";
     private static final String FIND_USER_BY_LOGIN = "SELECT DISTINCT e FROM User e WHERE e.login = :login";
-    private static final String FIND_USER_WITH_HIGHEST_ORDER_AMOUNT = "SELECT u FROM User u JOIN u.orderList o GROUP BY u ORDER BY SUM(o.cost) DESC";
+    private static final String FIND_USER_WITH_TOP_ORDERS = "SELECT u FROM User u JOIN u.orderList o GROUP BY u ORDER BY SUM(o.cost) DESC";
 
     /**
      * The index of the first item in the list.
@@ -82,7 +82,8 @@ public class UserDAOImpl implements UserDAO {
      */
     @Override
     public List<User> findAll() {
-        return em.createQuery(FIND_ALL_USERS, User.class).getResultList();
+        Query query = em.createQuery(FIND_ALL_USERS, User.class);
+        return query.getResultList();
     }
 
     /**
@@ -104,8 +105,8 @@ public class UserDAOImpl implements UserDAO {
      * @return the user with the highest order amount.
      */
     @Override
-    public User findUserWithHighestAmountOrders() {
-        Query query = em.createQuery(FIND_USER_WITH_HIGHEST_ORDER_AMOUNT, User.class);
+    public User findUserWithTopOrders() {
+        Query query = em.createQuery(FIND_USER_WITH_TOP_ORDERS, User.class);
         List<User> userList = query.getResultList();
         return userList.get(FIRST_ELEMENT_INDEX);
     }

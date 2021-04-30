@@ -1,4 +1,4 @@
-package com.epam.esm.dao.query;
+package com.epam.esm.dao.query.parameter;
 
 import com.epam.esm.dao.query.filter.Filter;
 import com.epam.esm.dao.query.sort.SortOrder;
@@ -18,22 +18,22 @@ public class GiftCertificateParam {
 
     private String name;
     private String description;
-    private List<String> tagName;
-    private List<Filter> price;
-    private List<Filter> duration;
+    private List<String> tagNameList;
+    private List<Filter> priceFilterList;
+    private List<Filter> durationFilterList;
     private SortType sortType;
     private SortOrder sortOrder;
 
     public GiftCertificateParam() {
     }
 
-    public GiftCertificateParam( String name, String description, List<Filter> price, List<Filter> duration,
-                                 List<String> tagName, SortType sortType, SortOrder sortOrder) {
+    public GiftCertificateParam(String name, String description, List<Filter> priceFilterList, List<Filter> durationFilterList,
+                                List<String> tagNameList, SortType sortType, SortOrder sortOrder) {
         this.name = name;
         this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.tagName = tagName;
+        this.priceFilterList = priceFilterList;
+        this.durationFilterList = durationFilterList;
+        this.tagNameList = tagNameList;
         this.sortType = sortType;
         this.sortOrder = sortOrder;
     }
@@ -54,28 +54,28 @@ public class GiftCertificateParam {
         this.description = description;
     }
 
-    public List<String> getTagName() {
-        return tagName;
+    public List<String> getTagNameList() {
+        return tagNameList;
     }
 
-    public void setTagName(List<String> tagName) {
-        this.tagName = tagName;
+    public void setTagNameList(List<String> tagNameList) {
+        this.tagNameList = tagNameList;
     }
 
-    public List<Filter> getPrice() {
-        return price;
+    public List<Filter> getPriceFilterList() {
+        return priceFilterList;
     }
 
-    public void setPrice(List<Filter> price) {
-        this.price = price;
+    public void setPriceFilterList(List<Filter> priceFilterList) {
+        this.priceFilterList = priceFilterList;
     }
 
-    public List<Filter> getDuration() {
-        return duration;
+    public List<Filter> getDurationFilterList() {
+        return durationFilterList;
     }
 
-    public void setDuration(List<Filter> duration) {
-        this.duration = duration;
+    public void setDurationFilterList(List<Filter> durationFilterList) {
+        this.durationFilterList = durationFilterList;
     }
 
     public SortType getSortType() {

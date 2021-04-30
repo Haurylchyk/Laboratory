@@ -34,7 +34,7 @@ public class TagDAOImpl implements TagDAO {
     private static final String FIND_ALL_TAGS = "SELECT DISTINCT e FROM Tag e";
     private static final String FIND_TAG_BY_NAME = "SELECT DISTINCT e FROM Tag e WHERE e.name = :name";
     private static final String FIND_BY_CERTIFICATE_ID = "SELECT DISTINCT e FROM Tag e INNER JOIN e.certificates c WHERE c.id = :id";
-    private static final String FIND_MOST_WIDELY_USED_TAG = "SELECT DISTINCT t FROM Order e INNER JOIN e.giftCertificateList c " +
+    private static final String FIND_MOST_WIDELY_USED_TAG = "SELECT  t FROM Order e INNER JOIN e.giftCertificateList c " +
             "INNER JOIN c.tagList t INNER JOIN e.user u WHERE u.id = :id GROUP BY t.name ORDER BY COUNT(t) DESC ";
 
     /**
@@ -49,6 +49,7 @@ public class TagDAOImpl implements TagDAO {
      * @return Tag entity.
      */
     @Override
+    @Transactional
     public Tag save(Tag tag) {
         em.persist(tag);
         return findByName(tag.getName()).get();
@@ -86,7 +87,7 @@ public class TagDAOImpl implements TagDAO {
      */
     @Override
     public List<Tag> findAll(Integer pageNumber) {
-        int numberOnPage = PaginationConstant.NUMBER_TAGS_ON_PAGE;
+        int numberOnPage = PaginationConstant.TAG_NUMBER_ON_PAGE;
         return em.createQuery(FIND_ALL_TAGS, Tag.class).setMaxResults(numberOnPage)
                 .setFirstResult(numberOnPage * (pageNumber - 1)).getResultList();
     }
@@ -123,7 +124,7 @@ public class TagDAOImpl implements TagDAO {
      * @return the most widely used tag for
      * the user with with specific id.
      */
-    public Tag findMostWidelyUsedTagByUserId(Integer id) {
+    public Tag findMostWidelyUsedByUserId(Integer id) {
         List<Tag> tagList = em.createQuery(FIND_MOST_WIDELY_USED_TAG, Tag.class).
                 setParameter(ParamNameConstant.ID, id).getResultList();
         return tagList.get(FIRST_ELEMENT_INDEX);
