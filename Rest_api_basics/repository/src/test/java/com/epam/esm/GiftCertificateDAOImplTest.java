@@ -1,21 +1,28 @@
 package com.epam.esm;
 
+import com.epam.esm.config.RepositoryConfigTest;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.impl.GiftCertificateDAOImpl;
 import com.epam.esm.dao.query.GiftCertificateParam;
+import com.epam.esm.dao.query.filter.Filter;
+import com.epam.esm.dao.query.filter.FilterType;
 import com.epam.esm.entity.GiftCertificate;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest(classes = GiftCertificateDAOImpl.class)
+@ContextConfiguration(classes = RepositoryConfigTest.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class GiftCertificateDAOImplTest {
 
     private static final String TEST_NAME = "Test gift certificate name";
@@ -23,43 +30,34 @@ public class GiftCertificateDAOImplTest {
     private static final Integer TEST_PRICE = 500;
     private static final Integer TEST_DURATION = 50;
 
-    private static final String NAME = "Gym";
-    private static final String DESCRIPTION = "Many different locations and much more";
+    private static final String NAME = "Spa services";
+    private static final String DESCRIPTION = "Spa services and much more";
     private static final String TAG_NAME = "Spa";
+    private static final Filter PRICE_FILTER = new Filter(FilterType.GT, 180);
+    private static final Filter DURATION_FILTER = new Filter(FilterType.GT, 15);
+
+    private static final List<String> TAG_NAME_LIST = new ArrayList<>();
+    private static final List<Filter> PRICE_FILTER_LIST = new ArrayList<>();
+    private static final List<Filter> DURATION_FILTER_LIST = new ArrayList<>();
 
     private static final Integer TEST_ID = 1;
     private static final Integer INVALID_ID = 100;
 
-    private static final String UPDATED_NAME = "Updated gift certificate name";
-    private static final Integer UPDATED_DURATION = 100;
-
-    private EmbeddedDatabase embeddedDatabase;
+    @Autowired
     private GiftCertificateDAO giftCertificateDAO;
 
-    @BeforeEach
-    public void setUp() {
-        embeddedDatabase = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.H2)
-                .addScript("classpath:schema.sql")
-                .addScript("classpath:fill_tables.sql")
-                .build();
-        giftCertificateDAO = new GiftCertificateDAOImpl(embeddedDatabase);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        embeddedDatabase.shutdown();
-    }
-
     @Test
-    public void createGiftCertificate() {
+    public void saveTest() {
+
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setName(TEST_NAME);
         giftCertificate.setDescription(TEST_DESCRIPTION);
         giftCertificate.setPrice(TEST_PRICE);
         giftCertificate.setDuration(TEST_DURATION);
+        giftCertificate.setLastUpdateDate(LocalDateTime.now());
+        giftCertificate.setCreateDate(LocalDateTime.now());
 
-        GiftCertificate newCertificate = giftCertificateDAO.create(giftCertificate);
+        GiftCertificate newCertificate = giftCertificateDAO.save(giftCertificate);
 
         assertNotNull(newCertificate);
         assertEquals(TEST_NAME, newCertificate.getName());
@@ -69,28 +67,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void deleteGiftCertificate() {
-        giftCertificateDAO.delete(TEST_ID);
-        Optional<GiftCertificate> giftCertificate = giftCertificateDAO.find(TEST_ID);
-
-        assertFalse(giftCertificate.isPresent());
-    }
-
-    @Test
-    public void updateGiftCertificate() {
-        GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(TEST_ID);
-        giftCertificate.setName(UPDATED_NAME);
-        giftCertificate.setDuration(UPDATED_DURATION);
-
-        GiftCertificate updatedCertificate = giftCertificateDAO.update(giftCertificate, TEST_ID);
-
-        assertEquals(UPDATED_NAME, updatedCertificate.getName());
-        assertEquals(UPDATED_DURATION, updatedCertificate.getDuration());
-    }
-
-    @Test
-    public void getCertificateById() {
+    public void findTest() {
         Optional<GiftCertificate> existGiftCertificate = giftCertificateDAO.find(TEST_ID);
         assertTrue(existGiftCertificate.isPresent());
 
@@ -99,8 +76,16 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void getAllCertificates() {
-        final int EXIST_GС_NUMBER = 3;
+    public void deleteTest() {
+        giftCertificateDAO.delete(TEST_ID);
+        Optional<GiftCertificate> giftCertificate = giftCertificateDAO.find(TEST_ID);
+
+        assertFalse(giftCertificate.isPresent());
+    }
+
+    @Test
+    public void findAllTest() {
+        final int EXIST_GС_NUMBER = 4;
         final List<GiftCertificate> giftCertificateList = giftCertificateDAO.findAll();
 
         assertNotNull(giftCertificateList);
@@ -108,10 +93,10 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void getCertificatesByTagName() {
-        final int GC_NUMBER = 1;
+    public void findByNameTest() {
+        final Integer GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                TAG_NAME, null, null, null, null);
+                NAME, null, null, null, null, null, null);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -119,10 +104,10 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void getCertificatesByName() {
+    public void findByDescriptionTest() {
         final int GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, NAME, null, null, null);
+                null, DESCRIPTION, null, null, null, null, null);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -130,13 +115,39 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void getCertificatesByDescription() {
-        final int GC_NUMBER = 1;
+    public void findByPriceFilterTest() {
+        final int GC_NUMBER = 2;
+        PRICE_FILTER_LIST.add(PRICE_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, DESCRIPTION, null, null);
+                null, null, PRICE_FILTER_LIST, null, null, null, null);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
+
+    @Test
+    public void findByDurationFilterTest() {
+        final int GC_NUMBER = 3;
+        DURATION_FILTER_LIST.add(DURATION_FILTER);
+        GiftCertificateParam compositeParameter = new GiftCertificateParam(
+                null, null, null, DURATION_FILTER_LIST, null, null, null);
+
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+
+        assertEquals(GC_NUMBER, giftCertificateList.size());
+    }
+
+    @Test
+    public void findByTagNameTest() {
+        final int GC_NUMBER = 1;
+        TAG_NAME_LIST.add(TAG_NAME);
+        GiftCertificateParam compositeParameter = new GiftCertificateParam(
+                null, null, null, null, TAG_NAME_LIST, null, null);
+
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+
+        assertEquals(GC_NUMBER, giftCertificateList.size());
+    }
+
 }
