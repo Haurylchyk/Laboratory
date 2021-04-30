@@ -7,6 +7,14 @@ public class Filter {
     private FilterType type;
     private int value;
 
+    public Filter() {
+    }
+
+    public Filter(FilterType type, int value) {
+        this.type = type;
+        this.value = value;
+    }
+
     public FilterType getType() {
         return type;
     }

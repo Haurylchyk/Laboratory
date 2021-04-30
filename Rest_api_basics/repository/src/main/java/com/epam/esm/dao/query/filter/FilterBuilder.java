@@ -7,11 +7,12 @@ import java.util.stream.Collectors;
 
 public class FilterBuilder {
 
+    private static final String REGEX = "([\\w]{2}):([0-9]*)";
     private static final int FIRST_GROUP = 1;
     private static final int SECOND_GROUP = 2;
 
     public static Filter build(String parameter) {
-        Pattern pattern = Pattern.compile("([\\w]{2,3}):([0-9]*)");
+        Pattern pattern = Pattern.compile(REGEX);
         Matcher matcher = pattern.matcher(parameter);
         Filter filter = new Filter();
 
