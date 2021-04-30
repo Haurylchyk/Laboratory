@@ -19,9 +19,8 @@ import java.util.Objects;
  * @since JDK 1.8
  */
 @Entity
-@Table(name = "GIFT_CERTIFICATE")
+@Table(name = "gift_certificate")
 @Audited
-@DynamicUpdate
 public class GiftCertificate extends BaseEntity {
     @Column(nullable = false)
     private String name;
@@ -35,18 +34,19 @@ public class GiftCertificate extends BaseEntity {
     @Column(nullable = false)
     private Integer duration;
 
-    @Column(name = "CREATE_DATE", insertable = false, updatable = false)
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @Column(name = "LAST_UPDATE_DATE")
+    @Column(name = "last_update_date")
     private LocalDateTime lastUpdateDate;
 
     @UniqueElements
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "CERTIFICATE_TAG",
-            joinColumns = {@JoinColumn(name = "CERT_ID", nullable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "TAG_ID", nullable = false)})
+            name = "certificate_tag",
+
+            joinColumns = {@JoinColumn(name = "cert_id", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false)})
     private List<Tag> tagList;
 
     public String getName() {

@@ -16,9 +16,6 @@ public class User extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String login;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Order> orderList;
-
     public String getName() {
         return name;
     }
@@ -35,14 +32,6 @@ public class User extends BaseEntity {
         this.login = login;
     }
 
-    public List<Order> getOrderList() {
-        return orderList;
-    }
-
-    public void setOrderList(List<Order> orders) {
-        this.orderList = orders;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -50,12 +39,11 @@ public class User extends BaseEntity {
         if (!super.equals(o)) return false;
         User user = (User) o;
         return name.equals(user.name) &&
-                login.equals(user.login) &&
-                orderList.equals(user.orderList);
+                login.equals(user.login);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, login, orderList);
+        return Objects.hash(super.hashCode(), name, login);
     }
 }

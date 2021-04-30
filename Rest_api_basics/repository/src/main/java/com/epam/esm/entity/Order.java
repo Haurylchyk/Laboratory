@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "GIFT_ORDER")
+@Table(name = "gift_order")
+
 @Audited
 public class Order extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(nullable = false)
@@ -24,9 +25,9 @@ public class Order extends BaseEntity {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "ORDER_CERTIFICATE",
-            joinColumns = @JoinColumn(name = "ORDER_ID", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "CERT_ID", nullable = false))
+            name = "order_certificate",
+            joinColumns = @JoinColumn(name = "order_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "cert_id", nullable = false))
     private List<GiftCertificate> giftCertificateList;
 
     public User getUser() {
