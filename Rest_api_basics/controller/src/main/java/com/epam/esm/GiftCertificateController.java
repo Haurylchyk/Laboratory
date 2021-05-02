@@ -1,5 +1,7 @@
 package com.epam.esm;
 
+import com.epam.esm.assembler.GiftCertificateModelAssembler;
+import com.epam.esm.assembler.TagModelAssembler;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.GiftCertificateParamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,14 @@ import java.util.List;
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateModelAssembler giftCertificateModelAssembler;
+
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateModelAssembler giftCertificateModelAssembler) {
         this.giftCertificateService = giftCertificateService;
+        this.giftCertificateModelAssembler = giftCertificateModelAssembler;
+
     }
 
     @PostMapping
@@ -42,6 +48,6 @@ public class GiftCertificateController {
 
     @GetMapping
     public List<GiftCertificateDTO> findByParameter(GiftCertificateParamDTO parameterDTO) {
-        return giftCertificateService.findByParam(parameterDTO);
+        return giftCertificateModelAssembler.toModel(giftCertificateService.findByParam(parameterDTO));
     }
 }

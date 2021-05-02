@@ -4,6 +4,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
@@ -31,6 +32,7 @@ public class ControllerConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @Profile("prod")
     public LocaleResolver getLocaleResolver() {
         FixedLocaleResolver localeResolver = new FixedLocaleResolver();
         localeResolver.setDefaultLocale(new Locale(DEFAULT_LOCALE));

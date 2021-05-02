@@ -1,8 +1,8 @@
 package com.epam.esm;
 
+import com.epam.esm.assembler.UserModelAssembler;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,25 +11,21 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
     private final UserService userService;
+    private final UserModelAssembler userModelAssembler;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserModelAssembler userModelAssembler) {
         this.userService = userService;
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO create(@RequestBody UserDTO userDTO) {
-        return userService.create(userDTO);
+        this.userModelAssembler = userModelAssembler;
     }
 
     @GetMapping("/{id}")
     public UserDTO findById(@PathVariable Integer id) {
-        return userService.finById(id);
+        return userModelAssembler.toModel(userService.finById(id));
     }
 
     @GetMapping
-    public List<UserDTO> findAll() {
-        return userService.findAll();
+    public List<UserDTO> findAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        return userModelAssembler.toModel(userService.findAll(page, size));
     }
 }

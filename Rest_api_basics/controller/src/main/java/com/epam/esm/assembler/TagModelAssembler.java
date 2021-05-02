@@ -2,6 +2,7 @@ package com.epam.esm.assembler;
 
 import com.epam.esm.TagController;
 import com.epam.esm.TagService;
+import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -16,8 +17,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class TagModelAssembler implements RepresentationModelAssembler<TagDTO, TagDTO> {
 
-    private static final String LINK_NAME_FOR_FIND_MOST_USED_TAG = "MostUsedTagUserWithHighestAmountOrders";
-    private static final String LINK_NAME_FOR_FIND_ALL_TAGS = "AllTags";
+    private static final String LINK_NAME_MOST_USED_TAG = "MostWidelyUsedOfTopOrderUser";
+    private static final String LINK_NAME_ALL_TAGS_FIRST = "All Tags - FirstPage";
+    private static final String LINK_NAME_ALL_TAGS_LAST = "All Tags - LastPage";
+    private Integer size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
+    private Integer page = PaginationConstant.DEFAULT_PAGE;
 
     private final TagService tagService;
 
@@ -30,15 +34,16 @@ public class TagModelAssembler implements RepresentationModelAssembler<TagDTO, T
     public TagDTO toModel(TagDTO tagDTO) {
         tagDTO.add(
                 linkTo(methodOn(TagController.class).findById(tagDTO.getId())).withSelfRel(),
-                linkTo(methodOn(TagController.class).findMostUsedTagUserWithHighestAmountOrders())
-                        .withRel(LINK_NAME_FOR_FIND_MOST_USED_TAG));
-        for (int i = 1; i <= tagService.findNumberPagesForAllTags() ; i++) {
-            tagDTO.add(linkTo(methodOn(TagController.class).findAll(i)).withRel(LINK_NAME_FOR_FIND_ALL_TAGS));
-        }
+                linkTo(methodOn(TagController.class).findMostWidelyUsedOfTopOrderUser()).withRel(LINK_NAME_MOST_USED_TAG),
+                linkTo(methodOn(TagController.class).findAll(page, size))
+                    .withRel(LINK_NAME_ALL_TAGS_FIRST),
+                linkTo(methodOn(TagController.class).findAll(tagService.findNumberPagesForAllTags(size), size))
+                    .withRel(LINK_NAME_ALL_TAGS_LAST));
         return tagDTO;
     }
 
     public List<TagDTO> toModel(List<TagDTO> tagDTOList) {
+        size = tagDTOList.size();
         return tagDTOList.stream().map(tagDTO -> toModel(tagDTO)).collect(Collectors.toList());
     }
 }

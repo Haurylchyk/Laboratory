@@ -1,7 +1,7 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.TagDTO;
 import com.epam.esm.assembler.TagModelAssembler;
+import com.epam.esm.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -37,13 +37,13 @@ public class TagController {
         tagService.delete(id);
     }
 
-    @GetMapping(params = "page")
-    public List<TagDTO> findAll(@RequestParam(name = "page") Integer pageNumber) {
-        return tagModelAssembler.toModel(tagService.findAll(pageNumber));
+    @GetMapping
+    public List<TagDTO> findAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+        return tagModelAssembler.toModel(tagService.findAll(page, size));
     }
 
-    @GetMapping("/most_rich_user/most_used_tag")
-    public TagDTO findMostUsedTagUserWithHighestAmountOrders() {
-        return tagModelAssembler.toModel(tagService.findMostUsedTagUserWithHighestAmountOrders());
+    @GetMapping("/most-widely-used-of-top-order-user")
+    public TagDTO findMostWidelyUsedOfTopOrderUser() {
+        return tagModelAssembler.toModel(tagService.findMostWidelyUsedOfTopOrderUser());
     }
 }

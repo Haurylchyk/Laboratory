@@ -24,71 +24,29 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
         this.messageSource = messageSource;
     }
 
-    @ExceptionHandler(GiftCertificateInvalidDataException.class)
-    public ResponseEntity<ExceptionDescription> processGiftCertificateInvalidDataException(
-            GiftCertificateInvalidDataException e, Locale locale) {
+    @ExceptionHandler(InvalidDataException.class)
+    public ResponseEntity<ExceptionDescription> processInvalidDataException(
+            InvalidDataException e, Locale locale) {
 
         String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(TagInvalidDataException.class)
-    public ResponseEntity<ExceptionDescription> processTagInvalidDataException(
-            TagInvalidDataException e, Locale locale) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionDescription> processEntityNotFoundException(
+            EntityNotFoundException e, Locale locale) {
 
-        String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
-        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
-        return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(UserInvalidDataException.class)
-    public ResponseEntity<ExceptionDescription> processUserInvalidDataException(
-            UserInvalidDataException e, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
-        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
-        return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(OrderInvalidDataException.class)
-    public ResponseEntity<ExceptionDescription> processOrderInvalidDataException(
-            OrderInvalidDataException e, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(INVALID_DATA, new Object[]{}, locale);
-        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
-        return new ResponseEntity<>(exceptionDescription, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(GiftCertificateNotFoundException.class)
-    public ResponseEntity<ExceptionDescription> processGiftCertificateNotFoundException(
-            GiftCertificateNotFoundException e, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(ErrorMessageKey.GIFT_CERTIFICATE_NOT_FOUND, new Object[]{}, locale);
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.ENTITY_NOT_FOUND, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(TagNotFoundException.class)
-    public ResponseEntity<ExceptionDescription> processTagNotFoundException(TagNotFoundException e, Locale locale) {
+    @ExceptionHandler(NotExistingPageException.class)
+    public ResponseEntity<ExceptionDescription> processNotExistingPageException(
+            NotExistingPageException e, Locale locale) {
 
-        String errorMessage = messageSource.getMessage(ErrorMessageKey.TAG_NOT_FOUND, new Object[]{}, locale);
-        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
-        return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ExceptionDescription> processUserNotFoundException(UserNotFoundException e, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(ErrorMessageKey.USER_NOT_FOUND, new Object[]{}, locale);
-        ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
-        return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<ExceptionDescription> processOrderNotFoundException(OrderNotFoundException e, Locale locale) {
-
-        String errorMessage = messageSource.getMessage(ErrorMessageKey.ORDER_NOT_FOUND, new Object[]{}, locale);
+        String errorMessage = messageSource.getMessage(ErrorMessageKey.PAGE_NOT_EXISTS, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, e.getMessage());
         return new ResponseEntity<>(exceptionDescription, HttpStatus.NOT_FOUND);
     }
