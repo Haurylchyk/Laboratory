@@ -3,11 +3,15 @@ package com.epam.esm.dao.impl;
 import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.Tag;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,11 +80,14 @@ public class OrderDAOImpl implements OrderDAO {
     /**
      * Returns all Orders stored in the database.
      *
+     * @param pageNumber number of page.
+     * @param size number of Orders on page.
      * @return all Orders stored in the database.
      */
     @Override
-    public List<Order> findAll() {
-        return em.createQuery(FIND_ALL_ORDERS, Order.class).getResultList();
+    public List<Order> findAll(Integer pageNumber, Integer size) {
+        return em.createQuery(FIND_ALL_ORDERS, Order.class).setMaxResults(size)
+                .setFirstResult(size * (pageNumber - 1)).getResultList();
     }
 
     /**
@@ -91,5 +98,20 @@ public class OrderDAOImpl implements OrderDAO {
      */
     public List<Order> findOrdersByUserId(Integer id) {
         return em.createQuery(FIND_ORDERS_BY_USER_ID, Order.class).setParameter(ParamNameConstant.ID, id).getResultList();
+    }
+
+    /**
+     * Returns the number of all Orders in the database.
+     *
+     * @return the number of all Orders in the database.
+     */
+    public Integer findTotalNumberOrders() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery criteria = cb.createQuery();
+        criteria.select(cb.count(criteria.from(Order.class)));
+        Query query = em.createQuery(criteria);
+        Long number =(Long) query.getSingleResult();
+
+        return number.intValue();
     }
 }

@@ -83,13 +83,14 @@ public class TagDAOImpl implements TagDAO {
     /**
      * Returns all Tags stored in the database.
      *
+     * @param pageNumber number of page.
+     * @param size number of Tags on page.
      * @return all Tags stored in the database.
      */
     @Override
-    public List<Tag> findAll(Integer pageNumber) {
-        int numberOnPage = PaginationConstant.TAG_NUMBER_ON_PAGE;
-        return em.createQuery(FIND_ALL_TAGS, Tag.class).setMaxResults(numberOnPage)
-                .setFirstResult(numberOnPage * (pageNumber - 1)).getResultList();
+    public List<Tag> findAll(Integer pageNumber, Integer size) {
+        return em.createQuery(FIND_ALL_TAGS, Tag.class).setMaxResults(size)
+                .setFirstResult(size * (pageNumber - 1)).getResultList();
     }
 
     /**
@@ -131,18 +132,17 @@ public class TagDAOImpl implements TagDAO {
     }
 
     /**
-     * Returns the number of all tags in the database.
+     * Returns the number of all Tags in the database.
      *
-     * @return the number of all tags in the database.
+     * @return the number of all Tags in the database.
      */
-    public Long findTotalNumberTags() {
+    public Integer findTotalNumberTags() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery criteria = cb.createQuery();
         criteria.select(cb.count(criteria.from(Tag.class)));
         Query query = em.createQuery(criteria);
+        Long number =(Long) query.getSingleResult();
 
-        return (Long) query.getSingleResult();
+        return number.intValue();
     }
-
-
 }

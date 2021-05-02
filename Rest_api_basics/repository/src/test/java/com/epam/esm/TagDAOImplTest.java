@@ -36,7 +36,6 @@ public class TagDAOImplTest {
         Tag newTag = tagDAO.save(tag);
         assertNotNull(newTag);
         assertEquals(TEST_TAG_NAME, newTag.getName());
-
     }
 
     @Test
@@ -88,7 +87,7 @@ public class TagDAOImplTest {
     @Test
     public void findTotalNumberTagsShouldSuccessfully() {
         final int TAG_NUMBER = 5;
-        final Long number = tagDAO.findTotalNumberTags();
+        final Integer number = tagDAO.findTotalNumberTags();
         assertEquals(TAG_NUMBER, number);
     }
 }

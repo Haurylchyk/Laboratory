@@ -2,10 +2,10 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.builder.GiftCertificatePredicateBuilder;
-import com.epam.esm.dao.query.sort.OrderBy;
 import com.epam.esm.dao.query.builder.PredicateBuilder;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
+import com.epam.esm.dao.query.sort.OrderBy;
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,6 +124,7 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
             criteriaQuery.orderBy(order);
         }
 
-        return em.createQuery(criteriaQuery).getResultList();
+        return em.createQuery(criteriaQuery).setMaxResults(param.getSize())
+                .setFirstResult(param.getSize() * (param.getPage() - 1)).getResultList();
     }
 }

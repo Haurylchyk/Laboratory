@@ -96,7 +96,7 @@ public class GiftCertificateDAOImplTest {
     public void findByNameTest() {
         final Integer GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                NAME, null, null, null, null, null, null);
+                NAME, null, null, null, null, null, null, 1, 3);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -107,7 +107,7 @@ public class GiftCertificateDAOImplTest {
     public void findByDescriptionTest() {
         final int GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, DESCRIPTION, null, null, null, null, null);
+                null, DESCRIPTION, null, null, null, null, null, 1, 3);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -119,7 +119,7 @@ public class GiftCertificateDAOImplTest {
         final int GC_NUMBER = 2;
         PRICE_FILTER_LIST.add(PRICE_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, PRICE_FILTER_LIST, null, null, null, null);
+                null, null, PRICE_FILTER_LIST, null, null, null, null, 1, 3);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -128,10 +128,10 @@ public class GiftCertificateDAOImplTest {
 
     @Test
     public void findByDurationFilterTest() {
-        final int GC_NUMBER = 3;
+        final int GC_NUMBER = 2;
         DURATION_FILTER_LIST.add(DURATION_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, null, DURATION_FILTER_LIST, null, null, null);
+                null, null, null, DURATION_FILTER_LIST, null, null, null, 1, 3);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 
@@ -143,7 +143,7 @@ public class GiftCertificateDAOImplTest {
         final int GC_NUMBER = 1;
         TAG_NAME_LIST.add(TAG_NAME);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, null, null, TAG_NAME_LIST, null, null);
+                null, null, null, null, TAG_NAME_LIST, null, null, 1, 3);
 
         List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
 

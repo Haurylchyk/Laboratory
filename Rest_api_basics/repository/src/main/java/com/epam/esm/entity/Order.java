@@ -9,7 +9,6 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "gift_order")
-
 @Audited
 public class Order extends BaseEntity {
 

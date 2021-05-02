@@ -45,7 +45,6 @@ public class OrderDAOImplTest {
         order.setGiftCertificateList(giftCertificateList);
         order.setCost(COST);
         order.setDate(LocalDateTime.now());
-        ;
 
         Order newOrder = orderDAO.save(order);
 

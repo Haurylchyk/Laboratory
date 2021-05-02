@@ -2,6 +2,7 @@ package com.epam.esm.dao.impl;
 
 import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.UserDAO;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +33,7 @@ public class UserDAOImpl implements UserDAO {
     private static final String DELETE_USER = "DELETE FROM User e WHERE e.id = :id";
     private static final String FIND_ALL_USERS = "SELECT DISTINCT e FROM User e";
     private static final String FIND_USER_BY_LOGIN = "SELECT DISTINCT e FROM User e WHERE e.login = :login";
-    private static final String FIND_USER_WITH_TOP_ORDERS = "SELECT u FROM User u JOIN u.orderList o GROUP BY u ORDER BY SUM(o.cost) DESC";
+    private static final String FIND_USER_WITH_TOP_ORDERS = "SELECT u FROM Order o JOIN o.user u GROUP BY u ORDER BY SUM(o.cost) DESC";
 
     /**
      * The index of the first item in the list.
@@ -78,12 +81,14 @@ public class UserDAOImpl implements UserDAO {
     /**
      * Returns all Users stored in the database.
      *
+     * @param pageNumber number of page.
+     * @param size number of Users on page.
      * @return all Users stored in the database.
      */
     @Override
-    public List<User> findAll() {
-        Query query = em.createQuery(FIND_ALL_USERS, User.class);
-        return query.getResultList();
+    public List<User> findAll(Integer pageNumber, Integer size) {
+        return em.createQuery(FIND_ALL_USERS, User.class).setMaxResults(size)
+                .setFirstResult(size * (pageNumber - 1)).getResultList();
     }
 
     /**
@@ -109,5 +114,20 @@ public class UserDAOImpl implements UserDAO {
         Query query = em.createQuery(FIND_USER_WITH_TOP_ORDERS, User.class);
         List<User> userList = query.getResultList();
         return userList.get(FIRST_ELEMENT_INDEX);
+    }
+
+    /**
+     * Returns the number of all Users in the database.
+     *
+     * @return the number of all Users in the database.
+     */
+    public Integer findTotalNumberUsers() {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery criteria = cb.createQuery();
+        criteria.select(cb.count(criteria.from(User.class)));
+        Query query = em.createQuery(criteria);
+        Long number =(Long) query.getSingleResult();
+
+        return number.intValue();
     }
 }

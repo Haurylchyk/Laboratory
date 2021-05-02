@@ -23,12 +23,14 @@ public class GiftCertificateParam {
     private List<Filter> durationFilterList;
     private SortType sortType;
     private SortOrder sortOrder;
+    private Integer page;
+    private Integer size;
 
     public GiftCertificateParam() {
     }
 
     public GiftCertificateParam(String name, String description, List<Filter> priceFilterList, List<Filter> durationFilterList,
-                                List<String> tagNameList, SortType sortType, SortOrder sortOrder) {
+                                List<String> tagNameList, SortType sortType, SortOrder sortOrder, Integer page, Integer size) {
         this.name = name;
         this.description = description;
         this.priceFilterList = priceFilterList;
@@ -36,6 +38,8 @@ public class GiftCertificateParam {
         this.tagNameList = tagNameList;
         this.sortType = sortType;
         this.sortOrder = sortOrder;
+        this.page = page;
+        this.size = size;
     }
 
     public String getName() {
@@ -92,5 +96,21 @@ public class GiftCertificateParam {
 
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
     }
 }
