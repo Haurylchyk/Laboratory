@@ -11,13 +11,14 @@ public class GiftCertificateParamDTO {
     private List<String> tagName;
     private String sortType;
     private String sortOrder;
-
+    private String page;
+    private String size;
 
     public GiftCertificateParamDTO() {
     }
 
     public GiftCertificateParamDTO(String name, String description, List<String> price, List<String> duration,
-                                   List<String> tagName, String sortType, String sortOrder) {
+                                   List<String> tagName, String sortType, String sortOrder, String page, String size) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -25,6 +26,8 @@ public class GiftCertificateParamDTO {
         this.tagName = tagName;
         this.sortType = sortType;
         this.sortOrder = sortOrder;
+        this.page = page;
+        this.size = size;
     }
 
     public String getName() {
@@ -81,5 +84,21 @@ public class GiftCertificateParamDTO {
 
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public String getPage() {
+        return page;
+    }
+
+    public void setPage(String page) {
+        this.page = page;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

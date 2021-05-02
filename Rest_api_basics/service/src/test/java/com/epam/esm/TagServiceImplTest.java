@@ -6,9 +6,10 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.ExistingTagException;
-import com.epam.esm.exception.impl.TagInvalidDataException;
-import com.epam.esm.exception.impl.TagNotFoundException;
+import com.epam.esm.exception.impl.InvalidDataException;
+import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.impl.TagServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -38,8 +38,12 @@ class TagServiceImplTest {
     private final String MOST_USED_TAG_NAME = "Activity";
 
     private final Integer USER_ID = 4;
-    private final Long TOTAL_NUMBER_TAGS = 5L;
-    private final Long TOTAL_NUMBER_PAGES = 2L;
+    private final Integer TOTAL_NUMBER_TAGS = 5;
+    private final Integer TOTAL_NUMBER_PAGES = 2;
+
+    private static final Integer PAGE_NUMBER = 1;
+    private static final Integer SIZE = 1;
+    private static final Integer PAGE_NUMBER_INVALID = 100;
 
     @InjectMocks
     private TagServiceImpl tagService;
@@ -52,10 +56,13 @@ class TagServiceImplTest {
     private Tag tagFirst;
     private Tag tagSecond;
     private Tag mostUsedTag;
-    private TagDTO tagDTO;
+    private TagDTO tagDTOFirst;
+    private TagDTO tagDTOSecond;
     private TagDTO emptyTagDTO;
     private List<Tag> tagList;
+    private List<TagDTO> tagListDTO;
     private List<Tag> emptyTagList;
+
 
     @BeforeEach
     public void setUp() {
@@ -66,28 +73,39 @@ class TagServiceImplTest {
         tagSecond.setId(TEST_SECOND_ID);
         tagSecond.setName(TEST_SECOND_NAME);
 
-        emptyTagList = new ArrayList<>();
         tagList = new ArrayList<>();
         tagList.add(tagFirst);
         tagList.add(tagSecond);
 
         emptyTagDTO = new TagDTO();
-        tagDTO = new TagDTO();
-        tagDTO.setName(TEST_FIRST_NAME);
+
+        tagDTOFirst = new TagDTO();
+        tagDTOFirst.setId(TEST_FIRST_ID);
+        tagDTOFirst.setName(TEST_FIRST_NAME);
+
+        tagDTOSecond = new TagDTO();
+        tagDTOSecond.setId(TEST_SECOND_ID);
+        tagDTOSecond.setName(TEST_SECOND_NAME);
 
         mostUsedTag = new Tag(MOST_USED_TAG_NAME);
+
+        tagListDTO = new ArrayList<>();
+        tagListDTO.add(tagDTOFirst);
+        tagListDTO.add(tagDTOSecond);
+
+        emptyTagList = new ArrayList<>();
     }
 
     @Test
     public void createShouldReturnCreatedTag() {
         given(tagDAO.save(any())).willReturn(tagFirst);
-        TagDTO createdTagDTO = tagService.create(tagDTO);
+        TagDTO createdTagDTO = tagService.create(tagDTOFirst);
         assertEquals(TEST_FIRST_NAME, createdTagDTO.getName());
     }
 
     @Test
     public void createShouldInvalidDataException() {
-        assertThrows(TagInvalidDataException.class,
+        assertThrows(InvalidDataException.class,
                 () -> tagService.create(emptyTagDTO));
     }
 
@@ -95,7 +113,7 @@ class TagServiceImplTest {
     public void createShouldExistingTagException() {
         given(tagDAO.findByName(TEST_FIRST_NAME)).willReturn(Optional.of(tagFirst));
         assertThrows(ExistingTagException.class,
-                () -> tagService.create(tagDTO));
+                () -> tagService.create(tagDTOFirst));
     }
 
     @Test
@@ -107,9 +125,9 @@ class TagServiceImplTest {
     }
 
     @Test
-    public void findShouldTagNotFoundException() {
+    public void findShouldNotFoundException() {
         given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.empty());
-        assertThrows(TagNotFoundException.class, () -> tagService.findById(TEST_FIRST_ID));
+        assertThrows(EntityNotFoundException.class, () -> tagService.findById(TEST_FIRST_ID));
     }
 
     @Test
@@ -120,9 +138,9 @@ class TagServiceImplTest {
     }
 
     @Test
-    public void deleteShouldTagNotFoundException() {
+    public void deleteShouldNotFoundException() {
         given(tagDAO.find(TEST_FIRST_ID)).willReturn(Optional.empty());
-        assertThrows(TagNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> tagService.delete(TEST_FIRST_ID));
     }
 
@@ -140,10 +158,23 @@ class TagServiceImplTest {
     }
 
     @Test
-    public void findNumberPagesForAllTagsShouldSuccessfully() {
-        given(tagDAO.findTotalNumberTags()).willReturn(TOTAL_NUMBER_TAGS);
-        Long foundNumber = tagService.findNumberPagesForAllTags();
-
-        assertEquals(TOTAL_NUMBER_PAGES, foundNumber);
+    public void findAllShouldSuccessfully() {
+        given(tagDAO.findAll(PAGE_NUMBER, SIZE)).willReturn(tagList);
+        List<TagDTO> foundTagDTOList = tagService.findAll(PAGE_NUMBER, SIZE);
+        assertIterableEquals(tagListDTO, foundTagDTOList);
     }
+
+    @Test
+    public void findAllShouldNotExistingPageException() {
+        given(tagDAO.findAll(PAGE_NUMBER_INVALID, SIZE)).willReturn(emptyTagList);
+        assertThrows(NotExistingPageException.class, () -> tagService.findAll(PAGE_NUMBER_INVALID, SIZE));
+    }
+
+//    @Test
+//    public void findNumberPagesForAllTagsShouldSuccessfully() {
+//        given(tagDAO.findTotalNumberTags()).willReturn(TOTAL_NUMBER_TAGS);
+//        Integer foundNumber = tagService.findNumberPagesForAllTags();
+//
+//        assertEquals(TOTAL_NUMBER_PAGES, foundNumber);
+//    }
 }

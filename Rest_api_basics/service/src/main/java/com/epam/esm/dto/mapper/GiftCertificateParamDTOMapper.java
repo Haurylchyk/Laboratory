@@ -1,4 +1,5 @@
 package com.epam.esm.dto.mapper;
+import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.filter.FilterBuilder;
 import com.epam.esm.dao.query.sort.SortOrder;
@@ -36,6 +37,16 @@ public class GiftCertificateParamDTOMapper {
         }
         if (parameterDTO.getSortOrder() != null) {
             parameter.setSortOrder(SortOrder.valueOf(parameterDTO.getSortOrder().toUpperCase()));
+        }
+        if (parameterDTO.getPage() != null) {
+            parameter.setPage(Integer.valueOf(parameterDTO.getPage()));
+        } else {
+            parameter.setPage(PaginationConstant.DEFAULT_PAGE);
+        }
+        if (parameterDTO.getSize() != null) {
+            parameter.setSize(Integer.valueOf(parameterDTO.getSize()));
+        } else {
+            parameter.setSize(PaginationConstant.DEFAULT_NUMBER_ON_PAGE);
         }
         return parameter;
     }

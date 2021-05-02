@@ -53,6 +53,5 @@ public interface GiftCertificateService {
      * @return list of GiftCertificates.
      */
     List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO giftCertificateParamDTO);
-
 }
 

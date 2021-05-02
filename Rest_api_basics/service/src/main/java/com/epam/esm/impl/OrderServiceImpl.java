@@ -2,6 +2,7 @@ package com.epam.esm.impl;
 
 import com.epam.esm.OrderService;
 import com.epam.esm.constant.ErrorCodeMessage;
+import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
@@ -10,10 +11,9 @@ import com.epam.esm.dto.mapper.OrderDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
-import com.epam.esm.exception.impl.GiftCertificateNotFoundException;
-import com.epam.esm.exception.impl.OrderInvalidDataException;
-import com.epam.esm.exception.impl.OrderNotFoundException;
-import com.epam.esm.exception.impl.UserNotFoundException;
+import com.epam.esm.exception.impl.EntityNotFoundException;
+import com.epam.esm.exception.impl.InvalidDataException;
+import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.validator.CommonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,12 +71,12 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional
-    public OrderDTO create(Integer userId,  List<Integer> giftCertificatesIdList) {
+    public OrderDTO create(Integer userId, List<Integer> giftCertificatesIdList) {
         if (CommonValidator.isEmpty(giftCertificatesIdList)) {
-            throw new OrderInvalidDataException(ErrorCodeMessage.ERROR_CODE_ORDER_INVALID_DATA);
+            throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_ORDER_INVALID_DATA);
         }
         Optional<User> optionalUser = userDAO.find(userId);
-        User user = optionalUser.orElseThrow(() -> new UserNotFoundException(
+        User user = optionalUser.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));
 
         List<GiftCertificate> giftCertificateList = new ArrayList<>();
@@ -86,7 +86,7 @@ public class OrderServiceImpl implements OrderService {
             Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(giftCertificateId);
 
             GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
-                    () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
+                    () -> new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
 
             cost += giftCertificate.getPrice();
             giftCertificateList.add(giftCertificate);
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO findById(Integer id) {
         Optional<Order> optionalOrder = orderDAO.find(id);
-        Order order = optionalOrder.orElseThrow(() -> new OrderNotFoundException(
+        Order order = optionalOrder.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND));
         return OrderDTOMapper.convertToDTO(order);
     }
@@ -121,13 +121,22 @@ public class OrderServiceImpl implements OrderService {
     /**
      * Accesses the corresponding DAO method to find all Orders.
      *
+     * @param pageNumber number of page.
+     * @param size number of Orders on page.
      * @return List of objects with Order data.
      */
     @Override
-    public List<OrderDTO> findAll() {
-        List<Order> orderList = orderDAO.findAll();
+    public List<OrderDTO> findAll(Integer pageNumber, Integer size) {
+        if (pageNumber == null) {
+            pageNumber = PaginationConstant.DEFAULT_PAGE;
+        }
+        if (size == null) {
+            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
+        }
+        List<Order> orderList = orderDAO.findAll(pageNumber, size);
+
         if (orderList.isEmpty()) {
-            throw new OrderNotFoundException(ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND);
+            throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
         return OrderDTOMapper.convertToDTO(orderList);
     }
@@ -143,8 +152,18 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDTO> findByUserId(int id) {
         List<Order> orderList = orderDAO.findOrdersByUserId(id);
         if (orderList.isEmpty()) {
-            throw new OrderNotFoundException(ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND);
         }
         return OrderDTOMapper.convertToDTO(orderList);
+    }
+
+    /**
+     * Calculates the total number of pages required to display all Orders.
+     *
+     * @return the total number of pages required to display all Orders.
+     */
+    public Integer findNumberPagesForAllOrders(Integer size) {
+        Integer totalNumberOrders = orderDAO.findTotalNumberOrders();
+        return totalNumberOrders % size == 0 ? totalNumberOrders / size : totalNumberOrders / size + 1;
     }
 }

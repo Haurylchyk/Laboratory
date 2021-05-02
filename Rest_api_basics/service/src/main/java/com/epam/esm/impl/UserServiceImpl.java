@@ -2,13 +2,12 @@ package com.epam.esm.impl;
 
 import com.epam.esm.UserService;
 import com.epam.esm.constant.ErrorCodeMessage;
+import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.dto.mapper.UserDTOMapper;
 import com.epam.esm.entity.User;
-import com.epam.esm.exception.impl.ExistingUserException;
-import com.epam.esm.exception.impl.UserInvalidDataException;
-import com.epam.esm.exception.impl.UserNotFoundException;
+import com.epam.esm.exception.impl.*;
 import com.epam.esm.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO create(UserDTO userDTO) {
         if (!UserValidator.isValidData(userDTO)) {
-            throw new UserInvalidDataException(ErrorCodeMessage.ERROR_CODE_USER_INVALID_DATA);
+            throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_USER_INVALID_DATA);
         }
         User user = UserDTOMapper.convertToEntity(userDTO);
         Optional<User> userByLogin = userDAO.findByLogin(user.getLogin());
@@ -71,7 +70,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO finById(Integer id) {
         Optional<User> optionalUser = userDAO.find(id);
-        User user = optionalUser.orElseThrow(() -> new UserNotFoundException(
+        User user = optionalUser.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));
         return UserDTOMapper.convertToDTO(user);
     }
@@ -79,14 +78,32 @@ public class UserServiceImpl implements UserService {
     /**
      * Accesses the corresponding DAO method to get all Users.
      *
+     * @param pageNumber number of page.
+     * @param size number of Users on page.
      * @return List of objects with User data.
      */
     @Override
-    public List<UserDTO> findAll() {
-        List<User> userList = userDAO.findAll();
+    public List<UserDTO> findAll(Integer pageNumber, Integer size) {
+        if (pageNumber == null) {
+            pageNumber = PaginationConstant.DEFAULT_PAGE;
+        }
+        if (size == null) {
+            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
+        }
+        List<User> userList = userDAO.findAll(pageNumber, size);
         if (userList.isEmpty()) {
-            throw new UserNotFoundException(ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND);
+            throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
         return UserDTOMapper.convertToDTO(userList);
+    }
+
+    /**
+     * Calculates the total number of pages required to display all Users.
+     *
+     * @return the total number of pages required to display all Users.
+     */
+    public Integer findNumberPagesForAllUsers(Integer size) {
+        Integer totalNumberUsers = userDAO.findTotalNumberUsers();
+        return totalNumberUsers % size == 0 ? totalNumberUsers / size : totalNumberUsers / size + 1;
     }
 }

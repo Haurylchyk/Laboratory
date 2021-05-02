@@ -11,8 +11,8 @@ import com.epam.esm.dto.mapper.GiftCertificateDTOMapper;
 import com.epam.esm.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.impl.GiftCertificateInvalidDataException;
-import com.epam.esm.exception.impl.GiftCertificateNotFoundException;
+import com.epam.esm.exception.impl.EntityNotFoundException;
+import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +72,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO create(GiftCertificateDTO giftCertificateDTO) {
         if (!GiftCertificateValidator.isValidDataForCreate(giftCertificateDTO)) {
-            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
+            throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
         }
         List<Tag> tagList = returnCreatedOrExistingTags(giftCertificateDTO.getTagNames());
 
@@ -96,7 +96,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDTO findById(Integer id) {
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
         GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
-                () -> new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
+                () -> new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         return GiftCertificateDTOMapper.convertToDTO(giftCertificate);
     }
 
@@ -111,10 +111,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public GiftCertificateDTO update(GiftCertificateDTO updatedCertificateDTO, Integer id) {
         if (!GiftCertificateValidator.isValidDataForUpdate(updatedCertificateDTO)) {
-            throw new GiftCertificateInvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
+            throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
         }
         Optional<GiftCertificate> optionalGiftCertificateFromDB = giftCertificateDAO.find(id);
-        GiftCertificate giftCertificateFromDB = optionalGiftCertificateFromDB.orElseThrow(() -> new GiftCertificateNotFoundException(
+        GiftCertificate giftCertificateFromDB = optionalGiftCertificateFromDB.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         updatedCertificateDTO.setId(id);
 
@@ -140,7 +140,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Transactional
     public void delete(Integer id) {
         Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
-        optionalGiftCertificate.orElseThrow(() -> new GiftCertificateNotFoundException(
+        optionalGiftCertificate.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
         giftCertificateDAO.delete(id);
@@ -160,7 +160,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(parameter);
 
         if (giftCertificates.isEmpty()) {
-            throw new GiftCertificateNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND);
+            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND);
         }
 
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();

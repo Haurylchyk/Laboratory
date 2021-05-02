@@ -1,12 +1,13 @@
 package com.epam.esm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class OrderDTO {
+public class OrderDTO extends RepresentationModel<OrderDTO> {
     private Integer id;
     private List<GiftCertificateDTO> giftCertificateList;
     private Integer cost;

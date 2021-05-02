@@ -8,8 +8,8 @@ import com.epam.esm.dto.GiftCertificateParamDTO;
 import com.epam.esm.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.impl.GiftCertificateInvalidDataException;
-import com.epam.esm.exception.impl.GiftCertificateNotFoundException;
+import com.epam.esm.exception.impl.EntityNotFoundException;
+import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.impl.GiftCertificateServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -160,7 +160,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     public void createShouldInvalidDataException() {
-        assertThrows(GiftCertificateInvalidDataException.class,
+        assertThrows(InvalidDataException.class,
                 () -> giftCertificateService.create(notFullyFilledGiftCertificateDTO));
     }
 
@@ -174,7 +174,7 @@ class GiftCertificateServiceImplTest {
     @Test
     public void findByIdShouldNotFoundException() {
         given(giftCertificateDAO.find(TEST_GC_ID_FIRST)).willReturn(Optional.empty());
-        assertThrows(GiftCertificateNotFoundException.class, () -> giftCertificateService.findById(TEST_GC_ID_FIRST));
+        assertThrows(EntityNotFoundException.class, () -> giftCertificateService.findById(TEST_GC_ID_FIRST));
     }
 
     @Test
@@ -190,7 +190,7 @@ class GiftCertificateServiceImplTest {
     @Test
     public void updateShouldNotFoundException() {
         given(giftCertificateDAO.find(TEST_GC_ID_FIRST)).willReturn(Optional.empty());
-        assertThrows(GiftCertificateNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> giftCertificateService.update(updatedGiftCertificateDTO, TEST_GC_ID_FIRST));
     }
 
@@ -206,7 +206,7 @@ class GiftCertificateServiceImplTest {
     @Test
     public void deleteShouldNotFoundException() {
         given(giftCertificateDAO.find(TEST_GC_ID_FIRST)).willReturn(Optional.empty());
-        assertThrows(GiftCertificateNotFoundException.class, () -> giftCertificateService.delete(TEST_GC_ID_FIRST));
+        assertThrows(EntityNotFoundException.class, () -> giftCertificateService.delete(TEST_GC_ID_FIRST));
     }
 
     @Test
@@ -236,7 +236,7 @@ class GiftCertificateServiceImplTest {
         try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
             paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(compositeParameterDTO)).thenReturn(compositeParameter);
             given(giftCertificateDAO.findByParam(emptyCompositeParameter)).willReturn(emptyGiftCertificateList);
-            assertThrows(GiftCertificateNotFoundException.class, () -> giftCertificateService.findByParam(emptyCompositeParameterDTO));
+            assertThrows(EntityNotFoundException.class, () -> giftCertificateService.findByParam(emptyCompositeParameterDTO));
         }
     }
 }

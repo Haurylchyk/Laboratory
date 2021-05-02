@@ -33,9 +33,11 @@ public interface OrderService {
     /**
      * Accesses the corresponding DAO method to find all Orders.
      *
+     * @param pageNumber number of page.
+     * @param size number of Orders on page.
      * @return List of objects with Order data.
      */
-    List<OrderDTO> findAll();
+    List<OrderDTO> findAll(Integer pageNumber, Integer size);
 
     /**
      * Accesses the corresponding DAO method to find all Orders
@@ -45,5 +47,12 @@ public interface OrderService {
      * @return List of objects with Order data.
      */
     List<OrderDTO> findByUserId(int id);
+
+    /**
+     * Calculates the total number of pages required to display all Orders.
+     *
+     * @return the total number of pages required to display all Orders.
+     */
+    Integer findNumberPagesForAllOrders(Integer size);
 
 }

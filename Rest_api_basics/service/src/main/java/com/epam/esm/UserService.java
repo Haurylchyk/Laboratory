@@ -32,7 +32,16 @@ public interface UserService {
     /**
      * Accesses the corresponding DAO method to find all Users.
      *
+     * @param pageNumber number of page.
+     * @param size number of Users on page.
      * @return List of objects with User data.
      */
-    List<UserDTO> findAll();
+    List<UserDTO> findAll(Integer pageNumber, Integer size);
+
+    /**
+     * Calculates the total number of pages required to display all Users.
+     *
+     * @return the total number of pages required to display all Users.
+     */
+    Integer findNumberPagesForAllUsers(Integer size);
 }

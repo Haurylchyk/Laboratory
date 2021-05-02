@@ -22,6 +22,10 @@ public class ErrorCodeMessage {
     public static final String ERROR_CODE_ORDER_INVALID_DATA = "0410";
     public static final String ERROR_CODE_ORDER_NOT_FOUND = "4040400";
 
+    public static final String ERROR_CODE_PAGE_NOT_FOUND = "4040500";
+
+
+
 
 
 

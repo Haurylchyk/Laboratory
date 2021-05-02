@@ -39,9 +39,11 @@ public interface TagService {
     /**
      * Accesses the corresponding DAO method to find all Tags.
      *
+     * @param pageNumber number of page.
+     * @param size number of Tags on page.
      * @return List of objects with Tag data.
      */
-    List<TagDTO> findAll(Integer pageNumber);
+    List<TagDTO> findAll(Integer pageNumber, Integer size);
 
     /**
      * Accesses the corresponding DAO method to find most widely used Tag for
@@ -56,5 +58,5 @@ public interface TagService {
      *
      * @return the total number of pages required to display all Tags.
      */
-    Long findNumberPagesForAllTags();
+    Integer findNumberPagesForAllTags(Integer size);
 }

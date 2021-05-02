@@ -5,7 +5,6 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

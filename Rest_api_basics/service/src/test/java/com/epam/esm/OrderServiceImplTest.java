@@ -11,9 +11,7 @@ import com.epam.esm.dto.mapper.OrderDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
-import com.epam.esm.exception.impl.GiftCertificateNotFoundException;
-import com.epam.esm.exception.impl.OrderNotFoundException;
-import com.epam.esm.exception.impl.UserNotFoundException;
+import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.impl.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -143,20 +141,20 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void createShouldReturnUserNotFoundException() {
+    public void createShouldReturnNotFoundException() {
         try (MockedStatic<OrderDTOMapper> orderDTOMapper = Mockito.mockStatic(OrderDTOMapper.class)) {
             orderDTOMapper.when(() -> OrderDTOMapper.convertToDTO(testOrder)).thenReturn(testOrderDTO);
             given(userDAO.find(any())).willReturn(Optional.empty());
-            assertThrows(UserNotFoundException.class,
+            assertThrows(EntityNotFoundException.class,
                     () -> orderService.create(NOT_EXIST_USER_ID, giftCertificateIdList));
         }
     }
 
     @Test
-    public void createShouldGCNotFoundException() {
+    public void createShouldNotFoundException() {
         given(userDAO.find(any())).willReturn(Optional.of(testUser));
         given(giftCertificateDAO.find(any())).willReturn(Optional.empty());
-        assertThrows(GiftCertificateNotFoundException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> orderService.create(TEST_USER_ID, notExistGCIdList));
     }
 
@@ -173,7 +171,7 @@ public class OrderServiceImplTest {
     @Test
     public void findByIdShouldNotFoundException() {
         given(orderDAO.find(anyInt())).willReturn(Optional.empty());
-        assertThrows(OrderNotFoundException.class, () -> orderService.findById(TEST_ID));
+        assertThrows(EntityNotFoundException.class, () -> orderService.findById(TEST_ID));
     }
 
     @Test
@@ -189,6 +187,6 @@ public class OrderServiceImplTest {
     @Test
     public void findByByUserIdShouldNotFoundException() {
         given(orderDAO.findOrdersByUserId(NOT_EXIST_USER_ID)).willReturn(emptyOrderList);
-        assertThrows(OrderNotFoundException.class, () -> orderService.findById(TEST_ID));
+        assertThrows(EntityNotFoundException.class, () -> orderService.findById(TEST_ID));
     }
 }

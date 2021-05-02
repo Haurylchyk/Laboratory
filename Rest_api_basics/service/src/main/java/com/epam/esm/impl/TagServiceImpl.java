@@ -9,9 +9,10 @@ import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.ExistingTagException;
-import com.epam.esm.exception.impl.TagInvalidDataException;
-import com.epam.esm.exception.impl.TagNotFoundException;
+import com.epam.esm.exception.impl.InvalidDataException;
+import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class TagServiceImpl implements TagService {
         Tag tag = TagDTOMapper.convertToEntity(tagDTO);
         String tagName = tagDTO.getName();
         if (!TagValidator.isNameValid(tagName)) {
-            throw new TagInvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
+            throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
         }
         Optional<Tag> optionalExistingTag = tagDAO.findByName(tagName);
         if (optionalExistingTag.isPresent()) {
@@ -84,7 +85,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO findById(Integer id) {
         Optional<Tag> optionalTag = tagDAO.find(id);
-        Tag tag = optionalTag.orElseThrow(() -> new TagNotFoundException(
+        Tag tag = optionalTag.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
         return TagDTOMapper.convertToDTO(tag);
     }
@@ -97,7 +98,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public void delete(Integer id) {
         Optional<Tag> optionalTag = tagDAO.find(id);
-        optionalTag.orElseThrow(() -> new TagNotFoundException(
+        optionalTag.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
         tagDAO.delete(id);
     }
@@ -105,13 +106,21 @@ public class TagServiceImpl implements TagService {
     /**
      * Accesses the corresponding DAO method to find all Tags.
      *
+     * @param pageNumber number of page.
+     * @param size number of Tags on page.
      * @return List of objects with Tag data.
      */
     @Override
-    public List<TagDTO> findAll(Integer pageNumber) {
-        List<Tag> tagList = tagDAO.findAll(pageNumber);
+    public List<TagDTO> findAll(Integer pageNumber, Integer size) {
+        if (pageNumber == null) {
+            pageNumber = PaginationConstant.DEFAULT_PAGE;
+        }
+        if (size == null) {
+            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
+        }
+        List<Tag> tagList = tagDAO.findAll(pageNumber, size);
         if (tagList.isEmpty()) {
-            throw new TagNotFoundException(ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND);
+            throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
         return TagDTOMapper.convertToDTO(tagList);
     }
@@ -134,9 +143,8 @@ public class TagServiceImpl implements TagService {
      *
      * @return the total number of pages required to display all Tags.
      */
-    public Long findNumberPagesForAllTags() {
-        Long totalNumberTags = tagDAO.findTotalNumberTags();
-        int number = PaginationConstant.TAG_NUMBER_ON_PAGE;
-        return totalNumberTags % number == 0 ? totalNumberTags / number : totalNumberTags / number + 1;
+    public Integer findNumberPagesForAllTags(Integer size) {
+        Integer totalNumberTags = tagDAO.findTotalNumberTags();
+        return totalNumberTags % size == 0 ? totalNumberTags / size : totalNumberTags / size + 1;
     }
 }
