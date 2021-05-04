@@ -44,7 +44,6 @@ public class GiftCertificate extends BaseEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "certificate_tag",
-
             joinColumns = {@JoinColumn(name = "cert_id", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false)})
     private List<Tag> tagList;

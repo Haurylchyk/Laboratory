@@ -2,7 +2,8 @@ package com.epam.esm.dao.query.sort;
 
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.metamodel.GiftCertificate_;
+import com.epam.esm.entity.GiftCertificate_;
+
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;

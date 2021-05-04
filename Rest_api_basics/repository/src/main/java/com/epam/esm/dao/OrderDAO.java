@@ -15,15 +15,6 @@ import java.util.List;
 public interface OrderDAO extends EntityDAO<Order> {
 
     /**
-     * Returns all Orders stored in the database.
-     *
-     * @param pageNumber number of page.
-     * @param size number of Orders on page.
-     * @return all Orders stored in the database.
-     */
-    List<Order> findAll(Integer pageNumber, Integer size);
-
-    /**
      * Returns all Orders for User with a specific id.
      *
      * @param id User id.
@@ -31,10 +22,4 @@ public interface OrderDAO extends EntityDAO<Order> {
      */
     List<Order> findOrdersByUserId(Integer id);
 
-    /**
-     * Returns the number of all Orders in the database.
-     *
-     * @return the number of all Orders in the database.
-     */
-    Integer findTotalNumberOrders();
 }

@@ -87,7 +87,7 @@ public class TagDAOImplTest {
     @Test
     public void findTotalNumberTagsShouldSuccessfully() {
         final int TAG_NUMBER = 5;
-        final Integer number = tagDAO.findTotalNumberTags();
+        final Integer number = tagDAO.countAll();
         assertEquals(TAG_NUMBER, number);
     }
 }

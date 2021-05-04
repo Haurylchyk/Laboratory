@@ -16,13 +16,6 @@ import java.util.List;
 public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
 
     /**
-     * Returns all GiftCertificates stored in the database.
-     *
-     * @return all GiftCertificate stored in the database.
-     */
-    List<GiftCertificate> findAll();
-
-    /**
      * Returns GiftCertificates that have Tag with specific name.
      *
      * @return list of GiftCertificates.
@@ -32,8 +25,10 @@ public interface GiftCertificateDAO extends EntityDAO<GiftCertificate> {
     /**
      * Returns list of matching GiftCertificates.
      *
+     * @param pageNumber number of page.
+     * @param size number of GiftCertificates on page.
      * @param giftCertificateParam special object containing params.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificate> findByParam(GiftCertificateParam giftCertificateParam);
+    List<GiftCertificate> findByParam(Integer pageNumber, Integer size, GiftCertificateParam giftCertificateParam);
 }

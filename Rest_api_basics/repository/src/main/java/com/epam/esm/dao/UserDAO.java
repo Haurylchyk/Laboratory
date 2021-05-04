@@ -2,7 +2,6 @@ package com.epam.esm.dao;
 
 import com.epam.esm.entity.User;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -14,15 +13,6 @@ import java.util.Optional;
  * @since JDK 1.8
  */
 public interface UserDAO extends EntityDAO<User> {
-
-    /**
-     * Returns all Users stored in the database.
-     *
-     * @param pageNumber number of page.
-     * @param size number of Users on page.
-     * @return all Users stored in the database.
-     */
-    List<User> findAll(Integer pageNumber, Integer size);
 
     /**
      * Returns User with specific login.
@@ -39,10 +29,4 @@ public interface UserDAO extends EntityDAO<User> {
      */
     User findUserWithTopOrders();
 
-    /**
-     * Returns the number of all Users in the database.
-     *
-     * @return the number of all Users in the database.
-     */
-    Integer findTotalNumberUsers();
 }

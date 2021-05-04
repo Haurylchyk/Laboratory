@@ -86,7 +86,7 @@ public class GiftCertificateDAOImplTest {
     @Test
     public void findAllTest() {
         final int EXIST_GС_NUMBER = 4;
-        final List<GiftCertificate> giftCertificateList = giftCertificateDAO.findAll();
+        final List<GiftCertificate> giftCertificateList = giftCertificateDAO.findAll(1, 4);
 
         assertNotNull(giftCertificateList);
         assertEquals(EXIST_GС_NUMBER, giftCertificateList.size());
@@ -96,9 +96,9 @@ public class GiftCertificateDAOImplTest {
     public void findByNameTest() {
         final Integer GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                NAME, null, null, null, null, null, null, 1, 3);
+                NAME, null, null, null, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(1, 3, compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -107,9 +107,9 @@ public class GiftCertificateDAOImplTest {
     public void findByDescriptionTest() {
         final int GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, DESCRIPTION, null, null, null, null, null, 1, 3);
+                null, DESCRIPTION, null, null, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(1, 3, compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -119,9 +119,9 @@ public class GiftCertificateDAOImplTest {
         final int GC_NUMBER = 2;
         PRICE_FILTER_LIST.add(PRICE_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, PRICE_FILTER_LIST, null, null, null, null, 1, 3);
+                null, null, PRICE_FILTER_LIST, null, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(1, 3, compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -131,9 +131,9 @@ public class GiftCertificateDAOImplTest {
         final int GC_NUMBER = 2;
         DURATION_FILTER_LIST.add(DURATION_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, null, DURATION_FILTER_LIST, null, null, null, 1, 3);
+                null, null, null, DURATION_FILTER_LIST, null, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(1, 3, compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
@@ -143,9 +143,9 @@ public class GiftCertificateDAOImplTest {
         final int GC_NUMBER = 1;
         TAG_NAME_LIST.add(TAG_NAME);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
-                null, null, null, null, TAG_NAME_LIST, null, null, 1, 3);
+                null, null, null, null, TAG_NAME_LIST, null, null);
 
-        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(compositeParameter);
+        List<GiftCertificate> giftCertificateList = giftCertificateDAO.findByParam(1, 3, compositeParameter);
 
         assertEquals(GC_NUMBER, giftCertificateList.size());
     }
