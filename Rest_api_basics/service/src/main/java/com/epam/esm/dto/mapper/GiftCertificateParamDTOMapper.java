@@ -24,29 +24,19 @@ public class GiftCertificateParamDTOMapper {
         parameter.setName(parameterDTO.getName());
         parameter.setDescription(parameterDTO.getDescription());
 
-        if (parameterDTO.getPrice() != null) {
-            parameter.setPriceFilterList(FilterBuilder.build(parameterDTO.getPrice()));
+        if (parameterDTO.getPriceFilterList() != null) {
+            parameter.setPriceFilterList(FilterBuilder.build(parameterDTO.getPriceFilterList()));
         }
-        if (parameterDTO.getDuration() != null) {
-            parameter.setDurationFilterList(FilterBuilder.build(parameterDTO.getDuration()));
+        if (parameterDTO.getDurationFilterList() != null) {
+            parameter.setDurationFilterList(FilterBuilder.build(parameterDTO.getDurationFilterList()));
         }
-        parameter.setTagNameList(parameterDTO.getTagName());
+        parameter.setTagNameList(parameterDTO.getTagNameList());
 
         if (parameterDTO.getSortType() != null) {
             parameter.setSortType(SortType.valueOf(parameterDTO.getSortType().toUpperCase()));
         }
         if (parameterDTO.getSortOrder() != null) {
             parameter.setSortOrder(SortOrder.valueOf(parameterDTO.getSortOrder().toUpperCase()));
-        }
-        if (parameterDTO.getPage() != null) {
-            parameter.setPage(Integer.valueOf(parameterDTO.getPage()));
-        } else {
-            parameter.setPage(PaginationConstant.DEFAULT_PAGE);
-        }
-        if (parameterDTO.getSize() != null) {
-            parameter.setSize(Integer.valueOf(parameterDTO.getSize()));
-        } else {
-            parameter.setSize(PaginationConstant.DEFAULT_NUMBER_ON_PAGE);
         }
         return parameter;
     }

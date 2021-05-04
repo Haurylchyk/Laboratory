@@ -178,15 +178,15 @@ public class OrderServiceImplTest {
     public void findByByUserIdShouldSuccessfully() {
         try (MockedStatic<GiftCertificateDTOMapper> giftCertificateDTOMapper = Mockito.mockStatic(GiftCertificateDTOMapper.class)) {
             giftCertificateDTOMapper.when(() -> GiftCertificateDTOMapper.convertToDTO(giftCertificateList)).thenReturn(giftCertificateDTOList);
-            given(orderDAO.findOrdersByUserId(TEST_USER_ID)).willReturn(orderList);
-            List<OrderDTO> receivedDtoList = orderService.findByUserId(TEST_USER_ID);
+            given(orderDAO.findOrdersByUserId(TEST_USER_ID, 1,2)).willReturn(orderList);
+            List<OrderDTO> receivedDtoList = orderService.findByUserId(TEST_USER_ID, 1,2);
             assertIterableEquals(orderDTOList, receivedDtoList);
         }
     }
 
     @Test
     public void findByByUserIdShouldNotFoundException() {
-        given(orderDAO.findOrdersByUserId(NOT_EXIST_USER_ID)).willReturn(emptyOrderList);
+        given(orderDAO.findOrdersByUserId(NOT_EXIST_USER_ID, 1,2)).willReturn(emptyOrderList);
         assertThrows(EntityNotFoundException.class, () -> orderService.findById(TEST_ID));
     }
 }

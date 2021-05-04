@@ -25,7 +25,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> findAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public List<UserDTO> findAll(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                 @RequestParam(required = false, defaultValue = "1") Integer size) {
         return userModelAssembler.toModel(userService.findAll(page, size));
     }
 }

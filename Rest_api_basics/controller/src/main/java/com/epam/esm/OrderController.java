@@ -21,7 +21,7 @@ public class OrderController {
         this.orderModelAssembler = orderModelAssembler;
     }
 
-    @PostMapping("/{userId}")
+    @PostMapping("/users/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO create(@PathVariable Integer userId, @RequestBody List<Integer> giftCertificatesIdList) {
         return orderModelAssembler.toModel(orderService.create(userId, giftCertificatesIdList));
@@ -32,14 +32,9 @@ public class OrderController {
         return orderModelAssembler.toModel(orderService.findById(id));
     }
 
-    @GetMapping(params = "id")
-    public List<OrderDTO> findByUserId(Integer id) {
-        return orderModelAssembler.toModel(orderService.findByUserId(id));
+    @GetMapping("/users/{userId}")
+    public List<OrderDTO> findByUserId(@PathVariable Integer userId, @RequestParam(required = false, defaultValue = "1") Integer page,
+                                       @RequestParam(required = false, defaultValue = "1") Integer size) {
+        return orderModelAssembler.toModel(orderService.findByUserId(userId, page, size));
     }
-
-    @GetMapping
-    public List<OrderDTO> findAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
-        return orderModelAssembler.toModel(orderService.findAll(page, size));
-    }
-
 }

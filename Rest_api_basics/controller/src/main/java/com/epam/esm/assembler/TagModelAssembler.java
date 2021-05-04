@@ -20,8 +20,8 @@ public class TagModelAssembler implements RepresentationModelAssembler<TagDTO, T
     private static final String LINK_NAME_MOST_USED_TAG = "MostWidelyUsedOfTopOrderUser";
     private static final String LINK_NAME_ALL_TAGS_FIRST = "All Tags - FirstPage";
     private static final String LINK_NAME_ALL_TAGS_LAST = "All Tags - LastPage";
-    private Integer size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
-    private Integer page = PaginationConstant.DEFAULT_PAGE;
+    private static final Integer size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
+    private static final Integer page = PaginationConstant.DEFAULT_PAGE;
 
     private final TagService tagService;
 
@@ -43,7 +43,6 @@ public class TagModelAssembler implements RepresentationModelAssembler<TagDTO, T
     }
 
     public List<TagDTO> toModel(List<TagDTO> tagDTOList) {
-        size = tagDTOList.size();
         return tagDTOList.stream().map(tagDTO -> toModel(tagDTO)).collect(Collectors.toList());
     }
 }

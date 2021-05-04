@@ -149,8 +149,8 @@ public class OrderServiceImpl implements OrderService {
      * @return List of objects with Order data.
      */
     @Override
-    public List<OrderDTO> findByUserId(int id) {
-        List<Order> orderList = orderDAO.findOrdersByUserId(id);
+    public List<OrderDTO> findByUserId(Integer id, Integer page, Integer size) {
+        List<Order> orderList = orderDAO.findOrdersByUserId(id, page, size);
         if (orderList.isEmpty()) {
             throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND);
         }
@@ -163,7 +163,7 @@ public class OrderServiceImpl implements OrderService {
      * @return the total number of pages required to display all Orders.
      */
     public Integer findNumberPagesForAllOrders(Integer size) {
-        Integer totalNumberOrders = orderDAO.findTotalNumberOrders();
+        Integer totalNumberOrders = orderDAO.countAll();
         return totalNumberOrders % size == 0 ? totalNumberOrders / size : totalNumberOrders / size + 1;
     }
 }

@@ -214,8 +214,8 @@ class GiftCertificateServiceImplTest {
         final int CORRECT_SIZE = 2;
         try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
             paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(emptyCompositeParameterDTO)).thenReturn(emptyCompositeParameter);
-            given(giftCertificateDAO.findByParam(emptyCompositeParameter)).willReturn(giftCertificateList);
-            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(emptyCompositeParameterDTO);
+            given(giftCertificateDAO.findByParam(2,2, emptyCompositeParameter)).willReturn(giftCertificateList);
+            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, emptyCompositeParameterDTO);
             assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
         }
     }
@@ -225,8 +225,8 @@ class GiftCertificateServiceImplTest {
         final int CORRECT_SIZE = 2;
         try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
             paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(compositeParameterDTO)).thenReturn(compositeParameter);
-            given(giftCertificateDAO.findByParam(compositeParameter)).willReturn(giftCertificateList);
-            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(compositeParameterDTO);
+            given(giftCertificateDAO.findByParam(2, 2, compositeParameter)).willReturn(giftCertificateList);
+            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, compositeParameterDTO);
             assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
         }
     }
@@ -235,8 +235,8 @@ class GiftCertificateServiceImplTest {
     public void findWithEmptyParamShouldNotFoundException() {
         try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
             paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(compositeParameterDTO)).thenReturn(compositeParameter);
-            given(giftCertificateDAO.findByParam(emptyCompositeParameter)).willReturn(emptyGiftCertificateList);
-            assertThrows(EntityNotFoundException.class, () -> giftCertificateService.findByParam(emptyCompositeParameterDTO));
+            given(giftCertificateDAO.findByParam(2, 2, emptyCompositeParameter)).willReturn(emptyGiftCertificateList);
+            assertThrows(EntityNotFoundException.class, () -> giftCertificateService.findByParam(2, 2, emptyCompositeParameterDTO));
         }
     }
 }

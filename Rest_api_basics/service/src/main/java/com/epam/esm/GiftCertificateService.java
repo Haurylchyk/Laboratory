@@ -49,9 +49,20 @@ public interface GiftCertificateService {
     /**
      * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
+     * @param page number of page.
+     * @param size number of GiftCertificates on page.
      * @param giftCertificateParamDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
-    List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO giftCertificateParamDTO);
+    List<GiftCertificateDTO> findByParam(Integer page, Integer size, GiftCertificateParamDTO giftCertificateParamDTO);
+
+    /**
+     * Calculates the total number of pages
+     * required to display all GiftCertificates.
+     *
+     * @return the total number of pages
+     * required to display all GiftCertificates.
+     */
+    Integer findNumberPagesForAllGiftCertificates(Integer size);
 }
 

@@ -24,9 +24,15 @@ public class OrderDAOImpl extends EntityDAOImpl<Order> implements OrderDAO {
      * Returns all Orders for user with a specific id.
      *
      * @param id User id.
+     * @param page number of page.
+     * @param size number of Orders on page.
      * @return list of Orders.
      */
-    public List<Order> findOrdersByUserId(Integer id) {
-        return em.createQuery(FIND_ORDERS_BY_USER_ID, Order.class).setParameter(ParamNameConstant.ID, id).getResultList();
+    public List<Order> findOrdersByUserId(Integer id, Integer page, Integer size) {
+        return em.createQuery(FIND_ORDERS_BY_USER_ID, Order.class)
+                .setParameter(ParamNameConstant.ID, id)
+                .setMaxResults(size)
+                .setFirstResult(size * (page - 1))
+                .getResultList();
     }
 }

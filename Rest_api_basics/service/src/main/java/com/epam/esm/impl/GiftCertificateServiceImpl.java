@@ -121,10 +121,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificate giftCertificateFromDTO = GiftCertificateDTOMapper.convertToEntity(updatedCertificateDTO);
 
         List<Tag> tagList = returnCreatedOrExistingTags(updatedCertificateDTO.getTagNames());
-        giftCertificateFromDTO.setTagList(tagList);
 
         modelMapper.map(giftCertificateFromDTO, giftCertificateFromDB);
         giftCertificateFromDB.setLastUpdateDate(LocalDateTime.now());
+        giftCertificateFromDB.setTagList(tagList);
 
         GiftCertificate updatedGiftCertificate = giftCertificateDAO.save(giftCertificateFromDB);
 
@@ -150,14 +150,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
+     * @param page number of page.
+     * @param size number of GiftCertificates on page.
      * @param parameterDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
     @Override
-    public List<GiftCertificateDTO> findByParam(GiftCertificateParamDTO parameterDTO) {
+    public List<GiftCertificateDTO> findByParam(Integer page, Integer size, GiftCertificateParamDTO parameterDTO) {
         GiftCertificateParam parameter = GiftCertificateParamDTOMapper.convertToEntity(parameterDTO);
 
-        List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(parameter);
+        List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(page, size, parameter);
 
         if (giftCertificates.isEmpty()) {
             throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND);
@@ -171,6 +173,18 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             giftCertificatesDTO.add(GiftCertificateDTOMapper.convertToDTO(giftCertificate));
         }
         return giftCertificatesDTO;
+    }
+
+    /**
+     * Calculates the total number of pages
+     * required to display all GiftCertificates.
+     *
+     * @return the total number of pages
+     * required to display all GiftCertificates.
+     */
+    public Integer findNumberPagesForAllGiftCertificates(Integer size) {
+        Integer totalNumber = giftCertificateDAO.countAll();
+        return totalNumber % size == 0 ? totalNumber / size : totalNumber / size + 1;
     }
 
     private List<Tag> returnCreatedOrExistingTags(List<String> tagNamesList) {

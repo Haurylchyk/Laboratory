@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  */
 public class GiftCertificateDTOMapper {
 
-//    private GiftCertificateDTOMapper() {}
+    private GiftCertificateDTOMapper() {}
 
     /**
      * Converts GiftCertificateDTO to GiftCertificate.
@@ -74,11 +74,8 @@ public class GiftCertificateDTOMapper {
      * @return list of objects of GiftCertificate type.
      */
     public static List<GiftCertificate> convertToEntity(List<GiftCertificateDTO> giftCertificateDTOList) {
-        List<GiftCertificate> giftCertificateList = new ArrayList<>();
-        giftCertificateDTOList.stream().map(giftCertificateDTO -> convertToEntity(giftCertificateDTO))
+        return giftCertificateDTOList.stream().map(giftCertificateDTO -> convertToEntity(giftCertificateDTO))
                 .collect(Collectors.toList());
-
-        return giftCertificateList;
     }
 
     /**
@@ -88,9 +85,6 @@ public class GiftCertificateDTOMapper {
      * @return list of objects of GiftCertificateDTO type.
      */
     public static List<GiftCertificateDTO> convertToDTO(List<GiftCertificate> giftCertificateList) {
-        List<GiftCertificateDTO> giftCertificateDTOList = new ArrayList<>();
-        giftCertificateList.stream().map(giftCertificate -> convertToDTO(giftCertificate)).collect(Collectors.toList());
-
-        return giftCertificateDTOList;
+        return giftCertificateList.stream().map(giftCertificate -> convertToDTO(giftCertificate)).collect(Collectors.toList());
     }
 }

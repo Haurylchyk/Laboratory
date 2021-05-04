@@ -38,7 +38,8 @@ public class TagController {
     }
 
     @GetMapping
-    public List<TagDTO> findAll(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size) {
+    public List<TagDTO> findAll(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                @RequestParam(required = false, defaultValue = "1") Integer size) {
         return tagModelAssembler.toModel(tagService.findAll(page, size));
     }
 

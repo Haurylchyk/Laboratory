@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
      * @return the total number of pages required to display all Users.
      */
     public Integer findNumberPagesForAllUsers(Integer size) {
-        Integer totalNumberUsers = userDAO.findTotalNumberUsers();
+        Integer totalNumberUsers = userDAO.countAll();
         return totalNumberUsers % size == 0 ? totalNumberUsers / size : totalNumberUsers / size + 1;
     }
 }

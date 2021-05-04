@@ -6,28 +6,24 @@ public class GiftCertificateParamDTO {
 
     private String name;
     private String description;
-    private List<String> price;
-    private List<String> duration;
-    private List<String> tagName;
+    private List<String> priceFilterList;
+    private List<String> durationFilterList;
+    private List<String> tagNameList;
     private String sortType;
     private String sortOrder;
-    private String page;
-    private String size;
 
     public GiftCertificateParamDTO() {
     }
 
-    public GiftCertificateParamDTO(String name, String description, List<String> price, List<String> duration,
-                                   List<String> tagName, String sortType, String sortOrder, String page, String size) {
+    public GiftCertificateParamDTO(String name, String description, List<String> priceFilterList, List<String> durationFilterList,
+                                   List<String> tagNameList, String sortType, String sortOrder) {
         this.name = name;
         this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.tagName = tagName;
+        this.priceFilterList = priceFilterList;
+        this.durationFilterList = durationFilterList;
+        this.tagNameList = tagNameList;
         this.sortType = sortType;
         this.sortOrder = sortOrder;
-        this.page = page;
-        this.size = size;
     }
 
     public String getName() {
@@ -46,28 +42,28 @@ public class GiftCertificateParamDTO {
         this.description = description;
     }
 
-    public List<String> getPrice() {
-        return price;
+    public List<String> getPriceFilterList() {
+        return priceFilterList;
     }
 
-    public void setPrice(List<String> price) {
-        this.price = price;
+    public void setPriceFilterList(List<String> priceFilterList) {
+        this.priceFilterList = priceFilterList;
     }
 
-    public List<String> getDuration() {
-        return duration;
+    public List<String> getDurationFilterList() {
+        return durationFilterList;
     }
 
-    public void setDuration(List<String> duration) {
-        this.duration = duration;
+    public void setDurationFilterList(List<String> durationFilterList) {
+        this.durationFilterList = durationFilterList;
     }
 
-    public List<String> getTagName() {
-        return tagName;
+    public List<String> getTagNameList() {
+        return tagNameList;
     }
 
-    public void setTagName(List<String> tagName) {
-        this.tagName = tagName;
+    public void setTagNameList(List<String> tagNameList) {
+        this.tagNameList = tagNameList;
     }
 
     public String getSortType() {
@@ -84,21 +80,5 @@ public class GiftCertificateParamDTO {
 
     public void setSortOrder(String sortOrder) {
         this.sortOrder = sortOrder;
-    }
-
-    public String getPage() {
-        return page;
-    }
-
-    public void setPage(String page) {
-        this.page = page;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 }

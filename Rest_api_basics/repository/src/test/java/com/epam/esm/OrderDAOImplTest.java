@@ -69,13 +69,13 @@ public class OrderDAOImplTest {
     @Test
     public void findOrdersByUserIdShouldSuccessfully() {
         final int ORDER_NUMBER = 2;
-        List<Order> orderList = orderDAO.findOrdersByUserId(TEST_ID);
+        List<Order> orderList = orderDAO.findOrdersByUserId(TEST_ID,1,2);
         assertEquals(ORDER_NUMBER, orderList.size());
     }
 
     @Test
     public void findOrdersByUserIdShouldReturnEmpty() {
-        List<Order> orderList = orderDAO.findOrdersByUserId(INVALID_ID);
+        List<Order> orderList = orderDAO.findOrdersByUserId(INVALID_ID,1,2);
         assertTrue(orderList.isEmpty());
     }
 }

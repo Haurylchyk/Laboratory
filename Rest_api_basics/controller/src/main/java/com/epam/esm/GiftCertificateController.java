@@ -47,7 +47,9 @@ public class GiftCertificateController {
     }
 
     @GetMapping
-    public List<GiftCertificateDTO> findByParameter(GiftCertificateParamDTO parameterDTO) {
-        return giftCertificateModelAssembler.toModel(giftCertificateService.findByParam(parameterDTO));
+    public List<GiftCertificateDTO> findByParameter(@RequestParam(required = false, defaultValue = "1") Integer page,
+                                                    @RequestParam(required = false, defaultValue = "1") Integer size,
+                                                    GiftCertificateParamDTO parameterDTO) {
+        return giftCertificateModelAssembler.toModel(giftCertificateService.findByParam(page, size, parameterDTO));
     }
 }

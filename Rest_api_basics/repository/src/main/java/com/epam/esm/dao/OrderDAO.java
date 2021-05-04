@@ -18,8 +18,10 @@ public interface OrderDAO extends EntityDAO<Order> {
      * Returns all Orders for User with a specific id.
      *
      * @param id User id.
+     * @param page number of page.
+     * @param size number of Orders on page.
      * @return list of Orders.
      */
-    List<Order> findOrdersByUserId(Integer id);
+    List<Order> findOrdersByUserId(Integer id, Integer page, Integer size);
 
 }

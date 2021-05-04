@@ -41,7 +41,6 @@ public class UserModelAssembler implements RepresentationModelAssembler<UserDTO,
     }
 
     public List<UserDTO> toModel(List<UserDTO> userDTOList) {
-        size = userDTOList.size();
         return userDTOList.stream().map(userDTO -> toModel(userDTO)).collect(Collectors.toList());
     }
 }

@@ -112,12 +112,6 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public List<TagDTO> findAll(Integer pageNumber, Integer size) {
-        if (pageNumber == null) {
-            pageNumber = PaginationConstant.DEFAULT_PAGE;
-        }
-        if (size == null) {
-            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
-        }
         List<Tag> tagList = tagDAO.findAll(pageNumber, size);
         if (tagList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
@@ -144,7 +138,7 @@ public class TagServiceImpl implements TagService {
      * @return the total number of pages required to display all Tags.
      */
     public Integer findNumberPagesForAllTags(Integer size) {
-        Integer totalNumberTags = tagDAO.findTotalNumberTags();
+        Integer totalNumberTags = tagDAO.countAll();
         return totalNumberTags % size == 0 ? totalNumberTags / size : totalNumberTags / size + 1;
     }
 }
