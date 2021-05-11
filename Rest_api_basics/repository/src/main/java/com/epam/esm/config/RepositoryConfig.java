@@ -41,7 +41,7 @@ public class RepositoryConfig {
     public DataSource devDataSource() {
         final HikariDataSource dataSource = new HikariDataSource();
         dataSource.setDriverClassName("org.h2.Driver");
-        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/gift_certificate_system?serverTimezone=Europe/Moscow");
+        dataSource.setJdbcUrl("jdbc:h2://localhost:3306/gift_certificate_system?serverTimezone=Europe/Moscow");
         dataSource.setUsername("root");
         dataSource.setPassword("root");
         return dataSource;

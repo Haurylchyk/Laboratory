@@ -22,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -148,7 +150,7 @@ class TagServiceImplTest {
     public void findMostWidelyUsedOfTopOrderUserShouldSuccessfully() {
         User userWithTopOrders = new User();
         userWithTopOrders.setId(USER_ID);
-        given(userDAO.findUserWithTopOrders()).willReturn(userWithTopOrders);
+        given(userDAO.findUserWithTopOrders()).willReturn(Optional.of(userWithTopOrders));
         given(tagDAO.findMostWidelyUsedByUserId(USER_ID)).willReturn(mostUsedTag);
 
         TagDTO foundTagDTO = tagService.findMostWidelyUsedOfTopOrderUser();
@@ -169,12 +171,4 @@ class TagServiceImplTest {
         given(tagDAO.findAll(PAGE_NUMBER_INVALID, SIZE)).willReturn(emptyTagList);
         assertThrows(NotExistingPageException.class, () -> tagService.findAll(PAGE_NUMBER_INVALID, SIZE));
     }
-
-//    @Test
-//    public void findNumberPagesForAllTagsShouldSuccessfully() {
-//        given(tagDAO.findTotalNumberTags()).willReturn(TOTAL_NUMBER_TAGS);
-//        Integer foundNumber = tagService.findNumberPagesForAllTags();
-//
-//        assertEquals(TOTAL_NUMBER_PAGES, foundNumber);
-//    }
 }

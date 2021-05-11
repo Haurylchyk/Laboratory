@@ -2,12 +2,14 @@ package com.epam.esm.impl;
 
 import com.epam.esm.UserService;
 import com.epam.esm.constant.ErrorCodeMessage;
-import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.dto.mapper.UserDTOMapper;
 import com.epam.esm.entity.User;
-import com.epam.esm.exception.impl.*;
+import com.epam.esm.exception.impl.EntityNotFoundException;
+import com.epam.esm.exception.impl.ExistingUserException;
+import com.epam.esm.exception.impl.InvalidDataException;
+import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,12 +86,6 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDTO> findAll(Integer pageNumber, Integer size) {
-        if (pageNumber == null) {
-            pageNumber = PaginationConstant.DEFAULT_PAGE;
-        }
-        if (size == null) {
-            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
-        }
         List<User> userList = userDAO.findAll(pageNumber, size);
         if (userList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);

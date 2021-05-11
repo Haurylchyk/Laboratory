@@ -9,7 +9,11 @@ import com.epam.esm.dao.query.sort.OrderBy;
 import com.epam.esm.entity.GiftCertificate;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
@@ -25,6 +29,10 @@ public class GiftCertificateDAOImpl extends EntityDAOImpl<GiftCertificate> imple
 
     private static final String FIND_CERTIFICATES_BY_TAG_NAME = "SELECT DISTINCT e FROM GiftCertificate e " +
             "INNER JOIN e.tagList c WHERE c.name = :name";
+
+    public GiftCertificateDAOImpl() {
+        super(GiftCertificate.class);
+    }
 
     /**
      * Returns GiftCertificates that have Tag with specific name.

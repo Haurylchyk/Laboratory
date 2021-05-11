@@ -23,6 +23,10 @@ public class UserDAOImpl extends EntityDAOImpl<User> implements UserDAO {
     private static final String FIND_USER_BY_LOGIN = "SELECT DISTINCT e FROM User e WHERE e.login = :login";
     private static final String FIND_USER_WITH_TOP_ORDERS = "SELECT u FROM Order o JOIN o.user u GROUP BY u ORDER BY SUM(o.cost) DESC";
 
+    public UserDAOImpl() {
+        super(User.class);
+    }
+
     /**
      * The index of the first item in the list.
      */
@@ -47,9 +51,9 @@ public class UserDAOImpl extends EntityDAOImpl<User> implements UserDAO {
      * @return the user with the highest order amount.
      */
     @Override
-    public User findUserWithTopOrders() {
+    public Optional<User> findUserWithTopOrders() {
         Query query = em.createQuery(FIND_USER_WITH_TOP_ORDERS, User.class);
         List<User> userList = query.getResultList();
-        return userList.get(FIRST_ELEMENT_INDEX);
+        return userList.isEmpty() ? Optional.empty() : Optional.of(userList.get(FIRST_ELEMENT_INDEX));
     }
 }

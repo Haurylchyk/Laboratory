@@ -12,7 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = UserDAOImpl.class)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
@@ -54,7 +55,7 @@ public class UserDAOImplTest {
 
     @Test
     public void findUserWithTopOrdersShouldSuccessfully() {
-        User topUser = userDAO.findUserWithTopOrders();
-        assertEquals(USER_LOGIN, topUser.getLogin());
+        Optional<User> topUser = userDAO.findUserWithTopOrders();
+        assertTrue(topUser.isPresent());
     }
 }

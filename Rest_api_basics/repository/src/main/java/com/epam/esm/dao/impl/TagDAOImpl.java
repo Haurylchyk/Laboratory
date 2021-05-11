@@ -21,8 +21,12 @@ public class TagDAOImpl extends EntityDAOImpl<Tag> implements TagDAO {
 
     private static final String FIND_TAG_BY_NAME = "SELECT DISTINCT e FROM Tag e WHERE e.name = :name";
     private static final String FIND_BY_CERTIFICATE_ID = "SELECT DISTINCT e FROM Tag e INNER JOIN e.certificates c WHERE c.id = :id";
-    private static final String FIND_MOST_WIDELY_USED_TAG = "SELECT  t FROM Order e INNER JOIN e.giftCertificateList c " +
+    private static final String FIND_MOST_WIDELY_USED_TAG = "SELECT t FROM Order e INNER JOIN e.giftCertificateList c " +
             "INNER JOIN c.tagList t INNER JOIN e.user u WHERE u.id = :id GROUP BY t.name ORDER BY COUNT(t) DESC ";
+
+    public TagDAOImpl() {
+        super(Tag.class);
+    }
 
     /**
      * The index of the first item in the list.

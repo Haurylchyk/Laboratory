@@ -230,13 +230,4 @@ class GiftCertificateServiceImplTest {
             assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
         }
     }
-
-    @Test
-    public void findWithEmptyParamShouldNotFoundException() {
-        try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
-            paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(compositeParameterDTO)).thenReturn(compositeParameter);
-            given(giftCertificateDAO.findByParam(2, 2, emptyCompositeParameter)).willReturn(emptyGiftCertificateList);
-            assertThrows(EntityNotFoundException.class, () -> giftCertificateService.findByParam(2, 2, emptyCompositeParameterDTO));
-        }
-    }
 }

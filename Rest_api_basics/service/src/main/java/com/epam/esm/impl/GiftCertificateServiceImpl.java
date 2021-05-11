@@ -124,7 +124,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         modelMapper.map(giftCertificateFromDTO, giftCertificateFromDB);
         giftCertificateFromDB.setLastUpdateDate(LocalDateTime.now());
-        giftCertificateFromDB.setTagList(tagList);
+        if (!tagList.isEmpty()) {
+            giftCertificateFromDB.setTagList(tagList);
+        }
 
         GiftCertificate updatedGiftCertificate = giftCertificateDAO.save(giftCertificateFromDB);
 
@@ -150,8 +152,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
-     * @param page number of page.
-     * @param size number of GiftCertificates on page.
+     * @param page         number of page.
+     * @param size         number of GiftCertificates on page.
      * @param parameterDTO special object containing requested parameters.
      * @return list of GiftCertificates.
      */
@@ -160,10 +162,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         GiftCertificateParam parameter = GiftCertificateParamDTOMapper.convertToEntity(parameterDTO);
 
         List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(page, size, parameter);
-
-        if (giftCertificates.isEmpty()) {
-            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND);
-        }
 
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();
 
@@ -188,10 +186,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     }
 
     private List<Tag> returnCreatedOrExistingTags(List<String> tagNamesList) {
-        if (tagNamesList == null) {
-            return null;
-        }
         List<Tag> tagList = new ArrayList<>();
+        if (tagNamesList == null) {
+            return tagList;
+        }
 
         tagNamesList.forEach(tagName -> {
             Optional<Tag> optionalTag = tagDAO.findByName(tagName);
@@ -205,7 +203,6 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         return tagList;
     }
-
 
     private void deleteTagsIfNotUsed(List<Tag> tagList) {
         for (Tag tag : tagList) {

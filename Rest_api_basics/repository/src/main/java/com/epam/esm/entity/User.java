@@ -2,8 +2,8 @@ package com.epam.esm.entity;
 
 import org.hibernate.envers.Audited;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import java.util.Objects;
 
 @Entity

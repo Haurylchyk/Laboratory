@@ -29,7 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
@@ -131,12 +134,12 @@ public class OrderServiceImplTest {
             given(userDAO.find(any())).willReturn(Optional.of(testUser));
             given(giftCertificateDAO.find(any())).willReturn(Optional.of(testGiftCertificate));
 
-            OrderDTO receivedDto = orderService.create(TEST_USER_ID, giftCertificateIdList);
+            OrderDTO receivedDTO = orderService.create(TEST_USER_ID, giftCertificateIdList);
 
-            assertEquals(TEST_ID, receivedDto.getId());
-            assertEquals(giftCertificateDTOList, receivedDto.getGiftCertificateList());
-            assertEquals(TEST_DATE, receivedDto.getDate());
-            assertEquals(TEST_PRICE, receivedDto.getCost());
+            assertEquals(TEST_ID, receivedDTO.getId());
+            assertEquals(giftCertificateDTOList, receivedDTO.getGiftCertificateList());
+            assertEquals(TEST_DATE, receivedDTO.getDate());
+            assertEquals(TEST_PRICE, receivedDTO.getCost());
         }
     }
 

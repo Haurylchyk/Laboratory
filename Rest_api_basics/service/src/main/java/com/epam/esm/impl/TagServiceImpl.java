@@ -2,7 +2,6 @@ package com.epam.esm.impl;
 
 import com.epam.esm.TagService;
 import com.epam.esm.constant.ErrorCodeMessage;
-import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.UserDAO;
 import com.epam.esm.dto.TagDTO;
@@ -49,7 +48,6 @@ public class TagServiceImpl implements TagService {
      */
     @Autowired
     public TagServiceImpl(TagDAO tagDAO, UserDAO userDAO) {
-
         this.tagDAO = tagDAO;
         this.userDAO = userDAO;
     }
@@ -107,7 +105,7 @@ public class TagServiceImpl implements TagService {
      * Accesses the corresponding DAO method to find all Tags.
      *
      * @param pageNumber number of page.
-     * @param size number of Tags on page.
+     * @param size       number of Tags on page.
      * @return List of objects with Tag data.
      */
     @Override
@@ -126,8 +124,10 @@ public class TagServiceImpl implements TagService {
      * @return object with Tag data.
      */
     public TagDTO findMostWidelyUsedOfTopOrderUser() {
-        User mostRichUser = userDAO.findUserWithTopOrders();
-        Tag mostWidelyUsedTag = tagDAO.findMostWidelyUsedByUserId(mostRichUser.getId());
+        Optional<User> optionalUser = userDAO.findUserWithTopOrders();
+        User user = optionalUser.orElseThrow(() -> new EntityNotFoundException(
+                ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));
+        Tag mostWidelyUsedTag = tagDAO.findMostWidelyUsedByUserId(user.getId());
 
         return TagDTOMapper.convertToDTO(mostWidelyUsedTag);
     }

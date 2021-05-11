@@ -7,7 +7,12 @@ import com.epam.esm.entity.GiftCertificate_;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.Tag_;
 
-import javax.persistence.criteria.*;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.ListJoin;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -2,7 +2,6 @@ package com.epam.esm.impl;
 
 import com.epam.esm.OrderService;
 import com.epam.esm.constant.ErrorCodeMessage;
-import com.epam.esm.constant.PaginationConstant;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
@@ -127,14 +126,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<OrderDTO> findAll(Integer pageNumber, Integer size) {
-        if (pageNumber == null) {
-            pageNumber = PaginationConstant.DEFAULT_PAGE;
-        }
-        if (size == null) {
-            size = PaginationConstant.DEFAULT_NUMBER_ON_PAGE;
-        }
         List<Order> orderList = orderDAO.findAll(pageNumber, size);
-
         if (orderList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
@@ -151,9 +143,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> findByUserId(Integer id, Integer page, Integer size) {
         List<Order> orderList = orderDAO.findOrdersByUserId(id, page, size);
-        if (orderList.isEmpty()) {
-            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND);
-        }
         return OrderDTOMapper.convertToDTO(orderList);
     }
 

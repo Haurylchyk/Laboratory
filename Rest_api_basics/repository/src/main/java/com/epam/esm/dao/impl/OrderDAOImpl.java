@@ -20,10 +20,14 @@ public class OrderDAOImpl extends EntityDAOImpl<Order> implements OrderDAO {
 
     private static final String FIND_ORDERS_BY_USER_ID = "SELECT DISTINCT e FROM Order e INNER JOIN e.user c WHERE c.id = :id";
 
+    public OrderDAOImpl() {
+        super(Order.class);
+    }
+
     /**
      * Returns all Orders for user with a specific id.
      *
-     * @param id User id.
+     * @param id   User id.
      * @param page number of page.
      * @param size number of Orders on page.
      * @return list of Orders.
