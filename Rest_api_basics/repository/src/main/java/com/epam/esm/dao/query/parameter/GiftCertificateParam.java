@@ -5,6 +5,7 @@ import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class describes a composite parameter
@@ -92,5 +93,25 @@ public class GiftCertificateParam {
 
     public void setSortOrder(SortOrder sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GiftCertificateParam that = (GiftCertificateParam) o;
+        return Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(tagNameList, that.tagNameList) &&
+                Objects.equals(priceFilterList, that.priceFilterList) &&
+                Objects.equals(durationFilterList, that.durationFilterList) &&
+                sortType == that.sortType &&
+                sortOrder == that.sortOrder;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, tagNameList, priceFilterList, durationFilterList, sortType, sortOrder);
     }
 }

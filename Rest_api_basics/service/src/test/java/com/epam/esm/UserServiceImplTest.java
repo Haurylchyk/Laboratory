@@ -32,7 +32,6 @@ public class UserServiceImplTest {
     private static final Integer SIZE = 1;
     private static final Integer PAGE_NUMBER_INVALID = 100;
 
-
     @InjectMocks
     private UserServiceImpl userService;
     @Mock

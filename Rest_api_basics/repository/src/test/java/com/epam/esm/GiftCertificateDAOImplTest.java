@@ -3,9 +3,9 @@ package com.epam.esm;
 import com.epam.esm.config.RepositoryConfigTest;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.impl.GiftCertificateDAOImpl;
-import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.filter.Filter;
 import com.epam.esm.dao.query.filter.FilterType;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.entity.GiftCertificate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class GiftCertificateDAOImplTest {
     private GiftCertificateDAO giftCertificateDAO;
 
     @Test
-    public void saveTest() {
+    public void createShouldReturnCreatedGiftCertificate() {
 
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setName(TEST_NAME);
@@ -70,24 +70,26 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findTest() {
+    public void findShouldReturnGiftCertificate() {
         Optional<GiftCertificate> existGiftCertificate = giftCertificateDAO.find(TEST_ID);
         assertTrue(existGiftCertificate.isPresent());
+    }
 
+    @Test
+    public void findShouldReturnNull() {
         Optional<GiftCertificate> notExistGiftCertificate = giftCertificateDAO.find(INVALID_ID);
         assertFalse(notExistGiftCertificate.isPresent());
     }
 
     @Test
-    public void deleteTest() {
+    public void deleteShouldSuccessfully() {
         giftCertificateDAO.delete(TEST_ID);
         Optional<GiftCertificate> giftCertificate = giftCertificateDAO.find(TEST_ID);
-
         assertFalse(giftCertificate.isPresent());
     }
 
     @Test
-    public void findAllTest() {
+    public void findAllShouldReturnAllGiftCertificates() {
         final int EXIST_GС_NUMBER = 4;
         final List<GiftCertificate> giftCertificateList = giftCertificateDAO.findAll(1, 4);
 
@@ -96,7 +98,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findByNameTest() {
+    public void findByNameShouldReturnGiftCertificateList() {
         final Integer GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 NAME, null, null, null, null, null, null);
@@ -107,7 +109,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findByDescriptionTest() {
+    public void findByDescriptionShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 1;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 null, DESCRIPTION, null, null, null, null, null);
@@ -118,7 +120,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findByPriceFilterTest() {
+    public void findByPriceFilterShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 2;
         PRICE_FILTER_LIST.add(PRICE_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
@@ -130,7 +132,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findByDurationFilterTest() {
+    public void findByDurationFilterShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 2;
         DURATION_FILTER_LIST.add(DURATION_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
@@ -142,7 +144,7 @@ public class GiftCertificateDAOImplTest {
     }
 
     @Test
-    public void findByTagNameTest() {
+    public void findByTagNameShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 1;
         TAG_NAME_LIST.add(TAG_NAME);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(

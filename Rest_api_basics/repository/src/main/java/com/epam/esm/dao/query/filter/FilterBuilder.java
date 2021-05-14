@@ -17,9 +17,7 @@ public class FilterBuilder {
         Filter filter = new Filter();
 
         if (!matcher.matches()) {
-            filter.setType(FilterType.EQ);
-            filter.setValue(Integer.parseInt(parameter.toUpperCase()));
-
+            throw new IllegalArgumentException();
         } else {
             String filterTypeName = matcher.group(FIRST_GROUP).toUpperCase();
             filter.setType(FilterType.valueOf(filterTypeName));

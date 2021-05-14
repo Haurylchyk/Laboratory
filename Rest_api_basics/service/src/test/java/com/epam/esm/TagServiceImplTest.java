@@ -40,8 +40,6 @@ class TagServiceImplTest {
     private final String MOST_USED_TAG_NAME = "Activity";
 
     private final Integer USER_ID = 4;
-    private final Integer TOTAL_NUMBER_TAGS = 5;
-    private final Integer TOTAL_NUMBER_PAGES = 2;
 
     private static final Integer PAGE_NUMBER = 1;
     private static final Integer SIZE = 1;

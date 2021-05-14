@@ -5,7 +5,6 @@ import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.dto.GiftCertificateParamDTO;
-import com.epam.esm.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.impl.EntityNotFoundException;
@@ -17,11 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
@@ -31,12 +26,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class GiftCertificateServiceImplTest {
 
     private static final int TEST_GC_ID_FIRST = 1;
@@ -69,17 +64,14 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateDTO updatedGiftCertificateDTO;
     private GiftCertificateDTO createdGiftCertificateDTO;
 
-
     private List<Tag> tagList;
     private List<String> tagNamesList;
     private List<GiftCertificate> giftCertificateList;
-    private List<GiftCertificate> emptyGiftCertificateList;
 
     private GiftCertificateParamDTO compositeParameterDTO;
     private GiftCertificateParamDTO emptyCompositeParameterDTO;
     private GiftCertificateParam compositeParameter;
     private GiftCertificateParam emptyCompositeParameter;
-
 
     @BeforeEach
     public void setUp() {
@@ -128,7 +120,6 @@ class GiftCertificateServiceImplTest {
         updatedGiftCertificateDTO.setDuration(TEST_DURATION);
         updatedGiftCertificateDTO.setTagNames(tagNamesList);
 
-        emptyGiftCertificateList = new ArrayList<>();
         giftCertificateList = new ArrayList<>();
         giftCertificateList.add(giftCertificateFirst);
         giftCertificateList.add(giftCertificateSecond);
@@ -150,7 +141,7 @@ class GiftCertificateServiceImplTest {
     public void createShouldReturnCreatedGiftCertificate() {
         given(giftCertificateDAO.save(any())).willReturn(giftCertificateFirst);
         given(tagDAO.findByName(TEST_TAG_NAME)).willReturn(Optional.of(tag));
-        GiftCertificateDTO createdGCDTO = giftCertificateService.create(updatedGiftCertificateDTO);
+        GiftCertificateDTO createdGCDTO = giftCertificateService.create(createdGiftCertificateDTO);
         assertEquals(TEST_GC_NAME_FIRST, createdGCDTO.getName());
         assertEquals(TEST_DESCRIPTION, createdGCDTO.getDescription());
         assertEquals(TEST_PRICE, createdGCDTO.getPrice());
@@ -182,7 +173,6 @@ class GiftCertificateServiceImplTest {
         given(giftCertificateDAO.find(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
         given(giftCertificateDAO.save(giftCertificateFirst)).willReturn(giftCertificateFirst);
         given(tagDAO.findByName(TEST_TAG_NAME)).willReturn(Optional.of(tag));
-        Mockito.doNothing().when(modelMapper).map(updatedGiftCertificateDTO, giftCertificateFirst);
         GiftCertificateDTO updatedGCDTO = giftCertificateService.update(updatedGiftCertificateDTO, TEST_GC_ID_FIRST);
         assertEquals(updatedGiftCertificateDTO, updatedGCDTO);
     }
@@ -212,22 +202,16 @@ class GiftCertificateServiceImplTest {
     @Test
     public void findWithEmptyParamShouldSuccessfully() {
         final int CORRECT_SIZE = 2;
-        try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
-            paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(emptyCompositeParameterDTO)).thenReturn(emptyCompositeParameter);
-            given(giftCertificateDAO.findByParam(2,2, emptyCompositeParameter)).willReturn(giftCertificateList);
-            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, emptyCompositeParameterDTO);
-            assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
-        }
+        given(giftCertificateDAO.findByParam(eq(2), eq(2), eq(emptyCompositeParameter))).willReturn(giftCertificateList);
+        List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, emptyCompositeParameterDTO);
+        assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
     }
 
     @Test
     public void findByParamShouldSuccessfully() {
         final int CORRECT_SIZE = 2;
-        try (MockedStatic<GiftCertificateParamDTOMapper> paramDTOMapper = Mockito.mockStatic(GiftCertificateParamDTOMapper.class)) {
-            paramDTOMapper.when(() -> GiftCertificateParamDTOMapper.convertToEntity(compositeParameterDTO)).thenReturn(compositeParameter);
-            given(giftCertificateDAO.findByParam(2, 2, compositeParameter)).willReturn(giftCertificateList);
-            List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, compositeParameterDTO);
-            assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
-        }
+        given(giftCertificateDAO.findByParam(eq(2), eq(2), eq(compositeParameter))).willReturn(giftCertificateList);
+        List<GiftCertificateDTO> giftCertificateDTOList = giftCertificateService.findByParam(2, 2, compositeParameterDTO);
+        assertEquals(CORRECT_SIZE, giftCertificateDTOList.size());
     }
 }

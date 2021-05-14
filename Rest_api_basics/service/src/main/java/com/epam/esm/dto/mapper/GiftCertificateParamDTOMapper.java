@@ -1,7 +1,7 @@
 package com.epam.esm.dto.mapper;
-import com.epam.esm.constant.PaginationConstant;
-import com.epam.esm.dao.query.parameter.GiftCertificateParam;
+
 import com.epam.esm.dao.query.filter.FilterBuilder;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
 import com.epam.esm.dto.GiftCertificateParamDTO;

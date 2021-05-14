@@ -121,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
      * Accesses the corresponding DAO method to find all Orders.
      *
      * @param pageNumber number of page.
-     * @param size number of Orders on page.
+     * @param size       number of Orders on page.
      * @return List of objects with Order data.
      */
     @Override

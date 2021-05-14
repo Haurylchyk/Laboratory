@@ -51,9 +51,6 @@ public class GiftCertificatePredicateBuilder {
         if (param.getDurationFilterList() != null) {
             predicateList.add(new GiftCertificateDurationPredicateBuilder());
         }
-        if (param.getTagNameList() != null) {
-            predicateList.add(new GiftCertificateTagNamePredicateBuilder());
-        }
         return new CommonPredicateBuilder(predicateList);
     }
 }

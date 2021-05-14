@@ -4,6 +4,7 @@ import com.epam.esm.assembler.TagModelAssembler;
 import com.epam.esm.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
+@Validated
 @RestController
 @RequestMapping(value = "/tags")
 public class TagController {
@@ -32,7 +35,7 @@ public class TagController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TagDTO create(@RequestBody TagDTO tagDTO) {
+    public TagDTO create(@Valid @RequestBody TagDTO tagDTO) {
         return tagModelAssembler.toModel(tagService.create(tagDTO));
     }
 
@@ -47,8 +50,8 @@ public class TagController {
     }
 
     @GetMapping
-    public List<TagDTO> findAll(@RequestParam(required = false, defaultValue = "1") Integer page,
-                                @RequestParam(required = false, defaultValue = "1") Integer size) {
+    public List<TagDTO> findAll(@RequestParam(required = false, defaultValue = "1") @Min(1) Integer page,
+                                @RequestParam(required = false, defaultValue = "1") @Min(1) Integer size) {
         return tagModelAssembler.toModel(tagService.findAll(page, size));
     }
 
