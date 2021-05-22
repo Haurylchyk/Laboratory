@@ -143,6 +143,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderDTO> findByUserId(Integer id, Integer page, Integer size) {
         List<Order> orderList = orderDAO.findOrdersByUserId(id, page, size);
+        if (orderList.isEmpty()) {
+            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND);
+        }
         return OrderDTOMapper.convertToDTO(orderList);
     }
 

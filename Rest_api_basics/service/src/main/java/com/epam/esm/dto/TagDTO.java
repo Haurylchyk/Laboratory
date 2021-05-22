@@ -9,7 +9,6 @@ import java.util.Objects;
 public class TagDTO extends RepresentationModel<TagDTO> {
 
     private Integer id;
-    @NotNull
     @Size(min = 1, max = 100)
     private String name;
 

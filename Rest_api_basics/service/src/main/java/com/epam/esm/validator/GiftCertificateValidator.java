@@ -118,6 +118,9 @@ public class GiftCertificateValidator {
         if (tagNamesList == null) {
             return true;
         }
+        if (tagNamesList.isEmpty()) {
+            return false;
+        }
         for (String tagName : tagNamesList) {
             if (!TagValidator.isNameValid(tagName)) {
                 return false;

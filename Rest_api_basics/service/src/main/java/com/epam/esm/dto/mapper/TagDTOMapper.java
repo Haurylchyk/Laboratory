@@ -3,7 +3,6 @@ package com.epam.esm.dto.mapper;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

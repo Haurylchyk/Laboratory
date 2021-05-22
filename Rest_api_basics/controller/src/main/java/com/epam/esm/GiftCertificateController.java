@@ -44,7 +44,7 @@ public class GiftCertificateController {
 
     @GetMapping("/{id}")
     public GiftCertificateDTO findById(@PathVariable @Min(1) Integer id) {
-        return giftCertificateService.findById(id);
+        return giftCertificateModelAssembler.toModel(giftCertificateService.findById(id));
     }
 
     @PutMapping("/{id}")

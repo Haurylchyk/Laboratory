@@ -72,6 +72,9 @@ public class GiftCertificateDAOImpl extends EntityDAOImpl<GiftCertificate> imple
             List<Tag> tagList = em.createQuery(FIND_TAG_BY_NAME, Tag.class)
                     .setParameter(ParamNameConstant.TAG_NAME_LIST, tagNameList).getResultList();
             tagList.forEach(tag -> predicateList.add(criteriaBuilder.isMember(tag, root.get(GiftCertificate_.TAG_LIST))));
+            if (tagNameList.size() != tagList.size()) {
+                return new ArrayList<>();
+            }
         }
         criteriaQuery.select(root).where(predicateList.toArray(new Predicate[0]));
 
