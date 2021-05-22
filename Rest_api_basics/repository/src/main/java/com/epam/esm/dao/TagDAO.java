@@ -16,13 +16,6 @@ import java.util.Optional;
 public interface TagDAO extends EntityDAO<Tag> {
 
     /**
-     * Returns all Tags stored in the database.
-     *
-     * @return all Tags stored in the database.
-     */
-    List<Tag> findAll();
-
-    /**
      * Returns Tag with specific name.
      *
      * @param name Tag name.
@@ -37,5 +30,14 @@ public interface TagDAO extends EntityDAO<Tag> {
      * @return List of Tags.
      */
     List<Tag> findByGiftCertificateId(Integer id);
+
+    /**
+     * Returns the most widely used tag for
+     * the user with with specific.
+     *
+     * @return the most widely used tag for
+     * the user with with specific.
+     */
+    Tag findMostWidelyUsedByUserId(Integer id);
 
 }

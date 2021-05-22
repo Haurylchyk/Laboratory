@@ -1,16 +1,24 @@
 package com.epam.esm.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class GiftCertificateDTO {
+public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> {
     private Integer id;
+    @Size(min = 1, max = 100)
     private String name;
+    @Size(min = 1, max = 255)
     private String description;
+    @Min(1)
     private Integer price;
+    @Min(1)
     private Integer duration;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createDate;
@@ -92,8 +100,6 @@ public class GiftCertificateDTO {
                 Objects.equals(duration, that.duration) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
-                Objects.equals(createDate, that.createDate) &&
-                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
                 Objects.equals(tagNames, that.tagNames);
     }
 

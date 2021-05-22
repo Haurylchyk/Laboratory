@@ -2,6 +2,8 @@ package com.epam.esm.validator;
 
 import com.epam.esm.dto.GiftCertificateDTO;
 
+import java.util.List;
+
 /**
  * Class contains methods for checking field values
  * which describe the details of the GiftCertificate.
@@ -29,7 +31,7 @@ public class GiftCertificateValidator {
      * @param giftCertificateDTO GiftCertificate entity.
      * @return true if the data is valid, false otherwise.
      */
-    public static boolean isValidData(GiftCertificateDTO giftCertificateDTO) {
+    public static boolean isValidDataForCreate(GiftCertificateDTO giftCertificateDTO) {
         return isNameValid(giftCertificateDTO.getName())
                 && isDescriptionValid(giftCertificateDTO.getDescription())
                 && isPriceValid(giftCertificateDTO.getPrice())
@@ -45,7 +47,8 @@ public class GiftCertificateValidator {
      * exceed the allowed length, false otherwise.
      */
     public static boolean isNameValid(String name) {
-        return !CommonValidator.isEmpty(name) && CommonValidator.isNameLengthValid(name);
+        return !CommonValidator.isEmpty(name)
+                && CommonValidator.isStringLengthValid(name);
     }
 
     /**
@@ -80,5 +83,49 @@ public class GiftCertificateValidator {
      */
     public static boolean isDurationValid(Integer duration) {
         return !CommonValidator.isEmpty(duration) && CommonValidator.isPositiveNumber(duration);
+    }
+
+    /**
+     * Checks that the data is valid.
+     *
+     * @param giftCertificateDTO GiftCertificate entity.
+     * @return true if the data is valid, false otherwise.
+     */
+    public static boolean isValidDataForUpdate(GiftCertificateDTO giftCertificateDTO) {
+        String name = giftCertificateDTO.getName();
+        if (name != null && !isNameValid(giftCertificateDTO.getName())) {
+            return false;
+        }
+
+        String description = giftCertificateDTO.getDescription();
+        if (description != null && !isDescriptionValid(giftCertificateDTO.getDescription())) {
+            return false;
+        }
+
+        Integer price = giftCertificateDTO.getPrice();
+        if (price != null && !isPriceValid(giftCertificateDTO.getPrice())) {
+            return false;
+        }
+
+        Integer duration = giftCertificateDTO.getDuration();
+        if (duration != null && !isDurationValid(giftCertificateDTO.getDuration())) {
+            return false;
+        }
+        return validateTagList(giftCertificateDTO.getTagNames());
+    }
+
+    private static boolean validateTagList(List<String> tagNamesList) {
+        if (tagNamesList == null) {
+            return true;
+        }
+        if (tagNamesList.isEmpty()) {
+            return false;
+        }
+        for (String tagName : tagNamesList) {
+            if (!TagValidator.isNameValid(tagName)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

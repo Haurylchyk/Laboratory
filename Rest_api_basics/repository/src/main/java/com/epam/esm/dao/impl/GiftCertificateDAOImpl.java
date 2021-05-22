@@ -1,25 +1,24 @@
 package com.epam.esm.dao.impl;
 
-import com.epam.esm.constant.ParameterNameСonstant;
+import com.epam.esm.constant.ParamNameConstant;
 import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.mapper.GiftCertificateMapper;
-import com.epam.esm.dao.query.GiftCertificateParam;
-import com.epam.esm.dao.query.QueryAndParam;
-import com.epam.esm.dao.query.builder.GiftCertificateQueryBuilder;
+import com.epam.esm.dao.query.builder.GiftCertificatePredicateBuilder;
+import com.epam.esm.dao.query.builder.PredicateBuilder;
+import com.epam.esm.dao.query.parameter.GiftCertificateParam;
+import com.epam.esm.dao.query.sort.OrderBy;
 import com.epam.esm.entity.GiftCertificate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
+import com.epam.esm.entity.GiftCertificate_;
+import com.epam.esm.entity.Tag;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.Instant;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class implements interface GiftCertificateDAO. Describes the interaction with the database
@@ -30,132 +29,14 @@ import java.util.Optional;
  * @since JDK 1.8
  */
 @Repository
-public class GiftCertificateDAOImpl implements GiftCertificateDAO {
+public class GiftCertificateDAOImpl extends EntityDAOImpl<GiftCertificate> implements GiftCertificateDAO {
 
-    private static final String CREATE_CERTIFICATE = "INSERT INTO gift_certificate (name, description, price, duration, create_date) " +
-            "VALUES (:name, :description, :price, :duration, :create_date)";
-    private static final String GET_CERTIFICATE_BY_ID = "SELECT * FROM gift_certificate WHERE (id=:id)";
-    private static final String DELETE_CERTIFICATE = "DELETE FROM gift_certificate WHERE id = ?";
-    private static final String GET_ALL_CERTIFICATES = "SELECT * FROM gift_certificate";
-    private static final String GET_CERTIFICATES_BY_TAG_NAME = "SELECT gift_certificate.id, gift_certificate.name, description, " +
-            "price, duration, create_date, last_update_date FROM gift_certificate " +
-            "JOIN certificate_tag cert_tag ON gift_certificate.id = cert_tag.cert_id " +
-            "JOIN tag ON tag.id = cert_tag.tag_id WHERE tag.name =:name";
-    private static final String CREATE_CERTIFICATE_TAG = "INSERT INTO certificate_tag(cert_id, tag_id) VALUES (?,?)";
-    private static final String DELETE_CERTIFICATE_TAGS_BY_CERTIFICATE_ID = "DELETE FROM certificate_tag WHERE (cert_id = ?)";
+    private static final String FIND_CERTIFICATES_BY_TAG_NAME = "SELECT DISTINCT e FROM GiftCertificate e " +
+            "INNER JOIN e.tagList c WHERE c.name = :name";
+    private static final String FIND_TAG_BY_NAME = "SELECT t FROM Tag t WHERE t.name IN (:tagNameList)";
 
-    /**
-     * The index of the first item in the list.
-     */
-    private static final int FIRST_ELEMENT_INDEX = 0;
-
-    /**
-     * Object responsible for data (database) access.
-     */
-    private final NamedParameterJdbcTemplate jdbcTemplate;
-
-    /**
-     * Object that links the GiftCertificate entity to the ResultSet.
-     */
-    private final static GiftCertificateMapper giftCertificateMapper = GiftCertificateMapper.getInstance();
-
-    /**
-     * Constructor with parameter.
-     *
-     * @param dataSource object that manages connections.
-     */
-    @Autowired
-    public GiftCertificateDAOImpl(DataSource dataSource) {
-        jdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-    }
-
-    /**
-     * Adds new object GiftCertificate to database.
-     *
-     * @param giftCertificate object of the GiftCertificate type.
-     * @return GiftCertificate entity.
-     */
-    @Override
-    public GiftCertificate create(GiftCertificate giftCertificate) {
-        final KeyHolder keyHolder = new GeneratedKeyHolder();
-        final Timestamp CURRENT_DATE = Timestamp.from(Instant.now());
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.NAME, giftCertificate.getName());
-        params.addValue(ParameterNameСonstant.DESCRIPTION, giftCertificate.getDescription());
-        params.addValue(ParameterNameСonstant.PRICE, giftCertificate.getPrice());
-        params.addValue(ParameterNameСonstant.DURATION, giftCertificate.getDuration());
-        params.addValue(ParameterNameСonstant.CREATE_DATE, CURRENT_DATE);
-        jdbcTemplate.update(CREATE_CERTIFICATE, params, keyHolder, new String[]{ParameterNameСonstant.ID});
-
-        Integer id = keyHolder.getKey().intValue();
-        return find(id).get();
-    }
-
-    /**
-     * Returns GiftCertificate with specific id.
-     *
-     * @param id GiftCertificate id.
-     * @return Optional of GiftCertificate entity stored in the database.
-     */
-    @Override
-    public Optional<GiftCertificate> find(Integer id) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.ID, id);
-        List<GiftCertificate> listGiftCertificate = jdbcTemplate.query(GET_CERTIFICATE_BY_ID, params, giftCertificateMapper);
-        return listGiftCertificate.isEmpty() ? Optional.empty() : Optional.of(listGiftCertificate.get(FIRST_ELEMENT_INDEX));
-    }
-
-    /**
-     * Updates GiftCertificate with specific id.
-     *
-     * @param giftCertificate updated object of the GiftCertificate type.
-     * @param id              GiftCertificate id.
-     * @return updated GiftCertificate entity.
-     */
-    @Override
-    public GiftCertificate update(GiftCertificate giftCertificate, Integer id) {
-        GiftCertificateQueryBuilder queryBuilder = GiftCertificateQueryBuilder.getInstance();
-        QueryAndParam compositeQuery = queryBuilder.buildUpdateQuery(giftCertificate);
-
-        jdbcTemplate.getJdbcOperations().update(compositeQuery.getQuery(), compositeQuery.getParams());
-        return find(id).get();
-    }
-
-    /**
-     * Deletes GiftCertificate with specific id from database.
-     *
-     * @param id GiftCertificate id.
-     */
-    @Override
-    public void delete(Integer id) {
-        jdbcTemplate.getJdbcOperations().update(DELETE_CERTIFICATE, id);
-    }
-
-    /**
-     * Returns all GiftCertificates stored in the database.
-     *
-     * @return all GiftCertificate stored in the database.
-     */
-    @Override
-    @Transactional
-    public List<GiftCertificate> findAll() {
-        List<GiftCertificate> giftCertificates = jdbcTemplate.query(GET_ALL_CERTIFICATES, giftCertificateMapper);
-        return giftCertificates;
-    }
-
-    /**
-     * Returns list of matching GiftCertificates.
-     *
-     * @param giftCertificateParam special object containing params.
-     * @return list of GiftCertificates.
-     */
-    @Override
-    public List<GiftCertificate> findByParam(GiftCertificateParam giftCertificateParam) {
-
-        QueryAndParam queryAndParam = GiftCertificateQueryBuilder.getInstance()
-                .buildGetQuery(giftCertificateParam);
-        return jdbcTemplate.getJdbcOperations().query(queryAndParam.getQuery(), queryAndParam.getParams(), giftCertificateMapper);
+    public GiftCertificateDAOImpl() {
+        super(GiftCertificate.class);
     }
 
     /**
@@ -165,32 +46,43 @@ public class GiftCertificateDAOImpl implements GiftCertificateDAO {
      */
     @Override
     public List<GiftCertificate> findByTagName(String name) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue(ParameterNameСonstant.NAME, name);
-        return jdbcTemplate.query(GET_CERTIFICATES_BY_TAG_NAME, params, giftCertificateMapper);
+        return em.createQuery(FIND_CERTIFICATES_BY_TAG_NAME, GiftCertificate.class).
+                setParameter(ParamNameConstant.NAME, name).getResultList();
     }
 
     /**
-     * Makes an record (to the database) that associates
-     * specific GiftCertificate with specific Tag.
+     * Returns list of matching GiftCertificates.
      *
-     * @param giftCertificateId GiftCertificate id.
-     * @param tagId             Tag id.
+     * @param param special object containing params.
+     * @return list of GiftCertificates.
      */
     @Override
-    public void putCertificateTag(Integer giftCertificateId, Integer tagId) {
-        jdbcTemplate.getJdbcOperations().update(CREATE_CERTIFICATE_TAG, giftCertificateId, tagId);
-    }
+    public List<GiftCertificate> findByParam(Integer page, Integer size, GiftCertificateParam param) {
+        PredicateBuilder predicateBuilder = GiftCertificatePredicateBuilder.getInstance().build(param);
 
-    /**
-     * Deletes records (from the database) that associates
-     * specific GiftCertificate with its Tags.
-     *
-     * @param id GiftCertificate id.
-     */
-    @Override
-    public void deleteCertificateTagsById(Integer id) {
-        jdbcTemplate.getJdbcOperations().update(DELETE_CERTIFICATE_TAGS_BY_CERTIFICATE_ID, id);
-    }
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<GiftCertificate> criteriaQuery = criteriaBuilder.createQuery(GiftCertificate.class);
+        Root<GiftCertificate> root = criteriaQuery.from(GiftCertificate.class);
 
+        List<Predicate> predicateList = new ArrayList<>();
+        predicateList.add(predicateBuilder.toPredicate(root, criteriaBuilder, param));
+
+        if (param.getTagNameList() != null) {
+            List<String> tagNameList = param.getTagNameList().stream().distinct().collect(Collectors.toList());
+            List<Tag> tagList = em.createQuery(FIND_TAG_BY_NAME, Tag.class)
+                    .setParameter(ParamNameConstant.TAG_NAME_LIST, tagNameList).getResultList();
+            tagList.forEach(tag -> predicateList.add(criteriaBuilder.isMember(tag, root.get(GiftCertificate_.TAG_LIST))));
+            if (tagNameList.size() != tagList.size()) {
+                return new ArrayList<>();
+            }
+        }
+        criteriaQuery.select(root).where(predicateList.toArray(new Predicate[0]));
+
+        if (param.getSortType() != null && param.getSortOrder() != null) {
+            OrderBy orderBy = new OrderBy();
+            Order order = orderBy.toOrderBy(root, criteriaBuilder, param);
+            criteriaQuery.orderBy(order);
+        }
+        return em.createQuery(criteriaQuery).setMaxResults(size).setFirstResult(size * (page - 1)).getResultList();
+    }
 }

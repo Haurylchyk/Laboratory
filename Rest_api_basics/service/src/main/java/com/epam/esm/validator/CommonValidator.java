@@ -1,6 +1,9 @@
 package com.epam.esm.validator;
 
+import java.util.Collection;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Class contains methods for checking  values of common
@@ -19,9 +22,20 @@ public class CommonValidator {
     }
 
     /**
-     * The maximum permitted length of the name.
+     * The minimum permitted length of the string.
+     */
+    private static final int MIN_VALID_NAME_LENGTH = 2;
+
+    /**
+     * The maximum permitted length of the string.
      */
     private static final int MAX_VALID_NAME_LENGTH = 100;
+
+    /**
+     * The valid name format.
+     */
+    private static final String NAME_FORMAT_REGEX = "^[A-zА-я_]+$";
+
 
     /**
      * Checks if the object is not empty.
@@ -36,6 +50,9 @@ public class CommonValidator {
         if (object instanceof String && ((String) object).isEmpty()) {
             return true;
         }
+        if (object instanceof Collection && ((Collection) object).isEmpty()) {
+            return true;
+        }
         return false;
     }
 
@@ -45,8 +62,10 @@ public class CommonValidator {
      * @param str string for verification.
      * @return true if the string meets the requirements, false otherwise.
      */
-    public static boolean isNameLengthValid(String str) {
-        return str.length() <= MAX_VALID_NAME_LENGTH;
+    public static boolean isStringLengthValid(String str) {
+
+        return str.length() >= MIN_VALID_NAME_LENGTH
+                && str.length() <= MAX_VALID_NAME_LENGTH;
     }
 
     /**
@@ -57,5 +76,17 @@ public class CommonValidator {
      */
     public static boolean isPositiveNumber(Integer number) {
         return number > 0;
+    }
+
+    /**
+     * Checks whether the name matches the specified format.
+     *
+     * @param name name for verification.
+     * @return true if the name meets the requirements, false otherwise.
+     */
+    public static boolean isNameFormatValid(String name) {
+        Pattern p = Pattern.compile(NAME_FORMAT_REGEX);
+        Matcher m = p.matcher(name);
+        return m.matches();
     }
 }

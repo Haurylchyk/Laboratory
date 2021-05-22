@@ -22,12 +22,12 @@ public interface TagService {
     TagDTO create(TagDTO tagDTO);
 
     /**
-     * Accesses the corresponding DAO method to get Tag object with specific id.
+     * Accesses the corresponding DAO method to find Tag object with specific id.
      *
      * @param id Tag id.
      * @return object with Tag data.
      */
-    TagDTO finById(Integer id);
+    TagDTO findById(Integer id);
 
     /**
      * Accesses the corresponding DAO method to delete Tag object with specific id.
@@ -37,9 +37,26 @@ public interface TagService {
     void delete(Integer id);
 
     /**
-     * Accesses the corresponding DAO method to get all Tags.
+     * Accesses the corresponding DAO method to find all Tags.
      *
+     * @param pageNumber number of page.
+     * @param size number of Tags on page.
      * @return List of objects with Tag data.
      */
-    List<TagDTO> findAll();
+    List<TagDTO> findAll(Integer pageNumber, Integer size);
+
+    /**
+     * Accesses the corresponding DAO method to find most widely used Tag for
+     * the user with the highest cost of all orders.
+     *
+     * @return object with Tag data.
+     */
+    TagDTO findMostWidelyUsedOfTopOrderUser();
+
+    /**
+     * Calculates the total number of pages required to display all Tags.
+     *
+     * @return the total number of pages required to display all Tags.
+     */
+    Integer findNumberPagesForAllTags(Integer size);
 }
