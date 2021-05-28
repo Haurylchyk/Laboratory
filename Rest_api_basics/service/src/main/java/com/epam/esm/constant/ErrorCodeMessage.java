@@ -15,7 +15,6 @@ public class ErrorCodeMessage {
     public static final String ERROR_CODE_GC_INVALID_DATA = "0210";
     public static final String ERROR_CODE_GC_NOT_FOUND = "4040200";
 
-    public static final String ERROR_CODE_USER_INVALID_DATA = "0310";
     public static final String ERROR_CODE_USER_EXISTS = "0320";
     public static final String ERROR_CODE_USER_NOT_FOUND = "4040300";
     public static final String ERROR_CODE_AUTH_FAILED = "0330";
