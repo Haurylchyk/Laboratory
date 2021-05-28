@@ -1,6 +1,6 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.model.dto.mapper;
 
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.model.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;

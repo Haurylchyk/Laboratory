@@ -1,10 +1,10 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.model.dto.mapper;
 
 import com.epam.esm.dao.query.filter.FilterBuilder;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
 import com.epam.esm.dao.query.sort.SortOrder;
 import com.epam.esm.dao.query.sort.SortType;
-import com.epam.esm.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.GiftCertificateParamDTO;
 
 public class GiftCertificateParamDTOMapper {
 

@@ -1,6 +1,6 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.model.dto.mapper;
 
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.model.dto.UserDTO;
 import com.epam.esm.entity.User;
 
 import java.util.List;

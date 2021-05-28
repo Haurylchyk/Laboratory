@@ -1,7 +1,7 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.model.dto.mapper;
 
-import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.model.dto.OrderDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
 
