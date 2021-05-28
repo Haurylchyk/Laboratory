@@ -1,6 +1,6 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.model.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

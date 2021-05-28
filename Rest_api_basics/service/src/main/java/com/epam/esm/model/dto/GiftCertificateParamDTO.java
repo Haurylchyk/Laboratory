@@ -1,4 +1,4 @@
-package com.epam.esm.dto;
+package com.epam.esm.model.dto;
 
 import javax.validation.constraints.Size;
 import java.util.List;

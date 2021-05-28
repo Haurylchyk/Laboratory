@@ -1,7 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.dao.UserDAO;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.model.dto.UserDTO;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.NotExistingPageException;

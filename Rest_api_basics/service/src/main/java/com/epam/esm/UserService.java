@@ -1,6 +1,8 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.model.CreatingUserData;
+import com.epam.esm.model.dto.AuthRequestDTO;
+import com.epam.esm.model.dto.UserDTO;
 
 import java.util.List;
 
@@ -16,10 +18,18 @@ public interface UserService {
     /**
      * Accesses the corresponding DAO method to create a new User object.
      *
-     * @param userDTO object with User data.
+     * @param creatingUserData object containing the data required to create a User.
      * @return created object with User data.
      */
-    UserDTO create(UserDTO userDTO);
+    UserDTO signUp(CreatingUserData creatingUserData);
+
+    /**
+     * Accesses the appropriate DAO method so that the authenticated User can log in.
+     *
+     * @param authRequestDTO object containing the data required to log in.
+     * @return created object with User data.
+     */
+    UserDTO login(AuthRequestDTO authRequestDTO);
 
     /**
      * Accesses the corresponding DAO method to find User object with specific id.

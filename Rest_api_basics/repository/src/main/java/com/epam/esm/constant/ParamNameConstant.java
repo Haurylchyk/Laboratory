@@ -12,5 +12,4 @@ public class ParamNameConstant {
     public static final String NAME = "name";
     public static final String LOGIN = "login";
     public static final String TAG_NAME_LIST = "tagNameList";
-
 }

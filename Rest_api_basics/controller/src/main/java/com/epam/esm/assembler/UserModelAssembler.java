@@ -3,7 +3,7 @@ package com.epam.esm.assembler;
 import com.epam.esm.UserController;
 import com.epam.esm.UserService;
 import com.epam.esm.constant.PaginationConstant;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.model.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;

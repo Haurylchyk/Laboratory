@@ -18,6 +18,7 @@ public class ErrorCodeMessage {
     public static final String ERROR_CODE_USER_INVALID_DATA = "0310";
     public static final String ERROR_CODE_USER_EXISTS = "0320";
     public static final String ERROR_CODE_USER_NOT_FOUND = "4040300";
+    public static final String ERROR_CODE_AUTH_FAILED = "0330";
 
     public static final String ERROR_CODE_ORDER_INVALID_DATA = "0410";
     public static final String ERROR_CODE_ORDER_NOT_FOUND = "4040400";
@@ -25,4 +26,8 @@ public class ErrorCodeMessage {
     public static final String ERROR_CODE_PAGE_NOT_FOUND = "4040500";
 
     public static final String ERROR_CODE_ARG_NOT_VALID = "0610";
+
+    public static final String ERROR_CODE_TOKEN_NOT_VALID = "0710";
+
+
 }

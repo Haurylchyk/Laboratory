@@ -24,6 +24,7 @@ public class EntityDAOImpl<E extends BaseEntity> implements EntityDAO<E> {
     protected EntityManager em;
 
     @Override
+    @Transactional
     public E save(E entity) {
         em.persist(entity);
         return find(entity.getId()).get();

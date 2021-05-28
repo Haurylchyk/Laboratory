@@ -1,6 +1,6 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.model.dto.OrderDTO;
 
 import java.util.List;
 

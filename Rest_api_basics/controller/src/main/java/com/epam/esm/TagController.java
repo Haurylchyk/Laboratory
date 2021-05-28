@@ -1,7 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.assembler.TagModelAssembler;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.model.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

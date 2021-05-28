@@ -1,8 +1,8 @@
 package com.epam.esm;
 
 import com.epam.esm.assembler.GiftCertificateModelAssembler;
-import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.model.dto.GiftCertificateParamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;

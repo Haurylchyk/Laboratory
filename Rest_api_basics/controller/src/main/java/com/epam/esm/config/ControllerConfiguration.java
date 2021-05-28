@@ -16,7 +16,7 @@ import java.util.Locale;
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm")
 @EnableTransactionManagement
-public class ControllerConfig implements WebMvcConfigurer {
+public class ControllerConfiguration implements WebMvcConfigurer {
 
     private static final String ERROR_MESSAGES_BUNDLE_CLASSPATH = "classpath:local";
     private static final String DEFAULT_ENCODING = "UTF-8";

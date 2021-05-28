@@ -2,8 +2,8 @@ package com.epam.esm;
 
 import com.epam.esm.dao.TagDAO;
 import com.epam.esm.dao.UserDAO;
-import com.epam.esm.dto.TagDTO;
-import com.epam.esm.dto.mapper.TagDTOMapper;
+import com.epam.esm.model.dto.TagDTO;
+import com.epam.esm.model.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.impl.EntityNotFoundException;

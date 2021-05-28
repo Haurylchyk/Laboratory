@@ -3,7 +3,7 @@ package com.epam.esm.assembler;
 import com.epam.esm.TagController;
 import com.epam.esm.TagService;
 import com.epam.esm.constant.PaginationConstant;
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.model.dto.TagDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
