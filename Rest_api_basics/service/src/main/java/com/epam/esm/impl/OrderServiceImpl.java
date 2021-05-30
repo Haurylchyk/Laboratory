@@ -5,6 +5,7 @@ import com.epam.esm.constant.ErrorCodeMessage;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
+import com.epam.esm.entity.OrderGiftCertificate;
 import com.epam.esm.model.dto.OrderDTO;
 import com.epam.esm.model.dto.mapper.OrderDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
@@ -78,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         User user = optionalUser.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));
 
-        List<GiftCertificate> giftCertificateList = new ArrayList<>();
+        List<OrderGiftCertificate> orderGiftCertificateList = new ArrayList<>();
         int cost = 0;
 
         for (Integer giftCertificateId : giftCertificatesIdList) {
@@ -88,14 +89,14 @@ public class OrderServiceImpl implements OrderService {
                     () -> new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
 
             cost += giftCertificate.getPrice();
-            giftCertificateList.add(giftCertificate);
+            orderGiftCertificateList.add(new OrderGiftCertificate(giftCertificate));
         }
 
         Order order = new Order();
         LocalDateTime currentLocalDateTime = LocalDateTime.now();
 
         order.setUser(user);
-        order.setGiftCertificateList(giftCertificateList);
+        order.setGiftCertificateList(orderGiftCertificateList);
         order.setCost(cost);
         order.setDate(currentLocalDateTime);
 

@@ -7,9 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,12 +29,8 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "order_certificate",
-            joinColumns = @JoinColumn(name = "order_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "cert_id", nullable = false))
-    private List<GiftCertificate> giftCertificateList;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    private List<OrderGiftCertificate> giftCertificateList;
 
     public User getUser() {
         return user;
@@ -61,11 +56,11 @@ public class Order extends BaseEntity {
         this.date = date;
     }
 
-    public List<GiftCertificate> getGiftCertificateList() {
+    public List<OrderGiftCertificate> getGiftCertificateList() {
         return giftCertificateList;
     }
 
-    public void setGiftCertificateList(List<GiftCertificate> giftCertificateList) {
+    public void setGiftCertificateList(List<OrderGiftCertificate> giftCertificateList) {
         this.giftCertificateList = giftCertificateList;
     }
 

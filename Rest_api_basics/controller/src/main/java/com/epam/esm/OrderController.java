@@ -40,7 +40,7 @@ public class OrderController {
     @GetMapping
     public List<OrderDTO> findByUserId(@PathVariable @Min(1) Integer userId,
                                        @RequestParam(required = false, defaultValue = "1") @Min(1) Integer page,
-                                       @RequestParam(required = false, defaultValue = "1") @Min(1) Integer size) {
+                                       @RequestParam(required = false, defaultValue = "20") @Min(1) Integer size) {
         return orderService.findByUserId(userId, page, size);
     }
 }

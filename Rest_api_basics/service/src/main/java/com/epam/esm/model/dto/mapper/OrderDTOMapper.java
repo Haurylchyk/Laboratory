@@ -1,9 +1,9 @@
 package com.epam.esm.model.dto.mapper;
 
-import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.entity.OrderGiftCertificate;
 import com.epam.esm.model.dto.OrderDTO;
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
+import com.epam.esm.model.dto.OrderGiftCertificateDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,24 +17,6 @@ public class OrderDTOMapper {
     }
 
     /**
-     * Converts OrderDTO to Order.
-     *
-     * @param orderDTO object of OrderDTO type.
-     * @return object of Order type.
-     */
-    public static Order convertToEntity(OrderDTO orderDTO) {
-        Order order = new Order();
-        order.setId(orderDTO.getId());
-        order.setCost(orderDTO.getCost());
-        order.setDate(orderDTO.getDate());
-        List<GiftCertificate> giftCertificateList = GiftCertificateDTOMapper
-                .convertToEntity(orderDTO.getGiftCertificateList());
-        order.setGiftCertificateList(giftCertificateList);
-
-        return order;
-    }
-
-    /**
      * Converts Order to OrderDTO.
      *
      * @param order object of Order type.
@@ -45,9 +27,9 @@ public class OrderDTOMapper {
 
         orderDTO.setId(order.getId());
 
-        List<GiftCertificateDTO> giftCertificateDTOList = GiftCertificateDTOMapper
+        List<OrderGiftCertificateDTO> orderGiftCertificateDTOList = OrderGiftCertificateDTOMapper
                 .convertToDTO(order.getGiftCertificateList());
-        orderDTO.setGiftCertificateList(giftCertificateDTOList);
+        orderDTO.setGiftCertificateList(orderGiftCertificateDTOList);
 
         orderDTO.setCost(order.getCost());
         orderDTO.setDate(order.getDate());

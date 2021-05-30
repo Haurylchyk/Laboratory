@@ -1,15 +1,14 @@
 package com.epam.esm.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class OrderDTO extends RepresentationModel<OrderDTO> {
+public class OrderDTO {
     private Integer id;
-    private List<GiftCertificateDTO> giftCertificateList;
+    private List<OrderGiftCertificateDTO> giftCertificateList;
     private Integer cost;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime date;
@@ -22,11 +21,11 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
         this.id = id;
     }
 
-    public List<GiftCertificateDTO> getGiftCertificateList() {
+    public List<OrderGiftCertificateDTO> getGiftCertificateList() {
         return giftCertificateList;
     }
 
-    public void setGiftCertificateList(List<GiftCertificateDTO> giftCertificateList) {
+    public void setGiftCertificateList(List<OrderGiftCertificateDTO> giftCertificateList) {
         this.giftCertificateList = giftCertificateList;
     }
 

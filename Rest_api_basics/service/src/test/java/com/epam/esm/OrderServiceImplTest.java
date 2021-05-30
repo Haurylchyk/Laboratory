@@ -3,8 +3,10 @@ package com.epam.esm;
 import com.epam.esm.dao.GiftCertificateDAO;
 import com.epam.esm.dao.OrderDAO;
 import com.epam.esm.dao.UserDAO;
+import com.epam.esm.entity.OrderGiftCertificate;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.OrderDTO;
+import com.epam.esm.model.dto.OrderGiftCertificateDTO;
 import com.epam.esm.model.dto.UserDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
@@ -59,8 +61,10 @@ public class OrderServiceImplTest {
     private UserDTO userDTO;
     private GiftCertificate testGiftCertificate;
     private GiftCertificateDTO testGiftCertificateDTO;
-    private List<GiftCertificate> giftCertificateList;
-    private List<GiftCertificateDTO> giftCertificateDTOList;
+    private OrderGiftCertificate testOrderGiftCertificate;
+    private OrderGiftCertificateDTO testOrderGiftCertificateDTO;
+    private List<OrderGiftCertificate> orderGiftCertificateList;
+    private List<OrderGiftCertificateDTO> orderGiftCertificateDTOList;
     private List<Order> orderList;
     private List<Order> emptyOrderList;
     private List<OrderDTO> orderDTOList;
@@ -86,6 +90,8 @@ public class OrderServiceImplTest {
         testGiftCertificate.setCreateDate(TEST_DATE);
         testGiftCertificate.setLastUpdateDate(TEST_DATE);
 
+        testOrderGiftCertificate = new OrderGiftCertificate();
+        testOrderGiftCertificate.setGiftCertificate(testGiftCertificate);
 
         testGiftCertificateDTO = new GiftCertificateDTO();
         testGiftCertificateDTO.setId(TEST_GС_ID);
@@ -94,18 +100,21 @@ public class OrderServiceImplTest {
         testGiftCertificateDTO.setCreateDate(TEST_DATE);
         testGiftCertificateDTO.setLastUpdateDate(TEST_DATE);
 
-        giftCertificateDTOList = new ArrayList<>();
-        giftCertificateDTOList.add(testGiftCertificateDTO);
+        testOrderGiftCertificateDTO = new OrderGiftCertificateDTO();
+        testOrderGiftCertificateDTO.setGiftCertificate(testGiftCertificateDTO);
+
+        orderGiftCertificateDTOList = new ArrayList<>();
+        orderGiftCertificateDTOList.add(testOrderGiftCertificateDTO);
 
         userDTO = new UserDTO();
         userDTO.setId(TEST_USER_ID);
 
-        giftCertificateList = new ArrayList<>();
-        giftCertificateList.add(testGiftCertificate);
+        orderGiftCertificateList = new ArrayList<>();
+        orderGiftCertificateList.add(testOrderGiftCertificate);
 
         testOrder = new Order();
         testOrder.setUser(testUser);
-        testOrder.setGiftCertificateList(giftCertificateList);
+        testOrder.setGiftCertificateList(orderGiftCertificateList);
         testOrder.setId(TEST_ID);
         testOrder.setCost(TEST_PRICE);
         testOrder.setDate(TEST_DATE);
@@ -116,7 +125,7 @@ public class OrderServiceImplTest {
         emptyOrderList = new ArrayList<>();
 
         testOrderDTO = new OrderDTO();
-        testOrderDTO.setGiftCertificateList(giftCertificateDTOList);
+        testOrderDTO.setGiftCertificateList(orderGiftCertificateDTOList);
         testOrderDTO.setId(TEST_ID);
         testOrderDTO.setCost(TEST_PRICE);
         testOrderDTO.setDate(TEST_DATE);
@@ -135,7 +144,7 @@ public class OrderServiceImplTest {
         OrderDTO receivedDTO = orderService.create(TEST_USER_ID, giftCertificateIdList);
 
         assertEquals(TEST_ID, receivedDTO.getId());
-        assertEquals(giftCertificateDTOList, receivedDTO.getGiftCertificateList());
+        assertEquals(orderGiftCertificateDTOList, receivedDTO.getGiftCertificateList());
         assertEquals(TEST_DATE, receivedDTO.getDate());
         assertEquals(TEST_PRICE, receivedDTO.getCost());
     }
@@ -178,7 +187,6 @@ public class OrderServiceImplTest {
     @Test
     public void findByByUserIdShouldNotFoundException() {
         given(orderDAO.findOrdersByUserId(NOT_EXIST_USER_ID, 1, 2)).willReturn(emptyOrderList);
-        List<OrderDTO> receivedDtoList = orderService.findByUserId(NOT_EXIST_USER_ID, 1, 2);
-        assertEquals(emptyOrderList, receivedDtoList);
+        assertThrows(EntityNotFoundException.class, () -> orderService.findByUserId(NOT_EXIST_USER_ID, 1, 2));
     }
 }
