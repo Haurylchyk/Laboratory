@@ -2,26 +2,31 @@ package com.epam.esm.impl;
 
 import com.epam.esm.GiftCertificateService;
 import com.epam.esm.constant.ErrorCodeMessage;
-import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.TagDAO;
+import com.epam.esm.dao.GiftCertificateRepository;
+import com.epam.esm.dao.TagRepository;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
-import com.epam.esm.model.dto.GiftCertificateDTO;
-import com.epam.esm.model.dto.GiftCertificateParamDTO;
-import com.epam.esm.model.dto.mapper.GiftCertificateDTOMapper;
-import com.epam.esm.model.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.InvalidDataException;
+import com.epam.esm.exception.impl.NotExistingPageException;
+import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.model.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.mapper.GiftCertificateDTOMapper;
+import com.epam.esm.model.dto.mapper.GiftCertificateParamDTOMapper;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -38,27 +43,27 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     /**
      * Object of the GiftCertificateDAO type.
      */
-    private final GiftCertificateDAO giftCertificateDAO;
+    private final GiftCertificateRepository giftCertificateRepository;
 
     /**
      * Object of the TagDAO type.
      */
-    private final TagDAO tagDAO;
+    private final TagRepository tagRepository;
 
     private ModelMapper modelMapper;
 
     /**
      * Constructor with parameter.
      *
-     * @param giftCertificateDAO interface for working with
-     *                           the corresponding DAO methods.
-     * @param tagDAO             interface for working with
-     *                           the corresponding DAO methods.
+     * @param giftCertificateRepository interface for working with
+     *                                  the corresponding DAO methods.
+     * @param tagRepository             interface for working with
+     *                                  the corresponding DAO methods.
      */
     @Autowired
-    public GiftCertificateServiceImpl(GiftCertificateDAO giftCertificateDAO, TagDAO tagDAO, ModelMapper modelMapper) {
-        this.giftCertificateDAO = giftCertificateDAO;
-        this.tagDAO = tagDAO;
+    public GiftCertificateServiceImpl(GiftCertificateRepository giftCertificateRepository, TagRepository tagRepository, ModelMapper modelMapper) {
+        this.giftCertificateRepository = giftCertificateRepository;
+        this.tagRepository = tagRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -81,7 +86,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         giftCertificate.setCreateDate(LocalDateTime.now());
         giftCertificate.setLastUpdateDate(LocalDateTime.now());
 
-        GiftCertificate newGiftCertificate = giftCertificateDAO.save(giftCertificate);
+        GiftCertificate newGiftCertificate = giftCertificateRepository.save(giftCertificate);
 
         return GiftCertificateDTOMapper.convertToDTO(newGiftCertificate);
     }
@@ -94,7 +99,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
      */
     @Override
     public GiftCertificateDTO findById(Integer id) {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateRepository.findById(id);
         GiftCertificate giftCertificate = optionalGiftCertificate.orElseThrow(
                 () -> new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         return GiftCertificateDTOMapper.convertToDTO(giftCertificate);
@@ -113,7 +118,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         if (!GiftCertificateValidator.isValidDataForUpdate(updatedCertificateDTO)) {
             throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_GC_INVALID_DATA);
         }
-        Optional<GiftCertificate> optionalGiftCertificateFromDB = giftCertificateDAO.find(id);
+        Optional<GiftCertificate> optionalGiftCertificateFromDB = giftCertificateRepository.findById(id);
         GiftCertificate giftCertificateFromDB = optionalGiftCertificateFromDB.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
         updatedCertificateDTO.setId(id);
@@ -128,7 +133,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             giftCertificateFromDB.setTagList(tagList);
         }
 
-        GiftCertificate updatedGiftCertificate = giftCertificateDAO.save(giftCertificateFromDB);
+        GiftCertificate updatedGiftCertificate = giftCertificateRepository.save(giftCertificateFromDB);
 
         return GiftCertificateDTOMapper.convertToDTO(updatedGiftCertificate);
     }
@@ -141,48 +146,42 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     @Override
     @Transactional
     public void delete(Integer id) {
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDAO.find(id);
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateRepository.findById(id);
         optionalGiftCertificate.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_GC_NOT_FOUND));
-        List<Tag> tagList = tagDAO.findByGiftCertificateId(id);
-        giftCertificateDAO.delete(id);
+        List<Tag> tagList = tagRepository.findByGiftCertificateId(id);
+        giftCertificateRepository.deleteById(id);
         deleteTagsIfNotUsed(tagList);
     }
 
     /**
      * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
-     * @param page         number of page.
-     * @param size         number of GiftCertificates on page.
+     * @param pageable     object contains page number and page size.
      * @param parameterDTO special object containing requested parameters.
-     * @return list of GiftCertificates.
+     * @return list of GiftCertificates for the current page.
      */
     @Override
-    public List<GiftCertificateDTO> findByParam(Integer page, Integer size, GiftCertificateParamDTO parameterDTO) {
+    public Page<GiftCertificateDTO> findByParam(Pageable pageable, GiftCertificateParamDTO parameterDTO) {
+        Integer count = 0;
+        List<GiftCertificate> giftCertificates = new ArrayList<>();
         GiftCertificateParam parameter = GiftCertificateParamDTOMapper.convertToEntity(parameterDTO);
-
-        List<GiftCertificate> giftCertificates = giftCertificateDAO.findByParam(page, size, parameter);
-
+        Map<Integer, List<GiftCertificate>> giftCertificatesMap = giftCertificateRepository.findByParam(pageable.getPageNumber(), pageable.getPageSize(), parameter);
+        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificatesMap.entrySet()) {
+            count = entry.getKey();
+            giftCertificates = entry.getValue();
+        }
+        if (giftCertificates.isEmpty()) {
+            throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
+        }
         List<GiftCertificateDTO> giftCertificatesDTO = new ArrayList<>();
 
         for (GiftCertificate giftCertificate : giftCertificates) {
-            List<Tag> tagList = tagDAO.findByGiftCertificateId(giftCertificate.getId());
+            List<Tag> tagList = tagRepository.findByGiftCertificateId(giftCertificate.getId());
             giftCertificate.setTagList(tagList);
             giftCertificatesDTO.add(GiftCertificateDTOMapper.convertToDTO(giftCertificate));
         }
-        return giftCertificatesDTO;
-    }
-
-    /**
-     * Calculates the total number of pages
-     * required to display all GiftCertificates.
-     *
-     * @return the total number of pages
-     * required to display all GiftCertificates.
-     */
-    public Integer findNumberPagesForAllGiftCertificates(Integer size) {
-        Integer totalNumber = giftCertificateDAO.countAll();
-        return totalNumber % size == 0 ? totalNumber / size : totalNumber / size + 1;
+        return new PageImpl<>(giftCertificatesDTO, pageable, count);
     }
 
     private List<Tag> returnCreatedOrExistingTags(List<String> tagNamesList) {
@@ -192,12 +191,12 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         }
 
         tagNamesList.forEach(tagName -> {
-            Optional<Tag> optionalTag = tagDAO.findByName(tagName);
+            Optional<Tag> optionalTag = tagRepository.findByName(tagName);
 
             Tag tagForSave = new Tag();
             tagForSave.setName(tagName);
 
-            Tag tag = optionalTag.orElseGet(() -> tagDAO.save(tagForSave));
+            Tag tag = optionalTag.orElseGet(() -> tagRepository.save(tagForSave));
             tagList.add(tag);
         });
 
@@ -206,8 +205,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private void deleteTagsIfNotUsed(List<Tag> tagList) {
         for (Tag tag : tagList) {
-            if (giftCertificateDAO.findByTagName(tag.getName()).isEmpty()) {
-                tagDAO.delete(tag.getId());
+            if (giftCertificateRepository.findByTagList_NameContaining(tag.getName()).isEmpty()) {
+                tagRepository.deleteById(tag.getId());
             }
         }
     }

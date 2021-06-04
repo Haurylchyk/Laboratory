@@ -1,3 +1,4 @@
+
 -- -----------------------------------------------------
 -- Data for the table `gift_certificate`
 -- -----------------------------------------------------
@@ -36,14 +37,22 @@ VALUES
 (4, 5);
 
 -- -----------------------------------------------------
+-- Data for the table `role`
+-- -----------------------------------------------------
+INSERT INTO role (name)
+VALUES
+('ADMIN'),
+('USER');
+
+-- -----------------------------------------------------
 -- Data for the table `user`
 -- -----------------------------------------------------
-INSERT INTO user (name, login)
+INSERT INTO user (name, login, password, role_id)
 VALUES
-('Ivan','athos'),
-('Gena','porthos'),
-('Maxim','aramis'),
-('Alex','dartagnan');
+('Ivan','athos', '12345', 2),
+('Gena','porthos', '54321', 2),
+('Maxim','aramis', '56789', 2),
+('Alex','dartagnan', '98765', 2);
 
 -- -----------------------------------------------------
 -- Data for the table `gift_order`

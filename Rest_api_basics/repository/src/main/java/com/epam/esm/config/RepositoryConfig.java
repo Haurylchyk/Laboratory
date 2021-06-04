@@ -22,6 +22,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan(basePackages = "com.epam.esm")
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = "com.epam.esm.dao")
 public class RepositoryConfig {
 
     @Bean(name = "dataSource")

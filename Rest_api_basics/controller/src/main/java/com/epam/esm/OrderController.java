@@ -2,6 +2,10 @@ package com.epam.esm;
 
 import com.epam.esm.model.dto.OrderDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +23,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(value = "/users/{userId}/orders/")
+@RequestMapping(value = "/users/{userId}/orders")
 public class OrderController {
 
     private final OrderService orderService;
@@ -38,9 +41,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public List<OrderDTO> findByUserId(@PathVariable @Min(1) Integer userId,
-                                       @RequestParam(required = false, defaultValue = "1") @Min(1) Integer page,
-                                       @RequestParam(required = false, defaultValue = "20") @Min(1) Integer size) {
-        return orderService.findByUserId(userId, page, size);
+    public PagedModel<OrderDTO> findByUserId(@PathVariable @Min(1) Integer userId, Pageable pageable,
+                                             PagedResourcesAssembler assembler) {
+        Page<OrderDTO> orderDTOPage = orderService.findByUserId(userId, pageable);
+        return assembler.toModel(orderDTOPage);
     }
 }

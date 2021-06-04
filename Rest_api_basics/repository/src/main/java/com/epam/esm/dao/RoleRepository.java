@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.Role;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * Interface describes the interaction with the database
@@ -10,7 +11,7 @@ import com.epam.esm.entity.Role;
  * @version 1.0
  * @since JDK 1.8
  */
-public interface RoleDAO {
+public interface RoleRepository extends JpaRepository<Role, Integer> {
 
     /**
      * Returns Role with specific name.

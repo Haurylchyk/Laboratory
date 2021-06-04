@@ -1,17 +1,21 @@
 package com.epam.esm;
 
-import com.epam.esm.dao.UserDAO;
-import com.epam.esm.model.dto.UserDTO;
+import com.epam.esm.dao.UserRepository;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.impl.UserServiceImpl;
+import com.epam.esm.model.dto.UserDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +39,7 @@ public class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userService;
     @Mock
-    private UserDAO userDAO;
+    private UserRepository userRepository;
 
     private User user;
     private UserDTO userDTO;
@@ -67,27 +71,30 @@ public class UserServiceImplTest {
 
     @Test
     public void findByIdShouldSuccessfully() {
-        given(userDAO.find(TEST_ID)).willReturn(Optional.of(user));
+        given(userRepository.findById(TEST_ID)).willReturn(Optional.of(user));
         UserDTO foundUserDTO = userService.finById(TEST_ID);
         assertEquals(userDTO, foundUserDTO);
     }
 
     @Test
     public void findByIdShouldNotFoundException() {
-        given(userDAO.find(TEST_ID)).willReturn(Optional.empty());
+        given(userRepository.findById(TEST_ID)).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> userService.finById(TEST_ID));
     }
 
     @Test
     public void findAllShouldSuccessfully() {
-        given(userDAO.findAll(PAGE_NUMBER, SIZE)).willReturn(userList);
-        List<UserDTO> foundUserDTOList = userService.findAll(PAGE_NUMBER, SIZE);
+        Page<User> page = new PageImpl<>(userList, Pageable.unpaged(), 2);
+        given(userRepository.findAll(Pageable.unpaged())).willReturn(page);
+        Page<UserDTO> pageUserDTO = userService.findAll(Pageable.unpaged());
+        List<UserDTO> foundUserDTOList = pageUserDTO.toList();
         assertIterableEquals(userListDTO, foundUserDTOList);
     }
 
     @Test
     public void findAllShouldNotExistingPageException() {
-        given(userDAO.findAll(PAGE_NUMBER_INVALID, SIZE)).willReturn(emptyUserList);
-        assertThrows(NotExistingPageException.class, () -> userService.findAll(PAGE_NUMBER_INVALID, SIZE));
+        Page<User> page = new PageImpl<>(emptyUserList, PageRequest.of(PAGE_NUMBER_INVALID, SIZE), 0);
+        given(userRepository.findAll(PageRequest.of(PAGE_NUMBER_INVALID, SIZE))).willReturn(page);
+        assertThrows(NotExistingPageException.class, () -> userService.findAll(PageRequest.of(PAGE_NUMBER_INVALID, SIZE)));
     }
 }

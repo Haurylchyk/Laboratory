@@ -3,9 +3,14 @@ package com.epam.esm;
 import com.epam.esm.assembler.UserModelAssembler;
 import com.epam.esm.model.CreatingUserData;
 import com.epam.esm.model.dto.AuthRequestDTO;
+import com.epam.esm.model.dto.TagDTO;
 import com.epam.esm.model.dto.UserDTO;
 import com.epam.esm.security.provider.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,8 +59,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDTO> findAll(@RequestParam(required = false, defaultValue = "1") @Min(1) Integer page,
-                                 @RequestParam(required = false, defaultValue = "1") @Min(1) Integer size) {
-        return userModelAssembler.toModel(userService.findAll(page, size));
+    public PagedModel<UserDTO> findAll(Pageable pageable, PagedResourcesAssembler assembler) {
+        Page<UserDTO> userDTOPage = userService.findAll(pageable);
+        userDTOPage.get().forEach(userDTO -> userModelAssembler.toModel(userDTO));
+        return assembler.toModel(userDTOPage);
     }
 }

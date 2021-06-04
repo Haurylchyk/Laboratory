@@ -3,8 +3,8 @@ package com.epam.esm;
 import com.epam.esm.model.CreatingUserData;
 import com.epam.esm.model.dto.AuthRequestDTO;
 import com.epam.esm.model.dto.UserDTO;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Interface describes the service for working with UserDTO.
@@ -42,16 +42,8 @@ public interface UserService {
     /**
      * Accesses the corresponding DAO method to find all Users.
      *
-     * @param pageNumber number of page.
-     * @param size number of Users on page.
+     * @param pageable object contains page number and page size..
      * @return List of objects with User data.
      */
-    List<UserDTO> findAll(Integer pageNumber, Integer size);
-
-    /**
-     * Calculates the total number of pages required to display all Users.
-     *
-     * @return the total number of pages required to display all Users.
-     */
-    Integer findNumberPagesForAllUsers(Integer size);
+    Page<UserDTO> findAll(Pageable pageable);
 }

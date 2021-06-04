@@ -94,7 +94,7 @@ public class CommonExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionDescription> processIllegalArgumentException(ConstraintViolationException e, Locale locale) {
+    public ResponseEntity<ExceptionDescription> processConstraintViolationException(ConstraintViolationException e, Locale locale) {
 
         String errorMessage = messageSource.getMessage(ILLEGAL_ARGUMENT, new Object[]{}, locale);
         ExceptionDescription exceptionDescription = new ExceptionDescription(errorMessage, ErrorCodeMessage.ERROR_CODE_ARG_NOT_VALID);

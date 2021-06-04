@@ -4,6 +4,10 @@ import com.epam.esm.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.GiftCertificateParamDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,13 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.List;
 
 @Validated
 @RestController
@@ -41,7 +43,6 @@ public class GiftCertificateController {
         return giftCertificateService.create(giftCertificateDTO);
     }
 
-
     @GetMapping("/{id}")
     public GiftCertificateDTO findById(@PathVariable @Min(1) Integer id) {
         return giftCertificateModelAssembler.toModel(giftCertificateService.findById(id));
@@ -58,9 +59,11 @@ public class GiftCertificateController {
     }
 
     @GetMapping
-    public List<GiftCertificateDTO> findByParameter(@RequestParam(required = false, defaultValue = "1") @Min(1) Integer page,
-                                                    @RequestParam(required = false, defaultValue = "1") @Min(1) Integer size,
-                                                    @Valid GiftCertificateParamDTO parameterDTO) {
-        return giftCertificateModelAssembler.toModel(giftCertificateService.findByParam(page, size, parameterDTO));
+    public PagedModel<GiftCertificateDTO> findByParameter(@Valid GiftCertificateParamDTO parameterDTO,
+                                                          Pageable pageable, PagedResourcesAssembler assembler) {
+        Page<GiftCertificateDTO> certDTOPage = giftCertificateService.findByParam(pageable, parameterDTO);
+        certDTOPage.get().forEach(certDTO -> giftCertificateModelAssembler.toModel(certDTO));
+        return assembler.toModel(certDTOPage);
     }
+
 }
