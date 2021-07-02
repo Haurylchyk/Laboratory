@@ -3,18 +3,16 @@ package com.epam.esm;
 import com.epam.esm.dao.GiftCertificateRepository;
 import com.epam.esm.dao.OrderRepository;
 import com.epam.esm.dao.UserRepository;
+import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Order;
 import com.epam.esm.entity.OrderGiftCertificate;
-import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.impl.NotExistingPageException;
+import com.epam.esm.entity.User;
+import com.epam.esm.exception.impl.EntityNotFoundException;
+import com.epam.esm.impl.OrderServiceImpl;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.OrderDTO;
 import com.epam.esm.model.dto.OrderGiftCertificateDTO;
 import com.epam.esm.model.dto.UserDTO;
-import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Order;
-import com.epam.esm.entity.User;
-import com.epam.esm.exception.impl.EntityNotFoundException;
-import com.epam.esm.impl.OrderServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +22,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -187,7 +184,7 @@ public class OrderServiceImplTest {
     public void findByByUserIdShouldSuccessfully() {
         Page<Order> page = new PageImpl<>(orderList, PageRequest.of(1, 2), 1);
         given(orderRepository.findByUserId(TEST_USER_ID, PageRequest.of(1, 2))).willReturn(page);
-        Page<OrderDTO> pageOrderDTO= orderService.findByUserId(TEST_USER_ID, PageRequest.of(1, 2));
+        Page<OrderDTO> pageOrderDTO = orderService.findByUserId(TEST_USER_ID, PageRequest.of(1, 2));
         assertIterableEquals(orderDTOList, pageOrderDTO.toList());
     }
 

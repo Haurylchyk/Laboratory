@@ -1,6 +1,6 @@
 package com.epam.esm;
 
-import com.epam.esm.model.CreatingUserData;
+import com.epam.esm.model.dto.SignUpUserDTO;
 import com.epam.esm.model.dto.AuthRequestDTO;
 import com.epam.esm.model.dto.UserDTO;
 import org.springframework.data.domain.Page;
@@ -18,10 +18,10 @@ public interface UserService {
     /**
      * Accesses the corresponding DAO method to create a new User object.
      *
-     * @param creatingUserData object containing the data required to create a User.
+     * @param signupUserDTO object containing the data required to create a User.
      * @return created object with User data.
      */
-    UserDTO signUp(CreatingUserData creatingUserData);
+    UserDTO signUp(SignUpUserDTO signupUserDTO);
 
     /**
      * Accesses the appropriate DAO method so that the authenticated User can log in.

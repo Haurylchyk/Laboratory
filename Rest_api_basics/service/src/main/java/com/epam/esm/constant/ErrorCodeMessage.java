@@ -27,6 +27,4 @@ public class ErrorCodeMessage {
     public static final String ERROR_CODE_ARG_NOT_VALID = "0610";
 
     public static final String ERROR_CODE_TOKEN_NOT_VALID = "0710";
-
-
 }

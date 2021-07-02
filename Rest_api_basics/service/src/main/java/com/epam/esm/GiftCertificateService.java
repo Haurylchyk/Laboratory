@@ -53,6 +53,6 @@ public interface GiftCertificateService {
      * @param parameterDTO special object containing requested parameters.
      * @return list of GiftCertificates for the current page.
      */
-    Page<GiftCertificateDTO> findByParam(Pageable pageable, GiftCertificateParamDTO parameterDTO);
+    Page<GiftCertificateDTO> findByParam(GiftCertificateParamDTO parameterDTO, Pageable pageable);
 }
 

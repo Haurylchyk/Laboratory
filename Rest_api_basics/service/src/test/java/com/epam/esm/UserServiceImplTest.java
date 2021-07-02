@@ -6,6 +6,7 @@ import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.impl.UserServiceImpl;
 import com.epam.esm.model.dto.UserDTO;
+import com.epam.esm.model.dto.mapper.impl.UserDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
@@ -32,7 +32,6 @@ public class UserServiceImplTest {
     private static final int TEST_ID = 1;
     private static final String TEST_USER_NAME = "Tramp";
     private static final String TEST_USER_LOGIN = "trololo";
-    private static final Integer PAGE_NUMBER = 1;
     private static final Integer SIZE = 1;
     private static final Integer PAGE_NUMBER_INVALID = 100;
 
@@ -40,6 +39,8 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private UserDTOMapper userDTOMapper;
 
     private User user;
     private UserDTO userDTO;
@@ -72,6 +73,7 @@ public class UserServiceImplTest {
     @Test
     public void findByIdShouldSuccessfully() {
         given(userRepository.findById(TEST_ID)).willReturn(Optional.of(user));
+        given(userDTOMapper.convertToDTO(user)).willReturn(userDTO);
         UserDTO foundUserDTO = userService.finById(TEST_ID);
         assertEquals(userDTO, foundUserDTO);
     }
@@ -86,9 +88,10 @@ public class UserServiceImplTest {
     public void findAllShouldSuccessfully() {
         Page<User> page = new PageImpl<>(userList, Pageable.unpaged(), 2);
         given(userRepository.findAll(Pageable.unpaged())).willReturn(page);
+        given(userDTOMapper.convertToDTO(userList)).willReturn(userListDTO);
         Page<UserDTO> pageUserDTO = userService.findAll(Pageable.unpaged());
         List<UserDTO> foundUserDTOList = pageUserDTO.toList();
-        assertIterableEquals(userListDTO, foundUserDTOList);
+        assertEquals(userListDTO, foundUserDTOList);
     }
 
     @Test

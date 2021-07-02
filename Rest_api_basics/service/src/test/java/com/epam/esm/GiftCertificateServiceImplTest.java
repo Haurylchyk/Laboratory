@@ -10,20 +10,22 @@ import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.impl.GiftCertificateServiceImpl;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.mapper.impl.GiftCertificateDTOMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,6 +58,8 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateRepository giftCertificateRepository;
     @Mock
     private TagRepository tagRepository;
+    @Mock
+    private GiftCertificateDTOMapper GiftCertificateDTOMapper;
 
     private Tag tag;
     private GiftCertificate giftCertificateFirst;
@@ -72,9 +76,6 @@ class GiftCertificateServiceImplTest {
     private GiftCertificateParamDTO compositeParameterDTO;
     private GiftCertificateParamDTO emptyCompositeParameterDTO;
     private GiftCertificateParam compositeParameter;
-    private GiftCertificateParam emptyCompositeParameter;
-
-    private Map<Integer, List<GiftCertificate>> giftCertificateMap;
 
     @BeforeEach
     public void setUp() {
@@ -128,14 +129,11 @@ class GiftCertificateServiceImplTest {
         giftCertificateList.add(giftCertificateSecond);
 
         emptyCompositeParameterDTO = new GiftCertificateParamDTO();
-        emptyCompositeParameter = new GiftCertificateParam();
         compositeParameterDTO = new GiftCertificateParamDTO();
         compositeParameter = new GiftCertificateParam();
 
         compositeParameterDTO.setName(TEST_NEW_NAME);
         compositeParameter.setName(TEST_NEW_NAME);
-
-        giftCertificateMap = new HashMap<>();
     }
 
     @AfterEach
@@ -163,6 +161,7 @@ class GiftCertificateServiceImplTest {
     @Test
     public void findByIdShouldSuccessfully() {
         given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
+        given(GiftCertificateDTOMapper.convertToDTO(giftCertificateFirst)).willReturn(createdGiftCertificateDTO);
         GiftCertificateDTO readGCDTO = giftCertificateService.findById(TEST_GC_ID_FIRST);
         assertEquals(createdGiftCertificateDTO, readGCDTO);
     }
@@ -179,6 +178,7 @@ class GiftCertificateServiceImplTest {
         given(giftCertificateRepository.save(giftCertificateFirst)).willReturn(giftCertificateFirst);
         given(tagRepository.findByName(TEST_TAG_NAME)).willReturn(Optional.of(tag));
         GiftCertificateDTO updatedGCDTO = giftCertificateService.update(updatedGiftCertificateDTO, TEST_GC_ID_FIRST);
+
         assertEquals(updatedGiftCertificateDTO, updatedGCDTO);
     }
 
@@ -192,7 +192,6 @@ class GiftCertificateServiceImplTest {
     @Test
     public void deleteShouldSuccessfully() {
         given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
-        given(tagRepository.findByGiftCertificateId(TEST_GC_ID_FIRST)).willReturn(tagList);
         giftCertificateService.delete(TEST_GC_ID_FIRST);
         verify(giftCertificateRepository, times(1)).deleteById(TEST_GC_ID_FIRST);
         verify(tagRepository, times(1)).deleteById(TEST_TAG_ID);
@@ -207,18 +206,19 @@ class GiftCertificateServiceImplTest {
     @Test
     public void findWithEmptyParamShouldSuccessfully() {
         final int CORRECT_SIZE = 2;
-        giftCertificateMap.put(2, giftCertificateList);
-        given(giftCertificateRepository.findByParam(eq(2), eq(2), eq(emptyCompositeParameter))).willReturn(giftCertificateMap);
-        Page<GiftCertificateDTO> page = giftCertificateService.findByParam(PageRequest.of(2, 2), emptyCompositeParameterDTO);
-        assertEquals(CORRECT_SIZE, page.toList().size());
+        Page<GiftCertificate> page = new PageImpl<>(giftCertificateList, PageRequest.of(0, 20), 2);
+        given(giftCertificateRepository.findAll(Mockito.any(Specification.class), eq(PageRequest.of(0, 20)))).willReturn(page);
+        Page<GiftCertificateDTO> pageDTO = giftCertificateService.findByParam(emptyCompositeParameterDTO, PageRequest.of(0, 20));
+
+        assertEquals(CORRECT_SIZE, pageDTO.toList().size());
     }
 
     @Test
     public void findByParamShouldSuccessfully() {
         final int CORRECT_SIZE = 2;
-        giftCertificateMap.put(2, giftCertificateList);
-        given(giftCertificateRepository.findByParam(eq(2), eq(2), eq(compositeParameter))).willReturn(giftCertificateMap);
-        Page<GiftCertificateDTO> page = giftCertificateService.findByParam(PageRequest.of(2, 2), compositeParameterDTO);
-        assertEquals(CORRECT_SIZE, page.toList().size());
+        Page<GiftCertificate> page = new PageImpl<>(giftCertificateList, PageRequest.of(0, 20), 2);
+        given(giftCertificateRepository.findAll(Mockito.any(Specification.class), eq(PageRequest.of(0, 20)))).willReturn(page);
+        Page<GiftCertificateDTO> pageDTO = giftCertificateService.findByParam(compositeParameterDTO, PageRequest.of(0, 20));
+        assertEquals(CORRECT_SIZE, pageDTO.toList().size());
     }
 }

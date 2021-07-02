@@ -11,7 +11,7 @@ import com.epam.esm.exception.impl.ExistingTagException;
 import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.model.dto.TagDTO;
-import com.epam.esm.model.dto.mapper.TagDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.TagDTOMapper;
 import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,14 +56,20 @@ public class TagServiceImpl implements TagService {
     private final UserRepository userRepository;
 
     /**
+     * Object intended for converting Tag to TagDTO and vice versa.
+     */
+    private final TagDTOMapper tagMapper;
+
+    /**
      * Constructor with parameter.
      *
      * @param tagRepository interface providing DAO methods.
      */
     @Autowired
-    public TagServiceImpl(TagRepository tagRepository, UserRepository userRepository) {
+    public TagServiceImpl(TagRepository tagRepository, UserRepository userRepository, TagDTOMapper tagMapper) {
         this.tagRepository = tagRepository;
         this.userRepository = userRepository;
+        this.tagMapper = tagMapper;
     }
 
     /**
@@ -75,7 +81,7 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public TagDTO create(TagDTO tagDTO) {
-        Tag tag = TagDTOMapper.convertToEntity(tagDTO);
+        Tag tag = tagMapper.convertToEntity(tagDTO);
         String tagName = tagDTO.getName();
         if (!TagValidator.isNameValid(tagName)) {
             throw new InvalidDataException(ErrorCodeMessage.ERROR_CODE_TAG_INVALID_DATA);
@@ -85,7 +91,7 @@ public class TagServiceImpl implements TagService {
             throw new ExistingTagException(ErrorCodeMessage.ERROR_CODE_TAG_EXISTS);
         }
         Tag newTag = tagRepository.save(tag);
-        return TagDTOMapper.convertToDTO(newTag);
+        return tagMapper.convertToDTO(newTag);
     }
 
     /**
@@ -99,7 +105,7 @@ public class TagServiceImpl implements TagService {
         Optional<Tag> optionalTag = tagRepository.findById(id);
         Tag tag = optionalTag.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_TAG_NOT_FOUND));
-        return TagDTOMapper.convertToDTO(tag);
+        return tagMapper.convertToDTO(tag);
     }
 
     /**
@@ -128,7 +134,8 @@ public class TagServiceImpl implements TagService {
         if (tagList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
-        return new PageImpl<>(TagDTOMapper.convertToDTO(tagList), pageable, tagPage.getTotalElements());
+        List<TagDTO> list = tagMapper.convertToDTO(tagList);
+        return new PageImpl<>(tagMapper.convertToDTO(tagList), pageable, tagPage.getTotalElements());
     }
 
     /**
@@ -146,6 +153,6 @@ public class TagServiceImpl implements TagService {
         User user = userList.get(FIRST_ELEMENT_INDEX);
         Tag mostWidelyUsedTag = tagRepository.findMostWidelyUsedByUserId(user.getId(), PAGE_WITH_FIRST_ELEMENT)
                 .get(FIRST_ELEMENT_INDEX);
-        return TagDTOMapper.convertToDTO(mostWidelyUsedTag);
+        return tagMapper.convertToDTO(mostWidelyUsedTag);
     }
 }

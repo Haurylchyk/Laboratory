@@ -13,7 +13,7 @@ import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.model.dto.OrderDTO;
-import com.epam.esm.model.dto.mapper.OrderDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.OrderDTOMapper;
 import com.epam.esm.validator.CommonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,16 +54,22 @@ public class OrderServiceImpl implements OrderService {
     private final GiftCertificateRepository giftCertificateRepository;
 
     /**
+     * Object intended for converting Order to OrderDTO and vice versa.
+     */
+    private final OrderDTOMapper orderDTOMapper;
+
+    /**
      * Constructor with parameter.
      *
      * @param orderRepository interface providing DAO methods.
      */
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository,
-                            GiftCertificateRepository giftCertificateRepository) {
+                            GiftCertificateRepository giftCertificateRepository, OrderDTOMapper orderDTOMapper) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.giftCertificateRepository = giftCertificateRepository;
+        this.orderDTOMapper = orderDTOMapper;
     }
 
     /**
@@ -105,7 +111,7 @@ public class OrderServiceImpl implements OrderService {
         order.setDate(currentLocalDateTime);
 
         Order resultOrder = orderRepository.save(order);
-        return OrderDTOMapper.convertToDTO(resultOrder);
+        return orderDTOMapper.convertToDTO(resultOrder);
     }
 
     /**
@@ -119,7 +125,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(id);
         Order order = optionalOrder.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_ORDER_NOT_FOUND));
-        return OrderDTOMapper.convertToDTO(order);
+        return orderDTOMapper.convertToDTO(order);
     }
 
     /**
@@ -135,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
         if (orderList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
-        return new PageImpl<>(OrderDTOMapper.convertToDTO(orderList), pageable, orderPage.getTotalElements());
+        return new PageImpl<>(orderDTOMapper.convertToDTO(orderList), pageable, orderPage.getTotalElements());
     }
 
     /**
@@ -150,12 +156,6 @@ public class OrderServiceImpl implements OrderService {
     public Page<OrderDTO> findByUserId(Integer id, Pageable pageable) {
         Page<Order> orderPage = orderRepository.findByUserId(id, pageable);
         List<Order> orderList = orderPage.toList();
-        if (orderList.isEmpty() && pageable.getPageNumber() == 1) {
-            throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND);
-        }
-        if (orderList.isEmpty()) {
-            throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
-        }
-        return new PageImpl<>(OrderDTOMapper.convertToDTO(orderList), pageable, orderPage.getTotalElements());
+        return new PageImpl<>(orderDTOMapper.convertToDTO(orderList), pageable, orderPage.getTotalElements());
     }
 }

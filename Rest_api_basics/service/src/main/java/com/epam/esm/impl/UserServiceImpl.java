@@ -2,19 +2,17 @@ package com.epam.esm.impl;
 
 import com.epam.esm.UserService;
 import com.epam.esm.constant.ErrorCodeMessage;
-import com.epam.esm.constant.RoleNameConstant;
-import com.epam.esm.dao.RoleRepository;
 import com.epam.esm.dao.UserRepository;
-import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
+import com.epam.esm.entity.field.Role;
 import com.epam.esm.exception.impl.AuthException;
 import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.exception.impl.ExistingUserException;
 import com.epam.esm.exception.impl.NotExistingPageException;
-import com.epam.esm.model.CreatingUserData;
 import com.epam.esm.model.dto.AuthRequestDTO;
+import com.epam.esm.model.dto.SignUpUserDTO;
 import com.epam.esm.model.dto.UserDTO;
-import com.epam.esm.model.dto.mapper.UserDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.UserDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,14 +48,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
 
     /**
-     * Object of the RoleDAO type.
-     */
-    private final RoleRepository roleRepository;
-
-    /**
      * Object intended for encoding a password.
      */
     private final PasswordEncoder passwordEncoder;
+
+    /**
+     * Object intended for converting User to UserDTO and vice versa.
+     */
+    private final UserDTOMapper userDTOMapper;
 
     /**
      * Constructor with parameter.
@@ -65,32 +63,27 @@ public class UserServiceImpl implements UserService, UserDetailsService {
      * @param userRepository interface providing DAO methods.
      */
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, UserDTOMapper userDTOMapper) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userDTOMapper = userDTOMapper;
     }
 
     /**
      * Accesses the corresponding DAO method to create a new User object.
      *
-     * @param creatingUserData object containing the data required to create a User.
+     * @param signUpUserDTO object containing the data required to create a User.
      * @return created object with User data.
      */
     @Override
-    public UserDTO signUp(CreatingUserData creatingUserData) {
-        List<User> userList = userRepository.findByLogin(creatingUserData.getLogin());
+    public UserDTO signUp(SignUpUserDTO signUpUserDTO) {
+        List<User> userList = userRepository.findByLogin(signUpUserDTO.getLogin());
         if (!userList.isEmpty()) {
             throw new ExistingUserException(ErrorCodeMessage.ERROR_CODE_USER_EXISTS);
         }
-        User user = new User();
-        user.setName(creatingUserData.getName());
-        user.setLogin(creatingUserData.getLogin());
-        user.setPassword(passwordEncoder.encode(creatingUserData.getPassword()));
-        Role role = roleRepository.findByName(RoleNameConstant.USER);
-        user.setRole(role);
+        User user = createUser(signUpUserDTO);
         User newUser = userRepository.save(user);
-        return UserDTOMapper.convertToDTO(newUser);
+        return userDTOMapper.convertToDTO(newUser);
     }
 
     /**
@@ -110,7 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if (!passwordEncoder.matches(authRequestDTO.getPassword(), userByLogin.getPassword())) {
             throw new AuthException(ErrorCodeMessage.ERROR_CODE_AUTH_FAILED);
         }
-        return UserDTOMapper.convertToDTO(userByLogin);
+        return userDTOMapper.convertToDTO(userByLogin);
     }
 
     /**
@@ -124,7 +117,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Optional<User> optionalUser = userRepository.findById(id);
         User user = optionalUser.orElseThrow(() -> new EntityNotFoundException(
                 ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND));
-        return UserDTOMapper.convertToDTO(user);
+        return userDTOMapper.convertToDTO(user);
     }
 
     /**
@@ -137,13 +130,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public Page<UserDTO> findAll(Pageable pageable) {
         Page<User> userPage = userRepository.findAll(pageable);
         List<User> userList = userPage.toList();
-        if (userList.isEmpty() && pageable.getPageNumber() == 1) {
+        if (userList.isEmpty() && pageable.getPageNumber() == 0) {
             throw new EntityNotFoundException(ErrorCodeMessage.ERROR_CODE_USER_NOT_FOUND);
         }
         if (userList.isEmpty()) {
             throw new NotExistingPageException(ErrorCodeMessage.ERROR_CODE_PAGE_NOT_FOUND);
         }
-        return new PageImpl<>(UserDTOMapper.convertToDTO(userList), pageable, userPage.getTotalElements());
+        return new PageImpl<>(userDTOMapper.convertToDTO(userList), pageable, userPage.getTotalElements());
     }
 
     /**
@@ -163,8 +156,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(user.getLogin())
                 .password(user.getPassword())
-                .roles(user.getRole().getName())
+                .roles(user.getRole().name())
                 .build();
         return userDetails;
+    }
+
+    private User createUser(SignUpUserDTO signUpUserDTO) {
+        User user = new User();
+        user.setName(signUpUserDTO.getName());
+        user.setLogin(signUpUserDTO.getLogin());
+        user.setPassword(passwordEncoder.encode(signUpUserDTO.getPassword()));
+        user.setRole(Role.USER);
+        return user;
     }
 }

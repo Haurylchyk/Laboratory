@@ -10,7 +10,7 @@ import com.epam.esm.exception.impl.InvalidDataException;
 import com.epam.esm.exception.impl.NotExistingPageException;
 import com.epam.esm.impl.TagServiceImpl;
 import com.epam.esm.model.dto.TagDTO;
-import com.epam.esm.model.dto.mapper.TagDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.TagDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -45,7 +44,6 @@ class TagServiceImplTest {
 
     private final Integer USER_ID = 4;
 
-    private static final Integer PAGE_NUMBER = 1;
     private static final Integer SIZE = 1;
     private static final Integer PAGE_NUMBER_INVALID = 100;
 
@@ -56,6 +54,8 @@ class TagServiceImplTest {
     private TagRepository tagRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private TagDTOMapper tagDTOMapper;
 
     private Tag tagFirst;
     private Tag tagSecond;
@@ -108,6 +108,7 @@ class TagServiceImplTest {
     @Test
     public void createShouldReturnCreatedTag() {
         given(tagRepository.save(any())).willReturn(tagFirst);
+        given(tagDTOMapper.convertToDTO(tagFirst)).willReturn(tagDTOFirst);
         TagDTO createdTagDTO = tagService.create(tagDTOFirst);
         assertEquals(TEST_FIRST_NAME, createdTagDTO.getName());
     }
@@ -129,7 +130,7 @@ class TagServiceImplTest {
     public void findShouldSuccessfully() {
         given(tagRepository.findById(TEST_FIRST_ID)).willReturn(Optional.of(tagFirst));
         TagDTO foundTagDTO = tagService.findById(TEST_FIRST_ID);
-        TagDTO testedDTO = TagDTOMapper.convertToDTO(tagFirst);
+        TagDTO testedDTO = tagDTOMapper.convertToDTO(tagFirst);
         assertEquals(testedDTO, foundTagDTO);
     }
 
@@ -163,7 +164,7 @@ class TagServiceImplTest {
         given(tagRepository.findMostWidelyUsedByUserId(USER_ID, PageRequest.of(0, 1))).willReturn(mostUserTagList);
 
         TagDTO foundTagDTO = tagService.findMostWidelyUsedOfTopOrderUser();
-        TagDTO testedTagDTO = TagDTOMapper.convertToDTO(mostUsedTag);
+        TagDTO testedTagDTO = tagDTOMapper.convertToDTO(mostUsedTag);
 
         assertEquals(testedTagDTO, foundTagDTO);
     }
@@ -174,7 +175,8 @@ class TagServiceImplTest {
         given(tagRepository.findAll(Pageable.unpaged())).willReturn(page);
         Page<TagDTO> pageTagDTO = tagService.findAll(Pageable.unpaged());
         List<TagDTO> foundTagDTOList = pageTagDTO.toList();
-        assertIterableEquals(tagListDTO, foundTagDTOList);
+        List<TagDTO> testedDTO = tagDTOMapper.convertToDTO(tagList);
+        assertEquals(testedDTO, foundTagDTOList);
     }
 
     @Test
