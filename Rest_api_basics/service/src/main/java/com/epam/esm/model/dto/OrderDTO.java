@@ -6,20 +6,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class OrderDTO {
-    private Integer id;
+public class OrderDTO extends BaseDTO<OrderDTO> {
+
     private List<OrderGiftCertificateDTO> giftCertificateList;
     private Integer cost;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime date;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public List<OrderGiftCertificateDTO> getGiftCertificateList() {
         return giftCertificateList;
@@ -49,25 +41,15 @@ public class OrderDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         OrderDTO orderDTO = (OrderDTO) o;
-        return id.equals(orderDTO.id) &&
-                giftCertificateList.equals(orderDTO.giftCertificateList) &&
-                cost.equals(orderDTO.cost) &&
-                date.equals(orderDTO.date);
+        return Objects.equals(giftCertificateList, orderDTO.giftCertificateList) &&
+                Objects.equals(cost, orderDTO.cost) &&
+                Objects.equals(date, orderDTO.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, giftCertificateList, cost, date);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderDTO{" +
-                "id=" + id +
-                ", giftCertificateList=" + giftCertificateList +
-                ", cost=" + cost +
-                ", date=" + date +
-                '}';
+        return Objects.hash(super.hashCode(), giftCertificateList, cost, date);
     }
 }

@@ -1,11 +1,11 @@
-package com.epam.esm.model;
+package com.epam.esm.model.dto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
-public class CreatingUserData {
+public class SignUpUserDTO {
     @NotNull
     @Size(min = 3, max = 100)
     @Pattern(regexp = "^[A-zА-я_]+$")
@@ -49,7 +49,7 @@ public class CreatingUserData {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CreatingUserData that = (CreatingUserData) o;
+        SignUpUserDTO that = (SignUpUserDTO) o;
         return Objects.equals(name, that.name) &&
                 Objects.equals(login, that.login) &&
                 Objects.equals(password, that.password);

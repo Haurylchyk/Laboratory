@@ -1,7 +1,6 @@
 package com.epam.esm.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
@@ -9,8 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> {
-    private Integer id;
+public class GiftCertificateDTO extends BaseDTO<GiftCertificateDTO> {
     @Size(min = 1, max = 100)
     private String name;
     @Size(min = 1, max = 255)
@@ -24,14 +22,6 @@ public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime lastUpdateDate;
     private List<String> tagNames;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -93,31 +83,19 @@ public class GiftCertificateDTO extends RepresentationModel<GiftCertificateDTO> 
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         GiftCertificateDTO that = (GiftCertificateDTO) o;
-        return Objects.equals(id, that.id) &&
+        return Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
+                Objects.equals(createDate, that.createDate) &&
+                Objects.equals(lastUpdateDate, that.lastUpdateDate) &&
                 Objects.equals(tagNames, that.tagNames);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate, tagNames);
-    }
-
-    @Override
-    public String toString() {
-        return "GiftCertificateDTO{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createDate=" + createDate +
-                ", lastsUpdateDate=" + lastUpdateDate +
-                ", tagName=" + tagNames +
-                '}';
+        return Objects.hash(super.hashCode(), name, description, price, duration, createDate, lastUpdateDate, tagNames);
     }
 }
