@@ -1,4 +1,4 @@
-package com.epam.esm.model.dto.mapper;
+package com.epam.esm.model.dto.mapper.impl;
 
 import com.epam.esm.dao.query.filter.FilterBuilder;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
