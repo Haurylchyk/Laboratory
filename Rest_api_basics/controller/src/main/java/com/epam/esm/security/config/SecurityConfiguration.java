@@ -1,6 +1,6 @@
 package com.epam.esm.security.config;
 
-import com.epam.esm.constant.RoleNameConstant;
+import com.epam.esm.entity.field.Role;
 import com.epam.esm.security.filter.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,15 +47,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/auth").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/tags/**").hasAnyRole(
-                RoleNameConstant.USER, RoleNameConstant.ADMIN)
-                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(
-                RoleNameConstant.USER, RoleNameConstant.ADMIN)
-                .antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(
-                RoleNameConstant.USER, RoleNameConstant.ADMIN)
+                .antMatchers(HttpMethod.GET, "/tags/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
 
-                .antMatchers("/certificates/**").hasRole(RoleNameConstant.ADMIN)
-                .antMatchers("/tags/**").hasRole(RoleNameConstant.ADMIN)
+                .antMatchers("/certificates/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/tags/**").hasRole(Role.ADMIN.name())
 
                 .antMatchers("/**").denyAll()
 

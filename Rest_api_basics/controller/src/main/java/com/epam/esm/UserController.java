@@ -1,9 +1,8 @@
 package com.epam.esm;
 
 import com.epam.esm.assembler.UserModelAssembler;
-import com.epam.esm.model.CreatingUserData;
+import com.epam.esm.model.dto.SignUpUserDTO;
 import com.epam.esm.model.dto.AuthRequestDTO;
-import com.epam.esm.model.dto.TagDTO;
 import com.epam.esm.model.dto.UserDTO;
 import com.epam.esm.security.provider.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +17,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import java.util.List;
 
 @Validated
 @RestController
@@ -43,8 +39,8 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO signUp(@Valid @RequestBody CreatingUserData creatingUserData) {
-        return userModelAssembler.toModel(userService.signUp(creatingUserData));
+    public UserDTO signUp(@Valid @RequestBody SignUpUserDTO signUpUserDTO) {
+        return userModelAssembler.toModel(userService.signUp(signUpUserDTO));
     }
 
     @PostMapping("/auth")

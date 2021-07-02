@@ -28,7 +28,6 @@ public class TagController {
     private final TagService tagService;
     private final TagModelAssembler tagModelAssembler;
 
-
     @Autowired
     public TagController(TagService tagService, TagModelAssembler tagModelAssembler) {
         this.tagService = tagService;
@@ -47,6 +46,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         tagService.delete(id);
     }

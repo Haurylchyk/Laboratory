@@ -49,11 +49,13 @@ public class GiftCertificateController {
     }
 
     @PutMapping("/{id}")
-    public GiftCertificateDTO update(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO, @PathVariable Integer id) {
+    public GiftCertificateDTO update(@Valid @RequestBody GiftCertificateDTO giftCertificateDTO,
+                                     @PathVariable Integer id) {
         return giftCertificateService.update(giftCertificateDTO, id);
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Integer id) {
         giftCertificateService.delete(id);
     }
@@ -61,7 +63,7 @@ public class GiftCertificateController {
     @GetMapping
     public PagedModel<GiftCertificateDTO> findByParameter(@Valid GiftCertificateParamDTO parameterDTO,
                                                           Pageable pageable, PagedResourcesAssembler assembler) {
-        Page<GiftCertificateDTO> certDTOPage = giftCertificateService.findByParam(pageable, parameterDTO);
+        Page<GiftCertificateDTO> certDTOPage = giftCertificateService.findByParam(parameterDTO, pageable);
         certDTOPage.get().forEach(certDTO -> giftCertificateModelAssembler.toModel(certDTO));
         return assembler.toModel(certDTOPage);
     }
