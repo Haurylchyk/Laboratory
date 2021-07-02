@@ -1,12 +1,12 @@
 package com.epam.esm.entity;
 
+import com.epam.esm.entity.field.Role;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.Objects;
 
 @Entity
@@ -22,8 +22,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id", nullable = false)
+    @Enumerated(value = EnumType.STRING)
     private Role role;
 
     public String getName() {

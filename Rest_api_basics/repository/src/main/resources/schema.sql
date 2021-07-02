@@ -5,14 +5,6 @@ CREATE DATABASE gift_certificate_system DEFAULT CHARACTER SET utf8;
 USE gift_certificate_system;
 
 -- -----------------------------------------------------
--- Table `role`
--- -----------------------------------------------------
-CREATE TABLE role (
-    id   INT          NOT NULL AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
-     PRIMARY KEY (id));
-
--- -----------------------------------------------------
 -- Table `gift_certificate`
 -- -----------------------------------------------------
 CREATE TABLE gift_certificate (
@@ -59,11 +51,8 @@ CREATE TABLE user (
     name VARCHAR(100) NOT NULL,
     login VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT fk_role
-        FOREIGN KEY (role_id)
-            REFERENCES role (id));
+    role VARCHAR(45) NOT NULL,
+    PRIMARY KEY (id));
 
 -- -----------------------------------------------------
 -- Table `gift_order`

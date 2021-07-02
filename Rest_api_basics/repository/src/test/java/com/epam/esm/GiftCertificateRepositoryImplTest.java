@@ -2,21 +2,22 @@ package com.epam.esm;
 
 import com.epam.esm.config.RepositoryConfigTest;
 import com.epam.esm.dao.GiftCertificateRepository;
-import com.epam.esm.dao.impl.GiftCertificateRepositoryImpl;
 import com.epam.esm.dao.query.filter.Filter;
 import com.epam.esm.dao.query.filter.FilterType;
 import com.epam.esm.dao.query.parameter.GiftCertificateParam;
+import com.epam.esm.dao.query.specification.GiftCertificateSpecification;
 import com.epam.esm.entity.GiftCertificate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@SpringBootTest(classes = GiftCertificateRepositoryImpl.class)
+@SpringBootTest(classes = GiftCertificateRepository.class)
 @ContextConfiguration(classes = RepositoryConfigTest.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class GiftCertificateRepositoryImplTest {
@@ -101,75 +102,58 @@ public class GiftCertificateRepositoryImplTest {
     @Test
     public void findByNameShouldReturnGiftCertificateList() {
         final Integer GC_NUMBER = 1;
-        Integer count = 0;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 NAME, null, null, null, null, null, null);
+        Page<GiftCertificate> giftCertificatePage = giftCertificateRepository.findAll(GiftCertificateSpecification
+                .findByParam(compositeParameter), PageRequest.of(0, 20));
 
-        Map<Integer, List<GiftCertificate>> giftCertificateMap = giftCertificateRepository.findByParam(1, 3, compositeParameter);
-        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificateMap.entrySet()) {
-            count = entry.getKey();
-        }
-
-        assertEquals(GC_NUMBER, count);
+        assertEquals(GC_NUMBER, giftCertificatePage.toList().size());
     }
 
     @Test
     public void findByDescriptionShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 1;
-        Integer count = 0;
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 null, DESCRIPTION, null, null, null, null, null);
+        Page<GiftCertificate> giftCertificatePage = giftCertificateRepository.findAll(GiftCertificateSpecification
+                .findByParam(compositeParameter), PageRequest.of(0, 20));
 
-        Map<Integer, List<GiftCertificate>> giftCertificateMap = giftCertificateRepository.findByParam(1, 3, compositeParameter);
-        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificateMap.entrySet()) {
-            count = entry.getKey();
-        }
-        assertEquals(GC_NUMBER, count);
+        assertEquals(GC_NUMBER, giftCertificatePage.toList().size());
     }
 
     @Test
     public void findByPriceFilterShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 2;
-        Integer count = 0;
         PRICE_FILTER_LIST.add(PRICE_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 null, null, PRICE_FILTER_LIST, null, null, null, null);
+        Page<GiftCertificate> giftCertificatePage = giftCertificateRepository.findAll(GiftCertificateSpecification
+                .findByParam(compositeParameter), PageRequest.of(0, 20));
 
-        Map<Integer, List<GiftCertificate>> giftCertificateMap = giftCertificateRepository.findByParam(1, 3, compositeParameter);
-        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificateMap.entrySet()) {
-            count = entry.getKey();
-        }
-        assertEquals(GC_NUMBER, count);
+        assertEquals(GC_NUMBER, giftCertificatePage.toList().size());
     }
 
     @Test
     public void findByDurationFilterShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 2;
-        Integer count = 0;
         DURATION_FILTER_LIST.add(DURATION_FILTER);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 null, null, null, DURATION_FILTER_LIST, null, null, null);
+        Page<GiftCertificate> giftCertificatePage = giftCertificateRepository.findAll(GiftCertificateSpecification
+                .findByParam(compositeParameter), PageRequest.of(0, 20));
 
-        Map<Integer, List<GiftCertificate>> giftCertificateMap = giftCertificateRepository.findByParam(1, 3, compositeParameter);
-        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificateMap.entrySet()) {
-            count = entry.getKey();
-        }
-        assertEquals(GC_NUMBER, count);
+        assertEquals(GC_NUMBER, giftCertificatePage.toList().size());
     }
 
     @Test
     public void findByTagNameShouldReturnGiftCertificateList() {
         final int GC_NUMBER = 1;
-        Integer count = 0;
         TAG_NAME_LIST.add(TAG_NAME);
         GiftCertificateParam compositeParameter = new GiftCertificateParam(
                 null, null, null, null, TAG_NAME_LIST, null, null);
+        Page<GiftCertificate> giftCertificatePage = giftCertificateRepository.findAll(GiftCertificateSpecification
+                .findByParam(compositeParameter), PageRequest.of(0, 20));
 
-        Map<Integer, List<GiftCertificate>> giftCertificateMap = giftCertificateRepository.findByParam(1, 3, compositeParameter);
-        for (Map.Entry<Integer, List<GiftCertificate>> entry : giftCertificateMap.entrySet()) {
-            count = entry.getKey();
-        }
-        assertEquals(GC_NUMBER, count);
+        assertEquals(GC_NUMBER, giftCertificatePage.toList().size());
     }
-
 }

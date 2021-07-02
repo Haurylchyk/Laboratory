@@ -29,7 +29,7 @@ public class Order extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderGiftCertificate> giftCertificateList;
 
     public User getUser() {

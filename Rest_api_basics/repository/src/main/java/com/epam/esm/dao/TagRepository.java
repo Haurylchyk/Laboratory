@@ -27,15 +27,6 @@ public interface TagRepository extends JpaRepository<Tag, Integer> {
     Optional<Tag> findByName(String name);
 
     /**
-     * Returns list of Tags of GiftCertificate with specific id.
-     *
-     * @param id GiftCertificate id.
-     * @return List of Tags.
-     */
-    @Query("SELECT e FROM Tag e INNER JOIN e.certificates c WHERE c.id = :id")
-    List<Tag> findByGiftCertificateId(Integer id);
-
-    /**
      * Returns the most widely used tag for
      * the user with with specific.
      *

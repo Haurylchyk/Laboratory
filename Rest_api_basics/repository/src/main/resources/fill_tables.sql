@@ -39,12 +39,12 @@ VALUES
 -- -----------------------------------------------------
 -- Data for the table `user`
 -- -----------------------------------------------------
-INSERT INTO user (name, login, password, role_id)
+INSERT INTO user (name, login, password, role)
 VALUES
-('Ivan','athos', '12345', 2),
-('Gena','porthos', '54321', 2),
-('Maxim','aramis', '56789', 2),
-('Alex','dartagnan', '98765', 2);
+('Ivan','athos', '12345', 'USER'),
+('Gena','porthos', '54321', 'USER'),
+('Maxim','aramis', '56789', 'USER'),
+('Alex','dartagnan', '98765', 'USER');
 
 -- -----------------------------------------------------
 -- Data for the table `gift_order`
