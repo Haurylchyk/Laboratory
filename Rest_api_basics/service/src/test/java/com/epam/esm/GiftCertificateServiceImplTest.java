@@ -40,11 +40,9 @@ import static org.mockito.Mockito.verify;
 class GiftCertificateServiceImplTest {
 
     private static final int TEST_GC_ID_FIRST = 1;
-    private static final int TEST_GC_ID_SECOND = 2;
     private static final int TEST_TAG_ID = 3;
     private static final String TEST_TAG_NAME = "Rest";
     private static final String TEST_GC_NAME_FIRST = "Test GiftCertificate name first";
-    private static final String TEST_GC_NAME_SECOND = "Test GiftCertificate name second";
     private static final String TEST_DESCRIPTION = "Test description";
     private static final String TEST_NEW_NAME = "Test new GiftCertificate name";
     private static final String TEST_NEW_DESCRIPTION = "Test new description";
@@ -59,11 +57,11 @@ class GiftCertificateServiceImplTest {
     @Mock
     private TagRepository tagRepository;
     @Mock
-    private GiftCertificateDTOMapper GiftCertificateDTOMapper;
+    private GiftCertificateDTOMapper giftCertificateDTOMapper;
 
     private Tag tag;
-    private GiftCertificate giftCertificateFirst;
-    private GiftCertificate giftCertificateSecond;
+    private GiftCertificate giftCertificate;
+    private GiftCertificateDTO giftCertificateDTO;
 
     private GiftCertificateDTO notFullyFilledGiftCertificateDTO;
     private GiftCertificateDTO updatedGiftCertificateDTO;
@@ -72,9 +70,9 @@ class GiftCertificateServiceImplTest {
     private List<Tag> tagList;
     private List<String> tagNamesList;
     private List<GiftCertificate> giftCertificateList;
+    private List<GiftCertificateDTO> giftCertificateDTOList;
 
     private GiftCertificateParamDTO compositeParameterDTO;
-    private GiftCertificateParamDTO emptyCompositeParameterDTO;
     private GiftCertificateParam compositeParameter;
 
     @BeforeEach
@@ -86,21 +84,21 @@ class GiftCertificateServiceImplTest {
         tagList = new ArrayList<>();
         tagList.add(tag);
 
-        giftCertificateFirst = new GiftCertificate();
-        giftCertificateFirst.setId(TEST_GC_ID_FIRST);
-        giftCertificateFirst.setName(TEST_GC_NAME_FIRST);
-        giftCertificateFirst.setDescription(TEST_DESCRIPTION);
-        giftCertificateFirst.setPrice(TEST_PRICE);
-        giftCertificateFirst.setDuration(TEST_DURATION);
-        giftCertificateFirst.setTagList(tagList);
+        giftCertificate = new GiftCertificate();
+        giftCertificate.setId(TEST_GC_ID_FIRST);
+        giftCertificate.setName(TEST_GC_NAME_FIRST);
+        giftCertificate.setDescription(TEST_DESCRIPTION);
+        giftCertificate.setPrice(TEST_PRICE);
+        giftCertificate.setDuration(TEST_DURATION);
+        giftCertificate.setTagList(tagList);
 
-        giftCertificateSecond = new GiftCertificate();
-        giftCertificateSecond.setId(TEST_GC_ID_SECOND);
-        giftCertificateSecond.setName(TEST_GC_NAME_SECOND);
-        giftCertificateSecond.setDescription(TEST_DESCRIPTION);
-        giftCertificateSecond.setPrice(TEST_PRICE);
-        giftCertificateSecond.setDuration(TEST_DURATION);
-        giftCertificateSecond.setTagList(tagList);
+        giftCertificateDTO = new GiftCertificateDTO();
+        giftCertificateDTO.setId(TEST_GC_ID_FIRST);
+        giftCertificateDTO.setName(TEST_GC_NAME_FIRST);
+        giftCertificateDTO.setDescription(TEST_DESCRIPTION);
+        giftCertificateDTO.setPrice(TEST_PRICE);
+        giftCertificateDTO.setDuration(TEST_DURATION);
+        giftCertificateDTO.setTagNames(tagNamesList);
 
         notFullyFilledGiftCertificateDTO = new GiftCertificateDTO();
         notFullyFilledGiftCertificateDTO.setName(TEST_NEW_NAME);
@@ -125,10 +123,11 @@ class GiftCertificateServiceImplTest {
         updatedGiftCertificateDTO.setTagNames(tagNamesList);
 
         giftCertificateList = new ArrayList<>();
-        giftCertificateList.add(giftCertificateFirst);
-        giftCertificateList.add(giftCertificateSecond);
+        giftCertificateList.add(giftCertificate);
 
-        emptyCompositeParameterDTO = new GiftCertificateParamDTO();
+        giftCertificateDTOList = new ArrayList<>();
+        giftCertificateDTOList.add(giftCertificateDTO);
+
         compositeParameterDTO = new GiftCertificateParamDTO();
         compositeParameter = new GiftCertificateParam();
 
@@ -142,8 +141,10 @@ class GiftCertificateServiceImplTest {
 
     @Test
     public void createShouldReturnCreatedGiftCertificate() {
-        given(giftCertificateRepository.save(any())).willReturn(giftCertificateFirst);
+        given(giftCertificateRepository.save(any())).willReturn(giftCertificate);
         given(tagRepository.findByName(TEST_TAG_NAME)).willReturn(Optional.of(tag));
+        given(giftCertificateDTOMapper.convertToEntity(createdGiftCertificateDTO)).willReturn(giftCertificate);
+        given(giftCertificateDTOMapper.convertToDTO(giftCertificate)).willReturn(createdGiftCertificateDTO);
         GiftCertificateDTO createdGCDTO = giftCertificateService.create(createdGiftCertificateDTO);
         assertEquals(TEST_GC_NAME_FIRST, createdGCDTO.getName());
         assertEquals(TEST_DESCRIPTION, createdGCDTO.getDescription());
@@ -160,8 +161,8 @@ class GiftCertificateServiceImplTest {
 
     @Test
     public void findByIdShouldSuccessfully() {
-        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
-        given(GiftCertificateDTOMapper.convertToDTO(giftCertificateFirst)).willReturn(createdGiftCertificateDTO);
+        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificate));
+        given(giftCertificateDTOMapper.convertToDTO(giftCertificate)).willReturn(createdGiftCertificateDTO);
         GiftCertificateDTO readGCDTO = giftCertificateService.findById(TEST_GC_ID_FIRST);
         assertEquals(createdGiftCertificateDTO, readGCDTO);
     }
@@ -174,11 +175,12 @@ class GiftCertificateServiceImplTest {
 
     @Test
     public void updateShouldSuccessfully() {
-        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
-        given(giftCertificateRepository.save(giftCertificateFirst)).willReturn(giftCertificateFirst);
+        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificate));
+        given(giftCertificateRepository.save(giftCertificate)).willReturn(giftCertificate);
         given(tagRepository.findByName(TEST_TAG_NAME)).willReturn(Optional.of(tag));
+        given(giftCertificateDTOMapper.convertToEntity(createdGiftCertificateDTO)).willReturn(giftCertificate);
+        given(giftCertificateDTOMapper.convertToDTO(giftCertificate)).willReturn(createdGiftCertificateDTO);
         GiftCertificateDTO updatedGCDTO = giftCertificateService.update(updatedGiftCertificateDTO, TEST_GC_ID_FIRST);
-
         assertEquals(updatedGiftCertificateDTO, updatedGCDTO);
     }
 
@@ -191,7 +193,7 @@ class GiftCertificateServiceImplTest {
 
     @Test
     public void deleteShouldSuccessfully() {
-        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificateFirst));
+        given(giftCertificateRepository.findById(TEST_GC_ID_FIRST)).willReturn(Optional.of(giftCertificate));
         giftCertificateService.delete(TEST_GC_ID_FIRST);
         verify(giftCertificateRepository, times(1)).deleteById(TEST_GC_ID_FIRST);
         verify(tagRepository, times(1)).deleteById(TEST_TAG_ID);
@@ -204,21 +206,13 @@ class GiftCertificateServiceImplTest {
     }
 
     @Test
-    public void findWithEmptyParamShouldSuccessfully() {
-        final int CORRECT_SIZE = 2;
-        Page<GiftCertificate> page = new PageImpl<>(giftCertificateList, PageRequest.of(0, 20), 2);
-        given(giftCertificateRepository.findAll(Mockito.any(Specification.class), eq(PageRequest.of(0, 20)))).willReturn(page);
-        Page<GiftCertificateDTO> pageDTO = giftCertificateService.findByParam(emptyCompositeParameterDTO, PageRequest.of(0, 20));
-
-        assertEquals(CORRECT_SIZE, pageDTO.toList().size());
-    }
-
-    @Test
     public void findByParamShouldSuccessfully() {
-        final int CORRECT_SIZE = 2;
+        final int CORRECT_SIZE = 1;
         Page<GiftCertificate> page = new PageImpl<>(giftCertificateList, PageRequest.of(0, 20), 2);
         given(giftCertificateRepository.findAll(Mockito.any(Specification.class), eq(PageRequest.of(0, 20)))).willReturn(page);
+        given(giftCertificateDTOMapper.convertToDTO(giftCertificateList)).willReturn(giftCertificateDTOList);
         Page<GiftCertificateDTO> pageDTO = giftCertificateService.findByParam(compositeParameterDTO, PageRequest.of(0, 20));
+
         assertEquals(CORRECT_SIZE, pageDTO.toList().size());
     }
 }

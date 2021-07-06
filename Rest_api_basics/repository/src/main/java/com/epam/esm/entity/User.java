@@ -7,9 +7,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
+@Table(name = "users")
 @Audited
 public class User extends BaseEntity {
 

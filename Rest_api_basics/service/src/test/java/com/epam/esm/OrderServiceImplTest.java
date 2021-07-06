@@ -13,6 +13,8 @@ import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.OrderDTO;
 import com.epam.esm.model.dto.OrderGiftCertificateDTO;
 import com.epam.esm.model.dto.UserDTO;
+import com.epam.esm.model.dto.mapper.impl.OrderDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.UserDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,6 +59,8 @@ public class OrderServiceImplTest {
     private UserRepository userRepository;
     @Mock
     private GiftCertificateRepository giftCertificateRepository;
+    @Mock
+    private OrderDTOMapper orderDTOMapper;
 
     private Order testOrder;
     private OrderDTO testOrderDTO;
@@ -143,6 +147,7 @@ public class OrderServiceImplTest {
         given(orderRepository.save(any())).willReturn(testOrder);
         given(userRepository.findById(any())).willReturn(Optional.of(testUser));
         given(giftCertificateRepository.findById(any())).willReturn(Optional.of(testGiftCertificate));
+        given(orderDTOMapper.convertToDTO(testOrder)).willReturn(testOrderDTO);
 
         OrderDTO receivedDTO = orderService.create(TEST_USER_ID, giftCertificateIdList);
 
@@ -170,6 +175,7 @@ public class OrderServiceImplTest {
     @Test
     public void findByIdShouldSuccessfully() {
         given(orderRepository.findById(anyInt())).willReturn(Optional.of(testOrder));
+        given(orderDTOMapper.convertToDTO(testOrder)).willReturn(testOrderDTO);
         OrderDTO receivedOrderDto = orderService.findById(TEST_ID);
         assertEquals(testOrderDTO, receivedOrderDto);
     }
@@ -184,14 +190,8 @@ public class OrderServiceImplTest {
     public void findByByUserIdShouldSuccessfully() {
         Page<Order> page = new PageImpl<>(orderList, PageRequest.of(1, 2), 1);
         given(orderRepository.findByUserId(TEST_USER_ID, PageRequest.of(1, 2))).willReturn(page);
+        given(orderDTOMapper.convertToDTO(orderList)).willReturn(orderDTOList);
         Page<OrderDTO> pageOrderDTO = orderService.findByUserId(TEST_USER_ID, PageRequest.of(1, 2));
         assertIterableEquals(orderDTOList, pageOrderDTO.toList());
-    }
-
-    @Test
-    public void findByByUserIdShouldNotFoundException() {
-        Page<Order> page = new PageImpl<>(emptyOrderList, PageRequest.of(1, 2), 1);
-        given(orderRepository.findByUserId(NOT_EXIST_USER_ID, PageRequest.of(1, 2))).willReturn(page);
-        assertThrows(EntityNotFoundException.class, () -> orderService.findByUserId(NOT_EXIST_USER_ID, PageRequest.of(1, 2)));
     }
 }
