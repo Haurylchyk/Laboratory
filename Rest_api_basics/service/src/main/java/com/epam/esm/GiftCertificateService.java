@@ -1,9 +1,9 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.GiftCertificateParamDTO;
-
-import java.util.List;
+import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.model.dto.GiftCertificateParamDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Interface describes the service for working with GiftCertificateDTO.
@@ -49,20 +49,10 @@ public interface GiftCertificateService {
     /**
      * Accesses the corresponding DAO method to find GiftCertificates that matches parameters.
      *
-     * @param page number of page.
-     * @param size number of GiftCertificates on page.
-     * @param giftCertificateParamDTO special object containing requested parameters.
-     * @return list of GiftCertificates.
+     * @param pageable     object contains page number and page size..
+     * @param parameterDTO special object containing requested parameters.
+     * @return list of GiftCertificates for the current page.
      */
-    List<GiftCertificateDTO> findByParam(Integer page, Integer size, GiftCertificateParamDTO giftCertificateParamDTO);
-
-    /**
-     * Calculates the total number of pages
-     * required to display all GiftCertificates.
-     *
-     * @return the total number of pages
-     * required to display all GiftCertificates.
-     */
-    Integer findNumberPagesForAllGiftCertificates(Integer size);
+    Page<GiftCertificateDTO> findByParam(GiftCertificateParamDTO parameterDTO, Pageable pageable);
 }
 

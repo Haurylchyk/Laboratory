@@ -1,6 +1,8 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.model.dto.OrderDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public interface OrderService {
      * @param giftCertificatesIdList list of GiftCertificate IDs in the Order.
      * @return created object with Order data.
      */
-    OrderDTO create(Integer userId,  List<Integer> giftCertificatesIdList);
+    OrderDTO create(Integer userId, List<Integer> giftCertificatesIdList);
 
     /**
      * Accesses the corresponding DAO method to find Order object with specific id.
@@ -33,28 +35,18 @@ public interface OrderService {
     /**
      * Accesses the corresponding DAO method to find all Orders.
      *
-     * @param page number of page.
-     * @param size number of Orders on page.
+     * @param pageable object contains page number and page size.
      * @return List of objects with Order data.
      */
-    List<OrderDTO> findAll(Integer page, Integer size);
+    Page<OrderDTO> findAll(Pageable pageable);
 
     /**
      * Accesses the corresponding DAO method to find all Orders
      * for User with a specific id.
      *
-     * @param id User id.
-     * @param page number of page.
-     * @param size number of Orders on page.
+     * @param id       User id.
+     * @param pageable object contains page number and page size.
      * @return List of objects with Order data.
      */
-    List<OrderDTO> findByUserId(Integer id, Integer page, Integer size);
-
-    /**
-     * Calculates the total number of pages required to display all Orders.
-     *
-     * @return the total number of pages required to display all Orders.
-     */
-    Integer findNumberPagesForAllOrders(Integer size);
-
+    Page<OrderDTO> findByUserId(Integer id, Pageable pageable);
 }

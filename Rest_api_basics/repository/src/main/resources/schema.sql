@@ -50,7 +50,9 @@ CREATE TABLE user (
     id   INT          NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     login VARCHAR(100) NOT NULL,
-     PRIMARY KEY (id));
+    password VARCHAR(100) NOT NULL,
+    role VARCHAR(45) NOT NULL,
+    PRIMARY KEY (id));
 
 -- -----------------------------------------------------
 -- Table `gift_order`

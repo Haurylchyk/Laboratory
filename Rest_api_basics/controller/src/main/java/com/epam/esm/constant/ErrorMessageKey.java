@@ -18,4 +18,7 @@ public class ErrorMessageKey {
     public static final String USER_EXISTS = "user_exists";
 
     public static final String PAGE_NOT_EXISTS = "page_not_exists";
+
+    public static final String TOKEN_NOT_VALID = "token_not_valid";
+    public static final String AUTH_FAILED = "auth_failed";
 }

@@ -1,6 +1,6 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.model.dto.UserDTO;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

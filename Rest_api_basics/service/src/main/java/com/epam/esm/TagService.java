@@ -1,8 +1,8 @@
 package com.epam.esm;
 
-import com.epam.esm.dto.TagDTO;
-
-import java.util.List;
+import com.epam.esm.model.dto.TagDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Interface describes the service for working with TagDTO.
@@ -39,11 +39,10 @@ public interface TagService {
     /**
      * Accesses the corresponding DAO method to find all Tags.
      *
-     * @param pageNumber number of page.
-     * @param size number of Tags on page.
+     * @param pageable object contains page number and page size.
      * @return List of objects with Tag data.
      */
-    List<TagDTO> findAll(Integer pageNumber, Integer size);
+    Page<TagDTO> findAll(Pageable pageable);
 
     /**
      * Accesses the corresponding DAO method to find most widely used Tag for
@@ -52,11 +51,4 @@ public interface TagService {
      * @return object with Tag data.
      */
     TagDTO findMostWidelyUsedOfTopOrderUser();
-
-    /**
-     * Calculates the total number of pages required to display all Tags.
-     *
-     * @return the total number of pages required to display all Tags.
-     */
-    Integer findNumberPagesForAllTags(Integer size);
 }

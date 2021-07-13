@@ -1,22 +1,29 @@
 package com.epam.esm;
 
-import com.epam.esm.dao.GiftCertificateDAO;
-import com.epam.esm.dao.OrderDAO;
-import com.epam.esm.dao.UserDAO;
-import com.epam.esm.dto.GiftCertificateDTO;
-import com.epam.esm.dto.OrderDTO;
-import com.epam.esm.dto.UserDTO;
+import com.epam.esm.dao.GiftCertificateRepository;
+import com.epam.esm.dao.OrderRepository;
+import com.epam.esm.dao.UserRepository;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Order;
+import com.epam.esm.entity.OrderGiftCertificate;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.impl.EntityNotFoundException;
 import com.epam.esm.impl.OrderServiceImpl;
+import com.epam.esm.model.dto.GiftCertificateDTO;
+import com.epam.esm.model.dto.OrderDTO;
+import com.epam.esm.model.dto.OrderGiftCertificateDTO;
+import com.epam.esm.model.dto.UserDTO;
+import com.epam.esm.model.dto.mapper.impl.OrderDTOMapper;
+import com.epam.esm.model.dto.mapper.impl.UserDTOMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,11 +54,13 @@ public class OrderServiceImplTest {
     private OrderServiceImpl orderService;
 
     @Mock
-    private OrderDAO orderDAO;
+    private OrderRepository orderRepository;
     @Mock
-    private UserDAO userDAO;
+    private UserRepository userRepository;
     @Mock
-    private GiftCertificateDAO giftCertificateDAO;
+    private GiftCertificateRepository giftCertificateRepository;
+    @Mock
+    private OrderDTOMapper orderDTOMapper;
 
     private Order testOrder;
     private OrderDTO testOrderDTO;
@@ -59,8 +68,10 @@ public class OrderServiceImplTest {
     private UserDTO userDTO;
     private GiftCertificate testGiftCertificate;
     private GiftCertificateDTO testGiftCertificateDTO;
-    private List<GiftCertificate> giftCertificateList;
-    private List<GiftCertificateDTO> giftCertificateDTOList;
+    private OrderGiftCertificate testOrderGiftCertificate;
+    private OrderGiftCertificateDTO testOrderGiftCertificateDTO;
+    private List<OrderGiftCertificate> orderGiftCertificateList;
+    private List<OrderGiftCertificateDTO> orderGiftCertificateDTOList;
     private List<Order> orderList;
     private List<Order> emptyOrderList;
     private List<OrderDTO> orderDTOList;
@@ -86,6 +97,8 @@ public class OrderServiceImplTest {
         testGiftCertificate.setCreateDate(TEST_DATE);
         testGiftCertificate.setLastUpdateDate(TEST_DATE);
 
+        testOrderGiftCertificate = new OrderGiftCertificate();
+        testOrderGiftCertificate.setGiftCertificate(testGiftCertificate);
 
         testGiftCertificateDTO = new GiftCertificateDTO();
         testGiftCertificateDTO.setId(TEST_GС_ID);
@@ -94,18 +107,21 @@ public class OrderServiceImplTest {
         testGiftCertificateDTO.setCreateDate(TEST_DATE);
         testGiftCertificateDTO.setLastUpdateDate(TEST_DATE);
 
-        giftCertificateDTOList = new ArrayList<>();
-        giftCertificateDTOList.add(testGiftCertificateDTO);
+        testOrderGiftCertificateDTO = new OrderGiftCertificateDTO();
+        testOrderGiftCertificateDTO.setGiftCertificate(testGiftCertificateDTO);
+
+        orderGiftCertificateDTOList = new ArrayList<>();
+        orderGiftCertificateDTOList.add(testOrderGiftCertificateDTO);
 
         userDTO = new UserDTO();
         userDTO.setId(TEST_USER_ID);
 
-        giftCertificateList = new ArrayList<>();
-        giftCertificateList.add(testGiftCertificate);
+        orderGiftCertificateList = new ArrayList<>();
+        orderGiftCertificateList.add(testOrderGiftCertificate);
 
         testOrder = new Order();
         testOrder.setUser(testUser);
-        testOrder.setGiftCertificateList(giftCertificateList);
+        testOrder.setGiftCertificateList(orderGiftCertificateList);
         testOrder.setId(TEST_ID);
         testOrder.setCost(TEST_PRICE);
         testOrder.setDate(TEST_DATE);
@@ -116,7 +132,7 @@ public class OrderServiceImplTest {
         emptyOrderList = new ArrayList<>();
 
         testOrderDTO = new OrderDTO();
-        testOrderDTO.setGiftCertificateList(giftCertificateDTOList);
+        testOrderDTO.setGiftCertificateList(orderGiftCertificateDTOList);
         testOrderDTO.setId(TEST_ID);
         testOrderDTO.setCost(TEST_PRICE);
         testOrderDTO.setDate(TEST_DATE);
@@ -128,57 +144,54 @@ public class OrderServiceImplTest {
 
     @Test
     public void createShouldReturnCreatedOrder() {
-        given(orderDAO.save(any())).willReturn(testOrder);
-        given(userDAO.find(any())).willReturn(Optional.of(testUser));
-        given(giftCertificateDAO.find(any())).willReturn(Optional.of(testGiftCertificate));
+        given(orderRepository.save(any())).willReturn(testOrder);
+        given(userRepository.findById(any())).willReturn(Optional.of(testUser));
+        given(giftCertificateRepository.findById(any())).willReturn(Optional.of(testGiftCertificate));
+        given(orderDTOMapper.convertToDTO(testOrder)).willReturn(testOrderDTO);
 
         OrderDTO receivedDTO = orderService.create(TEST_USER_ID, giftCertificateIdList);
 
         assertEquals(TEST_ID, receivedDTO.getId());
-        assertEquals(giftCertificateDTOList, receivedDTO.getGiftCertificateList());
+        assertEquals(orderGiftCertificateDTOList, receivedDTO.getGiftCertificateList());
         assertEquals(TEST_DATE, receivedDTO.getDate());
         assertEquals(TEST_PRICE, receivedDTO.getCost());
     }
 
     @Test
     public void createShouldReturnNotFoundException() {
-            given(userDAO.find(any())).willReturn(Optional.empty());
-            assertThrows(EntityNotFoundException.class,
-                    () -> orderService.create(NOT_EXIST_USER_ID, giftCertificateIdList));
+        given(userRepository.findById(any())).willReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class,
+                () -> orderService.create(NOT_EXIST_USER_ID, giftCertificateIdList));
     }
 
     @Test
     public void createShouldNotFoundException() {
-        given(userDAO.find(any())).willReturn(Optional.of(testUser));
-        given(giftCertificateDAO.find(any())).willReturn(Optional.empty());
+        given(userRepository.findById(any())).willReturn(Optional.of(testUser));
+        given(giftCertificateRepository.findById(any())).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class,
                 () -> orderService.create(TEST_USER_ID, notExistGCIdList));
     }
 
     @Test
     public void findByIdShouldSuccessfully() {
-            given(orderDAO.find(anyInt())).willReturn(Optional.of(testOrder));
-            OrderDTO receivedOrderDto = orderService.findById(TEST_ID);
-            assertEquals(testOrderDTO, receivedOrderDto);
+        given(orderRepository.findById(anyInt())).willReturn(Optional.of(testOrder));
+        given(orderDTOMapper.convertToDTO(testOrder)).willReturn(testOrderDTO);
+        OrderDTO receivedOrderDto = orderService.findById(TEST_ID);
+        assertEquals(testOrderDTO, receivedOrderDto);
     }
 
     @Test
     public void findByIdShouldNotFoundException() {
-        given(orderDAO.find(anyInt())).willReturn(Optional.empty());
+        given(orderRepository.findById(anyInt())).willReturn(Optional.empty());
         assertThrows(EntityNotFoundException.class, () -> orderService.findById(TEST_ID));
     }
 
     @Test
     public void findByByUserIdShouldSuccessfully() {
-            given(orderDAO.findOrdersByUserId(TEST_USER_ID, 1, 2)).willReturn(orderList);
-            List<OrderDTO> receivedDtoList = orderService.findByUserId(TEST_USER_ID, 1, 2);
-            assertIterableEquals(orderDTOList, receivedDtoList);
-    }
-
-    @Test
-    public void findByByUserIdShouldNotFoundException() {
-        given(orderDAO.findOrdersByUserId(NOT_EXIST_USER_ID, 1, 2)).willReturn(emptyOrderList);
-        List<OrderDTO> receivedDtoList = orderService.findByUserId(NOT_EXIST_USER_ID, 1, 2);
-        assertEquals(emptyOrderList, receivedDtoList);
+        Page<Order> page = new PageImpl<>(orderList, PageRequest.of(1, 2), 1);
+        given(orderRepository.findByUserId(TEST_USER_ID, PageRequest.of(1, 2))).willReturn(page);
+        given(orderDTOMapper.convertToDTO(orderList)).willReturn(orderDTOList);
+        Page<OrderDTO> pageOrderDTO = orderService.findByUserId(TEST_USER_ID, PageRequest.of(1, 2));
+        assertIterableEquals(orderDTOList, pageOrderDTO.toList());
     }
 }
