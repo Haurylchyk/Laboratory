@@ -1,6 +1,7 @@
 package com.epam.esm;
 
 import com.epam.esm.assembler.UserModelAssembler;
+import com.epam.esm.model.dto.AuthResponseDTO;
 import com.epam.esm.model.dto.SignUpUserDTO;
 import com.epam.esm.model.dto.AuthRequestDTO;
 import com.epam.esm.model.dto.UserDTO;
@@ -12,6 +13,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 
 @Validated
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping(value = "/users")
 public class UserController {
     private final UserService userService;
@@ -44,9 +47,10 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public String login(@RequestBody AuthRequestDTO authRequestDTO) {
+    public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO) {
         UserDTO user = userService.login(authRequestDTO);
-        return jwtTokenProvider.createToken(user.getLogin());
+        return new AuthResponseDTO(user.getLogin(),user.getRole(),
+                jwtTokenProvider.createToken(user.getLogin()));
     }
 
     @GetMapping("/{id}")
