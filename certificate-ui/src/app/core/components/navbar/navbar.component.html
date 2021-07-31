@@ -1,0 +1,36 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav>
+    <mat-toolbar>Logo</mat-toolbar>
+    <mat-nav-list>
+      <a *ngIf="!authService.isLoggedIn()" mat-list-item routerLink="login">Login</a>
+      <a *ngIf="!authService.isLoggedIn()" mat-list-item routerLink="sign-up">Sign Up</a>
+      <a *ngIf="!authService.hasRole('ADMIN')" mat-list-item routerLink="cart">Shopping Cart</a>
+      <a *ngIf="authService.isLoggedIn()" mat-list-item routerLink="logout">Logout</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar class="navbar">
+      <a routerLink="certificates" class="company-logo">Logo</a>
+      <span class="spacer"></span>
+      <ul class="navbar-nav">
+        <li *ngIf="!authService.hasRole('ADMIN')">
+          <a mat-button routerLink="cart" class="nav-link">
+            <mat-icon aria-label="Shopping cart">shopping_cart</mat-icon>
+          </a>
+        </li>
+        <li *ngIf="!authService.isLoggedIn()">
+          <a mat-button routerLink="login" class="nav-link">Login</a>
+        </li>
+        <li class="delimiter">
+        </li>
+        <li *ngIf="authService.isLoggedIn()">
+          <a mat-button routerLink="logout" class="nav-link">Logout</a>
+        </li>
+        <li *ngIf="!authService.isLoggedIn()">
+          <a mat-button routerLink="sign-up" class="nav-link">Sign Up</a>
+        </li>
+      </ul>
+    </mat-toolbar>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
