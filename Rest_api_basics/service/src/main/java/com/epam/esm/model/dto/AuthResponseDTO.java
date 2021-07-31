@@ -4,17 +4,15 @@ import com.epam.esm.entity.field.Role;
 
 import java.util.Objects;
 
-public class UserDTO extends BaseDTO<UserDTO> {
-    private String name;
+public class AuthResponseDTO {
     private String login;
     private Role role;
+    private String token;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public AuthResponseDTO(String login, Role role, String token) {
+        this.login = login;
+        this.role = role;
+        this.token = token;
     }
 
     public String getLogin() {
@@ -33,19 +31,26 @@ public class UserDTO extends BaseDTO<UserDTO> {
         this.role = role;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(name, userDTO.name) &&
-                Objects.equals(login, userDTO.login) &&
-                role == userDTO.role;
+        AuthResponseDTO that = (AuthResponseDTO) o;
+        return Objects.equals(login, that.login) &&
+                role == that.role &&
+                Objects.equals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, login, role);
+        return Objects.hash(login, role, token);
     }
 }
