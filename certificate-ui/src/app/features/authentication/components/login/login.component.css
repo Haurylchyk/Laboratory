@@ -1,0 +1,36 @@
+.login-form {
+  position: relative;
+  max-width: 340px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  margin-top: 30px;
+  padding: 80px 20px 40px;
+}
+.login-form.logo {
+    position: absolute;
+    bottom: 250px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 180px;
+    line-height: 180px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: white;
+    background-color: #c4c4c4;
+  }
+
+.login-form.form {
+    margin-top: 20px;
+  }
+
+.submit-btn {
+  width: 100%;
+  border: none;
+  font-size: 18px;
+  padding: 5px 0;
+  cursor: pointer;
+  background: green;
+  color: white;
+}
