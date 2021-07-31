@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'/>
+    <title>Login</title>
+    <link rel='stylesheet' href='css/styles.css'/>
+</head>
+<body>
+<div class='menu-container'>
+    <div class="side-menu left-side-menu">
+        <img class="menu-icon" src="images/menu.svg" alt="side">
+        <img class="menu-icon" src="images/polymer.svg" alt="logo">
+    </div>
+    <div class="search-container">
+        <input class="common-item search-input" type="text" name="search" placeholder="Search by item name">
+        <select class="common-item select-input" name='categories'>
+            <option value="all">All categories</option>
+        </select>
+    </div>
+    <div class="side-menu right-side-menu">
+        <img class="menu-icon" src="images/favorite.svg" alt="favourite">
+        <img class="menu-icon" src="images/shopping_cart.svg" alt="cart">
+        <a href="login.html">Login</a>
+        <label class="devider"> | </label>
+        <a href="login.html">SignUp</a>
+    </div>
+</div>
+<div class="content">
+    <div class="register-content">
+        <div class="register-header">
+            <label>Register</label>
+        </div>
+        <form action="" method="get">
+            <div class="register-row">
+                <div>
+                    <label for="login">Login</label>
+                    <input class="common-item register-input" name="login" type="text">
+                </div>
+                <div>
+                    <label for="name">First Name</label>
+                    <input class="common-item register-input" name="name" type="text">
+                </div>
+            </div>
+            <div class="register-row">
+                <div>
+                    <label for="password">Password</label>
+                    <input class="common-item register-input" name="password" type="password">
+                </div>
+                <div>
+                    <label for="repeat">Repeat Password</label>
+                    <input class="common-item register-input" name="repeat" type="password">
+                </div>
+            </div>
+            <div class="register-row">
+                <div>
+                    <label for="email">Email</label>
+                    <input class="common-item register-input" name="email" type="email">
+                </div>
+                <div>
+                    <label for="address">Address</label>
+                    <input class="common-item register-input" name="address" type="text">
+                </div>
+            </div>
+            <div class="register-button-row">
+                <button class="button cancel-button" type="reset">Cancel</button>
+                <button class="button submit-button register-submit-button" type="submit">Sign Up</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
