@@ -27,19 +27,19 @@ public class RepositoryConfig {
     @Profile("prod")
     public DataSource prodDataSource() {
         final HikariDataSource dataSource = new HikariDataSource();
-//        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/gift_certificate_system?serverTimezone=Europe/Moscow");
-//        dataSource.setUsername("root");
-//        dataSource.setPassword("root");
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setJdbcUrl("jdbc:mysql://localhost:3306/gift_certificate_system?serverTimezone=Europe/Moscow");
+        dataSource.setUsername("root");
+        dataSource.setPassword("root");
 //        dataSource.setJdbcUrl("jdbc:mysql://amazon-database-1.cj7cc7ajgdgs.us-east-2.rds.amazonaws.com:3306/gift_certificate_system?serverTimezone=Europe/Moscow");
 //        dataSource.setUsername("admin");
 //        dataSource.setPassword("admin123");
 
 
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/gift_certificate_system?serverTimezone=Europe/Moscow");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("admin");
+//        dataSource.setDriverClassName("org.postgresql.Driver");
+//        dataSource.setJdbcUrl("jdbc:postgresql://localhost:5432/gift_certificate_system?serverTimezone=Europe/Moscow");
+//        dataSource.setUsername("postgres");
+//        dataSource.setPassword("admin");
         return dataSource;
     }
 
@@ -61,8 +61,8 @@ public class RepositoryConfig {
 
         hibernateJpaVendorAdapter.setShowSql(false);
         hibernateJpaVendorAdapter.setGenerateDdl(true);
-//        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
-        hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
+        hibernateJpaVendorAdapter.setDatabase(Database.MYSQL);
+//        hibernateJpaVendorAdapter.setDatabase(Database.POSTGRESQL);
 
         return hibernateJpaVendorAdapter;
     }
@@ -101,8 +101,8 @@ public class RepositoryConfig {
         Properties hibernateProperties = new Properties();
 
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");
-//        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
-        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL94Dialect");
+        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+//        hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.PostgreSQL94Dialect");
         hibernateProperties.setProperty("hibernate.show_sql", "true");
         hibernateProperties.setProperty("hibernate.format_sql", "true");
         hibernateProperties.setProperty("hibernate.highlight_sql", "true");
