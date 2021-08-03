@@ -3,8 +3,6 @@ import {CommonModule} from '@angular/common';
 import {AuthenticationModule} from './authentication/authentication.module';
 import {CertificatesModule} from './certificates/certificates.module';
 
-
-
 @NgModule({
   declarations: [],
   imports: [

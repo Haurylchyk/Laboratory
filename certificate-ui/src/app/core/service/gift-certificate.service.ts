@@ -20,4 +20,20 @@ export class GiftCertificateService {
     return this.httpClient.get<GiftCertificate[]>(this.certificateBaseUrl, {params})
       .pipe(map((result: any) => result._embedded.giftCertificateDTOList));
   }
+
+  getCertificateById(certificateId: number): Observable<GiftCertificate> {
+    return this.httpClient.get<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`);
+  }
+
+  createCertificate(certificate: GiftCertificate): Observable<GiftCertificate> {
+    return this.httpClient.post<GiftCertificate>(this.certificateBaseUrl, certificate);
+  }
+
+  updateCertificate(certificate: GiftCertificate, certificateId: number): Observable<GiftCertificate> {
+    return this.httpClient.put<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`, certificate);
+  }
+
+  deleteCertificate(certificateId: number): void {
+   this.httpClient.delete<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`);
+  }
 }

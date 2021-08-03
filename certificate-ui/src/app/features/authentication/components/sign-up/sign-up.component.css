@@ -1,7 +1,7 @@
 .registration-form {
   display: flex;
   flex-direction: column;
-  width: 70%;
+  width: 50%;
 }
 
 .form-header {
@@ -17,13 +17,12 @@
     font-weight: 500;
   }
 
-
 .form-body {
   background-color: white;
 }
 
 .form-group {
-  width: 50%;
+  width: 100%;
   padding: 5px 20px;
   box-sizing: border-box;
 }
@@ -31,7 +30,7 @@
 .btn-group {
   display: inline-flex;
   flex-wrap: wrap;
-  width: 50%;
+  width: 100%;
   padding: 0 20px;
   margin-bottom: 20px;
   box-sizing: border-box;
@@ -52,29 +51,4 @@
   border: 1px solid #d9d9d9;
   background-color: white;
   margin-right: 10px;
-}
-
-@media all and (max-width: 600px) {
-  .btn {
-    width: 100%;
-  }
-
-  .btn-cancel {
-    margin-right: 0;
-    margin-bottom: 20px;
-  }
-
-  .btn-group {
-    width: 100%;
-    padding: 0 10px;
-  }
-
-  .registration-form {
-    width: 100%;
-  }
-
-  .form-group {
-    width: 100%;
-    padding: 5px 10px;
-  }
 }

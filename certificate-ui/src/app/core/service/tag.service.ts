@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Tag} from '../model/tag';
 import {map} from 'rxjs/operators';
@@ -11,12 +11,12 @@ export class TagService {
   private tagBaseUrl = 'http://localhost:8080/tags';
 
   constructor(
-    private httpClient: HttpClient,
+    private httpClient: HttpClient
   ) {
   }
 
-  getAllTags(): Observable<Tag[]> {
-    return this.httpClient.get<Tag[]>(this.tagBaseUrl)
+  getAllTags(params: HttpParams): Observable<Tag[]> {
+    return this.httpClient.get<Tag[]>(this.tagBaseUrl, {params})
       .pipe(map((result: any) => result._embedded.tagDTOList));
   }
 }

@@ -11,7 +11,7 @@ import {UserRole} from '../model/enum/user-role';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private authBaseUrl = 'http://localhost:8080';
+  private authBaseUrl = 'http://localhost:8080/users';
   private LOGIN_KEY = 'user-login';
   private ROLE_KEY = 'user-roles';
   private TOKEN_KEY = 'auth-token';
@@ -21,11 +21,11 @@ export class AuthenticationService {
   ) {
   }
   signUp(signUpRequest: SignUpRequest): Observable<User> {
-    return this.httpClient.post<User>(`${this.authBaseUrl}/users`, signUpRequest);
+    return this.httpClient.post<User>(this.authBaseUrl, signUpRequest);
   }
 
   login(loginRequest: LoginRequest): Observable<LoginResponse> {
-    return this.httpClient.post<LoginResponse>(`${this.authBaseUrl}/users/auth`, loginRequest);
+    return this.httpClient.post<LoginResponse>(`${this.authBaseUrl}/auth`, loginRequest);
   }
 
   logout(): void {
@@ -39,7 +39,7 @@ export class AuthenticationService {
   public hasRole(role: string): boolean {
     const userRoleName = this.getUserRole();
     if (userRoleName != null) {
-      return userRoleName.toString() === role;
+      return userRoleName === role;
     }
     return false;
   }
@@ -49,7 +49,7 @@ export class AuthenticationService {
     localStorage.setItem(this.LOGIN_KEY, login);
   }
 
-  public getLogin(): string | null {
+  public getLogin(): string {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
@@ -58,10 +58,10 @@ export class AuthenticationService {
     localStorage.setItem(this.ROLE_KEY, role.toString());
   }
 
-  public getUserRole(): UserRole {
+  public getUserRole(): string {
     const role = localStorage.getItem(this.ROLE_KEY);
     if (role) {
-      return UserRole[role];
+      return role;
     }
     return null;
   }
