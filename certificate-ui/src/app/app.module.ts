@@ -12,8 +12,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {LayoutModule} from '@angular/cdk/layout';
 import {MatListModule} from '@angular/material/list';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {CommonModule} from '@angular/common';
+import {AuthInterceptor} from './core/interceptor/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -32,9 +33,15 @@ import {CommonModule} from '@angular/common';
     MatIconModule,
     MatButtonModule,
     LayoutModule,
-    MatListModule,
+    MatListModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   exports: [],
   bootstrap: [AppComponent]
 })
