@@ -9,11 +9,18 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
+import {MatSliderModule} from '@angular/material/slider';
+import { CertificateDetailsComponent } from './components/certificate-details/certificate-details.component';
+import { AddCertificateComponent } from './components/add-certificate/add-certificate.component';
+import { EditCertificateComponent } from './components/edit-certificate/edit-certificate.component';
 
 
 @NgModule({
   declarations: [
-    CertificateListComponent
+    CertificateListComponent,
+    CertificateDetailsComponent,
+    AddCertificateComponent,
+    EditCertificateComponent
   ],
   imports: [
     CommonModule,
@@ -24,6 +31,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatInputModule,
     MatIconModule,
     MatSelectModule,
+    MatSliderModule
   ]
 })
 export class CertificatesModule {

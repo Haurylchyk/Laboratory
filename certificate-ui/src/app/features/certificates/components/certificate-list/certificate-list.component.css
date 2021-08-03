@@ -78,6 +78,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  cursor: pointer;
 }
 .product-name-container.product-name {
   cursor: pointer;
@@ -102,7 +103,6 @@
 .product-name-container.product-name a:visited {
   color: #609
 }
-
 
 .description {
   min-height: 60px;
@@ -170,12 +170,9 @@
   border: 1px solid #4f4f4f;
 }
 
-
   .product-card {
     flex-basis: 274px;
   }
-
-
 
   .input-group {
     width: 100%;
