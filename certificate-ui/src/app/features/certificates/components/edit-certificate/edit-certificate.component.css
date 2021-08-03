@@ -1,0 +1,87 @@
+.certificate-form-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: white;
+}
+
+.certificate-form-wrapper.header {
+  color: white;
+  background-color: #bdbdbd;
+}
+
+.certificate-form-wrapper.header.title {
+  width: 67%;
+  margin: 0 auto;
+  padding: 15px 0;
+  font-size: 20px;
+}
+
+.certificate-form-wrapper.body {
+  font-size: 14px;
+  color: gray;
+}
+
+.description {
+  resize: none;
+  height: 92px;
+}
+
+.certificate-form {
+  display: flex;
+  flex-direction: row;
+  width: 70%;
+  margin: 0 auto;
+}
+
+.column {
+  flex-basis: 50%;
+  flex-grow: 1;
+  padding: 20px 20px;
+}
+
+.category-container {
+  margin-bottom: 20px;
+  max-width: 460px;
+  font-weight: 600;
+}
+
+.btn-group {
+  padding-top: 10px;
+  display: flex;
+}
+
+.btn-group.btn {
+  width: 50%;
+}
+
+.btn-cancel {
+  margin-right: 15px;
+  color: #9a9a9a;
+  border: 1px solid #d9d9d9;
+  background-color: white;
+}
+
+.btn-submit {
+  color: white;
+  border: 1px solid green;
+  background-color: green;
+}
+
+.category-container.category {
+  width: 100%;
+  padding: 5px 0;
+  margin: 5px 0;
+}
+
+.column {
+  padding: 0;
+}
+
+.btn-group {
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.btn-group.btn {
+  width: 100%;
+}
