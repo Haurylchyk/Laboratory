@@ -10,10 +10,11 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatSliderModule} from '@angular/material/slider';
-import { CertificateDetailsComponent } from './components/certificate-details/certificate-details.component';
-import { AddCertificateComponent } from './components/add-certificate/add-certificate.component';
-import { EditCertificateComponent } from './components/edit-certificate/edit-certificate.component';
-
+import {CertificateDetailsComponent} from './components/certificate-details/certificate-details.component';
+import {AddCertificateComponent} from './components/add-certificate/add-certificate.component';
+import {EditCertificateComponent} from './components/edit-certificate/edit-certificate.component';
+import {SharedModule} from '../../shared/shared.module';
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,9 @@ import { EditCertificateComponent } from './components/edit-certificate/edit-cer
     MatInputModule,
     MatIconModule,
     MatSelectModule,
-    MatSliderModule
+    MatSliderModule,
+    SharedModule,
+    MatDialogModule
   ]
 })
 export class CertificatesModule {

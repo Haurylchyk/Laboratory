@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {GiftCertificateService} from '../../../../core/service/gift-certificate.service';
@@ -12,6 +12,7 @@ import {GiftCertificate} from '../../../../core/model/gift-certificate';
 export class EditCertificateComponent implements OnInit {
   certificateForm: FormGroup;
   tags: string[] = [];
+  tagName: string;
   private certificateId: number;
 
   constructor(
@@ -29,7 +30,7 @@ export class EditCertificateComponent implements OnInit {
       price: ['', Validators.required],
       duration: ['', Validators.required],
       description: ['', Validators.required],
-      category: ['', Validators.required],
+      category: ['', Validators.nullValidator],
     });
 
     this.certificateId = this.activatedRoute.snapshot.params.id;
@@ -44,14 +45,12 @@ export class EditCertificateComponent implements OnInit {
             price: certificate.price,
             duration: certificate.duration,
             description: certificate.description,
-            category: certificate.tagNames
           });
+          this.tags = certificate.tagNames;
         });
   }
 
   onSubmit(): void {
-    const str: string = this.certificateForm.get('category').value;
-    this.tags = str.split(',');
     const giftCertificate: GiftCertificate = {
       id: this.certificateForm.get('id').value,
       name: this.certificateForm.get('name').value,
@@ -69,6 +68,15 @@ export class EditCertificateComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+  }
+
+  addCertificateCategory(): void {
+    this.tags.push(this.tagName);
+    this.tagName = '';
+  }
+
+  deleteCertificateCategory(tagName: any): void {
+    this.tags = this.tags.filter(t => t !== tagName);
   }
 
   redirectToAllCertificates(): void {
