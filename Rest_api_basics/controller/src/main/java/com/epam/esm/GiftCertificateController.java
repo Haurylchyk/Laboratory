@@ -3,6 +3,7 @@ package com.epam.esm;
 import com.epam.esm.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.StatisticGiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,4 +71,10 @@ public class GiftCertificateController {
         return assembler.toModel(certDTOPage);
     }
 
+    @GetMapping("/stat")
+    public StatisticGiftCertificateDTO makeStatistics() {
+        Integer maxPrice = giftCertificateService.findTopPrice();
+        Integer maxDuration = giftCertificateService.findTopDuration();
+        return new StatisticGiftCertificateDTO(maxPrice, maxDuration);
+    }
 }
