@@ -1,0 +1,73 @@
+<div class="checkout-wrapper">
+  <div class="header">
+    <div class="title">
+      <span>Checkout</span>
+    </div>
+  </div>
+  <div class="body">
+    <div class="product-wrapper" *ngIf="currentCart.certificateList.length > 0">
+      <div>
+        <div class="product" *ngFor="let certificate of currentCart.certificateList">
+
+          <div class="product-image">
+            <img src="/assets/images/coupons/{{certificate.id%10}}.jpg" alt="{{certificate?.name}}">
+          </div>
+
+          <div class="product-details">
+            <div class="product-title">{{certificate?.name}}</div>
+            <p class="product-description">{{certificate?.description}}</p>
+          </div>
+
+          <div class="product-price">
+            <h3>{{certificate?.price | currency}}</h3>
+          </div>
+
+          <div class="product-removal">
+            <button class="remove-product"
+                    (click)="removeCertificateFromCart(certificate.id)">
+              <mat-icon>clear</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div class="total">
+        <div class="label"> Total cost:</div>
+        <div class="price">{{currentCart.cost | currency | cost}}</div>
+      </div>
+
+      <div class="total">
+        <h3>Total count:</h3>
+        <h3 class="price">{{currentCart.count}}</h3>
+      </div>
+
+      <div class="btn-group">
+        <button mat-button
+                class="btn btn-back"
+                (click)="redirectToCertificatesPage()"
+        >Catalog
+        </button>
+
+        <button mat-button
+                class="btn btn-checkout"
+                (click)="openOrderConfirmationDialog()"
+        >Checkout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="product-wrapper">
+    <div *ngIf="currentCart.certificateList.length === 0">
+      <h1>
+        <mat-icon>shopping_cart</mat-icon>
+        Your cart is currently empty!
+      </h1>
+      <button mat-button
+              class="btn btn-checkout"
+              (click)="redirectToCertificatesPage()"
+      >Catalog
+      </button>
+    </div>
+  </div>
+</div>
