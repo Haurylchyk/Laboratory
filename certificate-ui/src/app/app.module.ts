@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {NavbarComponent} from './core/components/navbar/navbar.component';
+import {NavbarComponent} from './core/component/navbar/navbar.component';
 import {FeaturesModule} from './features/features.module';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatToolbarModule} from '@angular/material/toolbar';
