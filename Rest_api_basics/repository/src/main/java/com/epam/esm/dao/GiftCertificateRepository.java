@@ -23,4 +23,8 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
      * @return list of GiftCertificates.
      */
     List<GiftCertificate> findByTagList_NameContaining(String name);
+
+    GiftCertificate findFirstByOrderByPriceDesc();
+
+    GiftCertificate findFirstByOrderByDurationDesc();
 }
