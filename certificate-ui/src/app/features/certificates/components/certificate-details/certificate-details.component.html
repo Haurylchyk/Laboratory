@@ -1,35 +1,36 @@
 <div class="product-details-wrapper">
   <div class="product-short-description">
     <div class="product-image">
-      <img src="" alt="{{certificate?.name}}">
+      <img src="/assets/images/coupons/{{certificate?.id%10}}.jpg" alt="{{certificate?.name}}">
     </div>
     <div class="product-description-container">
-      <div class="category-container">
-        <span class="category" *ngFor="let tag of certificate?.tagNames">{{tag}}</span>
+      <div class="name">
+        <span>Certificate name:</span>
+        <h4>{{certificate?.name}} days</h4>
       </div>
-      <div>
-        <span>Certificate Validity Period:</span>
+      <div class="duration">
+        <span>Certificate duration:</span>
         <h4>{{certificate?.duration}} days</h4>
       </div>
       <div class="cart">
         <h2>{{certificate?.price | currency}}</h2>
-        <a *ngIf="!authService.hasRole('ADMIN')"
-        >Add to Cart <i class="material-icons">shopping_cart</i>
+        <a (click)="addCertificateToCart(certificate)"
+           *ngIf="!isAdminRole">
+          Add to Cart <i class="material-icons">shopping_cart</i>
         </a>
-      </div>
-      <div>
-        <button mat-button
-                class="edit-btn"
-                (click)="redirectToEditCertificatePage(certificate.id)"
-                *ngIf="authService.hasRole('ADMIN')"
-        >Edit Certificate </button>
       </div>
     </div>
   </div>
   <div>
     <div class="product-long-description">
-      <h3>Item Detailed Description</h3>
+      <h3>Certificate description:</h3>
       <p>{{certificate?.description}}</p>
     </div>
+    <button mat-button
+            class="btn btn-checkout"
+            (click)="redirectToCertificatesPage()"
+    >Catalog
+    </button>
   </div>
+
 </div>
