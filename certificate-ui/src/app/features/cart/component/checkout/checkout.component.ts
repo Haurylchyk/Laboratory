@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import {Cart} from '../../../../core/model/cart';
 import {Router} from '@angular/router';
 import {CartManagerService} from '../../service/cart-manager.service';
-import {ConfirmationDialogComponent} from '../../../../shared/component/dialod/confirmation-dialod/confirmation-dialog.component';
+import {ConfirmationDialogComponent} from '../../../../shared/component/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {OrderService} from '../../../../core/service/order.service';
 

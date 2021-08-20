@@ -12,6 +12,7 @@ import {GiftCertificate} from '../../../../core/model/gift-certificate';
 export class AddCertificateComponent implements OnInit {
   certificateForm: FormGroup;
   tags: string[] = [];
+  tagName: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,12 +27,11 @@ export class AddCertificateComponent implements OnInit {
       price: ['', Validators.required],
       duration: ['', Validators.required],
       description: ['', Validators.required],
-      category: ['', Validators.required],
+      category: ['', Validators.nullValidator],
     });
   }
 
   onSubmit(): void {
-    this.tags.push(this.certificateForm.get('category').value);
     const giftCertificate: GiftCertificate = {
       id: null,
       name: this.certificateForm.get('name').value,
@@ -43,10 +43,20 @@ export class AddCertificateComponent implements OnInit {
       tagNames: this.tags
     };
     this.giftCertificateService.createCertificate(giftCertificate).subscribe(certificate => {
-      this.router.navigateByUrl('/certificates');});
+      this.router.navigateByUrl('/certificates');
+    });
   }
 
   redirectToAllCertificates(): void {
     this.router.navigateByUrl(`/certificates`);
+  }
+
+  addCertificateCategory(): void {
+    this.tags.push(this.tagName);
+    this.tagName = '';
+  }
+
+  deleteCertificateCategory(tagName: any): void {
+    this.tags = this.tags.filter(t => t !== tagName);
   }
 }
