@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {GiftCertificate} from '../model/gift-certificate';
 import {map} from 'rxjs/operators';
-
+import {Statistic} from '../model/statistic';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class GiftCertificateService {
 
   getAllCertificates(params: HttpParams): Observable<GiftCertificate[]> {
     return this.httpClient.get<GiftCertificate[]>(this.certificateBaseUrl, {params})
-      .pipe(map((result: any) => result._embedded.giftCertificateDTOList));
+      .pipe(map((result: any) => result._embedded !== undefined ? result._embedded.giftCertificateDTOList : []));
   }
 
   getCertificateById(certificateId: number): Observable<GiftCertificate> {
@@ -33,7 +33,11 @@ export class GiftCertificateService {
     return this.httpClient.put<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`, certificate);
   }
 
-  deleteCertificate(certificateId: number): void {
-   this.httpClient.delete<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`);
+  deleteCertificate(certificateId: number): Observable<GiftCertificate> {
+    return this.httpClient.delete<GiftCertificate>(this.certificateBaseUrl + `/${certificateId}`);
+  }
+
+  getStatistic(): Observable<Statistic> {
+    return this.httpClient.get<Statistic>(this.certificateBaseUrl + '/stat');
   }
 }

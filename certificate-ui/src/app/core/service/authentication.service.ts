@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {SignUpRequest} from '../../features/authentication/model/sign-up-request';
 import {User} from '../model/user';
@@ -12,6 +12,7 @@ import {UserRole} from '../model/enum/user-role';
 })
 export class AuthenticationService {
   private authBaseUrl = 'http://localhost:8080/users';
+  private ID_KEY = 'user-id';
   private LOGIN_KEY = 'user-login';
   private ROLE_KEY = 'user-roles';
   private TOKEN_KEY = 'auth-token';
@@ -20,6 +21,7 @@ export class AuthenticationService {
     private httpClient: HttpClient,
   ) {
   }
+
   signUp(signUpRequest: SignUpRequest): Observable<User> {
     return this.httpClient.post<User>(this.authBaseUrl, signUpRequest);
   }
@@ -42,6 +44,15 @@ export class AuthenticationService {
       return userRoleName === role;
     }
     return false;
+  }
+
+  public saveUserId(id: number): void {
+    localStorage.removeItem(this.ID_KEY);
+    localStorage.setItem(this.ID_KEY, '' + id);
+  }
+
+  public getUserId(): string {
+    return localStorage.getItem(this.ID_KEY);
   }
 
   public saveLogin(login: string): void {
