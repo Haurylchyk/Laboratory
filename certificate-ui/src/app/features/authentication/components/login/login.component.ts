@@ -2,11 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../core/service/authentication.service';
-import {UserRole} from '../../../../core/model/enum/user-role';
 import {LoginRequest} from '../../model/login-request';
 import {LoginResponse} from '../../model/login-response';
 import {map} from 'rxjs/operators';
-
 
 @Component({
   selector: 'app-login',
@@ -15,22 +13,17 @@ import {map} from 'rxjs/operators';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  badAccess: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
     private authService: AuthenticationService
-  ) {
+  )
+  {
     if (this.authService.isLoggedIn()) {
       this.router.navigate(['/certificates']);
     }
-  }
-
-  private static redirectUser(role: UserRole): string {
-    if (role === UserRole.ADMIN) {
-      return 'admin/home';
-    }
-    return 'certificates';
   }
 
   ngOnInit(): void {
@@ -47,18 +40,21 @@ export class LoginComponent implements OnInit {
     };
     this.authService.login(loginRequest).pipe(
       map((loginResponse) => {
+        this.badAccess = false;
         this.saveUserInformation(loginResponse);
-        return loginResponse;
       })
     ).subscribe(
-      (user) => {
-        const returnUrl = LoginComponent.redirectUser(user.role);
-        this.router.navigateByUrl(returnUrl);
+      () => {
+        this.router.navigateByUrl('certificates');
+      },
+      (error) => {
+        this.badAccess = true;
       }
     );
   }
 
   private saveUserInformation(user: LoginResponse): void {
+    this.authService.saveUserId(user.id);
     this.authService.saveLogin(user.login);
     this.authService.saveUserRole(user.role);
     this.authService.saveToken(user.token);

@@ -6,24 +6,24 @@
   margin-top: 30px;
   padding: 80px 20px 40px;
 }
-.login-form.logo {
-    position: absolute;
-    bottom: 250px;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 180px;
-    line-height: 180px;
-    border-radius: 50%;
-    text-align: center;
-    font-size: 36px;
-    font-weight: 700;
-    color: white;
-    background-color: #c4c4c4;
-  }
+
+.logo {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.logo img {
+  position: absolute;
+  bottom: 0;
+  transform: translate(-50%, 5%);
+  width: 180px;
+  border-radius: 50%;
+}
 
 .login-form.form {
-    margin-top: 20px;
-  }
+  margin-top: 20px;
+}
 
 .submit-btn {
   width: 100%;
@@ -31,6 +31,6 @@
   font-size: 18px;
   padding: 5px 0;
   cursor: pointer;
-  background: green;
+  background: #51cd51;
   color: white;
 }
