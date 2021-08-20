@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../core/service/authentication.service';
+import {CartManagerService} from '../../../cart/service/cart-manager.service';
 
 
 @Component({
@@ -11,12 +12,14 @@ import {AuthenticationService} from '../../../../core/service/authentication.ser
 export class LogoutComponent implements OnInit {
   constructor(
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private cartManagerService: CartManagerService
   ) {
   }
 
   ngOnInit(): void {
     this.authService.logout();
+    this.cartManagerService.cleanCart();
     this.router.navigateByUrl('login');
   }
 }
