@@ -9,13 +9,13 @@
   background-color: #bdbdbd;
 }
 
-.form-header.title {
-    width: 95%;
-    margin: 0 auto;
-    padding: 15px 0;
-    font-size: 18px;
-    font-weight: 500;
-  }
+.title {
+  width: 95%;
+  margin: 0 auto;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
 
 .form-body {
   background-color: white;
@@ -42,8 +42,9 @@
 
 .btn-submit {
   color: white;
-  border: 1px solid green;
-  background-color: green;
+  border: none;
+  font-size: 18px;
+  background-color: #51cd51;
 }
 
 .btn-cancel {
@@ -51,4 +52,5 @@
   border: 1px solid #d9d9d9;
   background-color: white;
   margin-right: 10px;
+  font-size: 18px;
 }
