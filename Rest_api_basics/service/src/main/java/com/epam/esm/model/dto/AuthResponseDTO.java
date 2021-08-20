@@ -5,14 +5,24 @@ import com.epam.esm.entity.field.Role;
 import java.util.Objects;
 
 public class AuthResponseDTO {
+    private Integer id;
     private String login;
     private Role role;
     private String token;
 
-    public AuthResponseDTO(String login, Role role, String token) {
+    public AuthResponseDTO(Integer id, String login, Role role, String token) {
+        this.id = id;
         this.login = login;
         this.role = role;
         this.token = token;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getLogin() {
@@ -44,13 +54,15 @@ public class AuthResponseDTO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AuthResponseDTO that = (AuthResponseDTO) o;
-        return Objects.equals(login, that.login) &&
+        return Objects.equals(id, that.id) &&
+                Objects.equals(login, that.login) &&
                 role == that.role &&
                 Objects.equals(token, that.token);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(login, role, token);
+        return Objects.hash(id, login, role, token);
     }
 }
+

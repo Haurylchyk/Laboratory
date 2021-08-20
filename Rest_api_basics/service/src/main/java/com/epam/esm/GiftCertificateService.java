@@ -54,5 +54,9 @@ public interface GiftCertificateService {
      * @return list of GiftCertificates for the current page.
      */
     Page<GiftCertificateDTO> findByParam(GiftCertificateParamDTO parameterDTO, Pageable pageable);
+
+    Integer findTopPrice();
+
+    Integer findTopDuration();
 }
 

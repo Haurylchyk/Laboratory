@@ -173,6 +173,16 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 giftCertificatePage.getTotalElements());
     }
 
+    @Override
+    public Integer findTopPrice() {
+        return giftCertificateRepository.findFirstByOrderByPriceDesc().getPrice();
+    }
+
+    @Override
+    public Integer findTopDuration() {
+        return giftCertificateRepository.findFirstByOrderByDurationDesc().getDuration();
+    }
+
     private List<Tag> returnCreatedOrExistingTags(List<String> tagNamesList) {
         List<Tag> tagList = new ArrayList<>();
         if (tagNamesList == null) {
