@@ -24,7 +24,17 @@ public interface GiftCertificateRepository extends JpaRepository<GiftCertificate
      */
     List<GiftCertificate> findByTagList_NameContaining(String name);
 
+    /**
+     * Returns GiftCertificate with the maximum price.
+     *
+     * @return GiftCertificate.
+     */
     GiftCertificate findFirstByOrderByPriceDesc();
 
+    /**
+     * Returns GiftCertificate with the maximum duration.
+     *
+     * @return GiftCertificate.
+     */
     GiftCertificate findFirstByOrderByDurationDesc();
 }

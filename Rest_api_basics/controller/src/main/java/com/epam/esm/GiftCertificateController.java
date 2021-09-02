@@ -32,11 +32,15 @@ import javax.validation.constraints.Min;
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateStatisticService giftCertificateStatisticService;
     private final GiftCertificateModelAssembler giftCertificateModelAssembler;
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateModelAssembler giftCertificateModelAssembler) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService,
+                                     GiftCertificateStatisticService giftCertificateStatisticService,
+                                     GiftCertificateModelAssembler giftCertificateModelAssembler) {
         this.giftCertificateService = giftCertificateService;
+        this.giftCertificateStatisticService = giftCertificateStatisticService;
         this.giftCertificateModelAssembler = giftCertificateModelAssembler;
     }
 
@@ -73,8 +77,8 @@ public class GiftCertificateController {
 
     @GetMapping("/stat")
     public StatisticGiftCertificateDTO makeStatistics() {
-        Integer maxPrice = giftCertificateService.findTopPrice();
-        Integer maxDuration = giftCertificateService.findTopDuration();
+        Integer maxPrice = giftCertificateStatisticService.findTopPrice();
+        Integer maxDuration = giftCertificateStatisticService.findTopDuration();
         return new StatisticGiftCertificateDTO(maxPrice, maxDuration);
     }
 }
