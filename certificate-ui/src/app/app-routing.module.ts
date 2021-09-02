@@ -4,12 +4,13 @@ import {ErrorComponent} from './shared/component/error/error.component';
 
 const routes: Routes = [
   {
-    path: 'error/:code/:message',
+    path: 'error',
     component: ErrorComponent,
   },
   {
     path: '**',
-    redirectTo: 'error/404/The requested page was not found!'
+    component: ErrorComponent,
+    data: {errorCode: 404, errorMessage: 'The requested page was not found!'}
   }
 ];
 

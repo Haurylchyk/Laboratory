@@ -58,11 +58,23 @@
 
 .product-image {
   margin: 0 auto;
+  overflow:hidden;
+  display: block;
 }
 
 .product-image img {
   width: 270px;
   height: 200px;
+  display: block;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  -webkit-transition: all 1s ease-out;
+}
+
+.product-image img:hover {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 
 .product-info {
@@ -111,10 +123,6 @@
   padding: 0 5px;
   min-width: 32px;
 }
-
-
-
-
 
 .description {
   min-height:30px;

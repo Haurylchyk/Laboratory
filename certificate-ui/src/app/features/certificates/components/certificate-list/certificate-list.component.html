@@ -39,7 +39,7 @@
       <div>
         <button mat-button class="btn-add input-group"
                 (click)="redirectToNewCertificate()"
-                *ngIf="isAdminRole">Add certificate
+                *ngIf="hasAdminRole">Add certificate
         </button>
       </div>
     </form>
@@ -51,7 +51,7 @@
   <div id="products" class="products">
     <div class="product-card" *ngFor="let certificate of certificates">
       <div class="product-image">
-        <img src="/assets/images/coupons/{{certificate.id%10}}.jpg" alt="{{certificate.name}}">
+        <img src="/assets/images/certificates/{{certificate.id%10}}.jpg" alt="{{certificate.name}}">
 
       </div>
 
@@ -64,14 +64,14 @@
           <div class="btn button-icon-edit">
             <button mat-button
                     (click)="redirectToEditCertificatePage(certificate.id)"
-                    *ngIf="isAdminRole">
+                    *ngIf="hasAdminRole">
               <mat-icon>edit</mat-icon>
             </button>
           </div>
           <div class="btn button-icon-delete">
             <button mat-button
                     (click)="openDeleteConfirmationDialog(certificate)"
-                    *ngIf="isAdminRole">
+                    *ngIf="hasAdminRole">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -90,7 +90,7 @@
           <div>
             <button mat-button class="btn-cart"
                     (click)="addCertificateToCart(certificate)"
-                    *ngIf="isUserRole">
+                    *ngIf="hasSmthRole">
               Add to Cart
             </button>
           </div>
@@ -108,10 +108,12 @@
   </div>
 </div>
 
-<div class="empty-content">
-  <div *ngIf="certificates.length === 0">
+<div class="empty-content" >
+  <div *ngIf="certificates$ | async; else loading">
     <h1>
       Nothing was found for your search!
     </h1>
   </div>
+  <ng-template #loading>Loading certificates...</ng-template>
 </div>
+

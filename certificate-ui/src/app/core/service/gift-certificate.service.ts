@@ -18,7 +18,7 @@ export class GiftCertificateService {
 
   getAllCertificates(params: HttpParams): Observable<GiftCertificate[]> {
     return this.httpClient.get<GiftCertificate[]>(this.certificateBaseUrl, {params})
-      .pipe(map((result: any) => result._embedded !== undefined ? result._embedded.giftCertificateDTOList : []));
+      .pipe(map((result: any) => result._embedded ? result._embedded.giftCertificateDTOList : []));
   }
 
   getCertificateById(certificateId: number): Observable<GiftCertificate> {
@@ -39,5 +39,51 @@ export class GiftCertificateService {
 
   getStatistic(): Observable<Statistic> {
     return this.httpClient.get<Statistic>(this.certificateBaseUrl + '/stat');
+  }
+
+  getCertificateRequestParams(
+    certificateName: string,
+    tags: string[],
+    price: number,
+    duration: number,
+    page: number,
+    pageSize: number
+  ): HttpParams {
+    let params: HttpParams = new HttpParams();
+    if (certificateName) {
+      params = params.append('name', certificateName);
+    }
+    if (tags.length > 0) {
+      params = params.append(`tagNameList`, tags.join(', '));
+    }
+    if (price > 0) {
+      params = params.append(`priceFilterList`, 'le:' + price.toString());
+    }
+    if (duration > 0) {
+      params = params.append(`durationFilterList`, 'le:' + duration.toString());
+    }
+    if (page) {
+      page = page - 1;
+      params = params.append('page', page.toString());
+    }
+    if (pageSize) {
+      params = params.append('size', pageSize.toString());
+    }
+    return params;
+  }
+
+  getTagRequestParams(
+    page: number,
+    pageSize: number
+  ): HttpParams {
+    let params: HttpParams = new HttpParams();
+    if (page) {
+      page = page - 1;
+      params = params.append('page', page.toString());
+    }
+    if (pageSize) {
+      params = params.append('size', pageSize.toString());
+    }
+    return params;
   }
 }

@@ -17,7 +17,6 @@ export class ConfirmationDialogComponent implements OnInit {
   dialogTitle: string;
 
   ngOnInit(): void {
-    console.log('Confirmation dialog was opened!');
     this.dialogTitle = this.data;
   }
 

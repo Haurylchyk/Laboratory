@@ -6,7 +6,7 @@
       </a>
       <span class="spacer"></span>
       <ul class="navbar-nav">
-        <li *ngIf="authService.hasAnyRole() && !authService.hasRole('ADMIN')">
+        <li *ngIf="authService.isLoggedIn() && !authService.hasRole('ADMIN')">
           <a mat-button routerLink="cart" class="nav-link">
             <mat-icon aria-label="Shopping cart">shopping_cart</mat-icon>
           </a>
@@ -25,6 +25,5 @@
         </li>
       </ul>
     </mat-toolbar>
-    <ng-content></ng-content>
   </mat-sidenav-content>
 </mat-sidenav-container>

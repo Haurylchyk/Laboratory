@@ -11,12 +11,16 @@ export class ErrorComponent implements OnInit {
   errorMessage: string;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {
   }
 
   ngOnInit(): void {
-    this.errorCode = this.activatedRoute.snapshot.params.code;
-    this.errorMessage = this.activatedRoute.snapshot.params.message;
+    this.errorCode = this.activatedRoute.snapshot.queryParams.errorCode;
+    this.errorMessage = this.activatedRoute.snapshot.queryParams.errorMessage;
+    if (!this.errorCode) {
+      this.errorCode = this.activatedRoute.snapshot.data.errorCode;
+      this.errorMessage = this.activatedRoute.snapshot.data.errorMessage;
+    }
   }
 }

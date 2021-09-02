@@ -1,7 +1,7 @@
 <div class="product-details-wrapper">
   <div class="product-short-description">
     <div class="product-image">
-      <img src="/assets/images/coupons/{{certificate?.id%10}}.jpg" alt="{{certificate?.name}}">
+      <img src="/assets/images/certificates/{{certificate?.id%10}}.jpg" alt="{{certificate?.name}}">
     </div>
     <div class="product-description-container">
       <div class="name">
@@ -15,7 +15,7 @@
       <div class="cart">
         <h2>{{certificate?.price | currency}}</h2>
         <a (click)="addCertificateToCart(certificate)"
-           *ngIf="!isAdminRole">
+           *ngIf="hasSmthRole && !hasAdminRole">
           Add to Cart <i class="material-icons">shopping_cart</i>
         </a>
       </div>

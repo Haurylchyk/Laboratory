@@ -3,7 +3,6 @@ import {GiftCertificate} from '../../../../core/model/gift-certificate';
 import {GiftCertificateService} from '../../../../core/service/gift-certificate.service';
 import {AuthenticationService} from '../../../../core/service/authentication.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Statistic} from '../../../../core/model/statistic';
 import {CartManagerService} from '../../../cart/service/cart-manager.service';
 
 @Component({
@@ -13,9 +12,8 @@ import {CartManagerService} from '../../../cart/service/cart-manager.service';
 })
 export class CertificateDetailsComponent implements OnInit {
   certificate: GiftCertificate;
-  certificateId: number;
-  statistic: Statistic;
-  isAdminRole: boolean;
+  hasAdminRole: boolean;
+  hasSmthRole: string;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -27,9 +25,10 @@ export class CertificateDetailsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isAdminRole = this.authService.hasRole('ADMIN');
-    this.certificateId = this.activatedRoute.snapshot.params.id;
-    this.certificateService.getCertificateById(this.certificateId)
+    this.hasAdminRole = this.authService.hasRole('ADMIN');
+    this.hasSmthRole = this.authService.getUserRole();
+    const certificateId = this.activatedRoute.snapshot.params.id;
+    this.certificateService.getCertificateById(certificateId)
       .subscribe(
         (certificate) => {
           this.certificate = certificate;
@@ -37,11 +36,6 @@ export class CertificateDetailsComponent implements OnInit {
           this.router.navigate(['/404']);
         }
       );
-    this.certificateService.getStatistic()
-      .subscribe(
-        (statistic) => {
-          this.statistic = statistic;
-        });
   }
 
   addCertificateToCart(certificate: GiftCertificate): void {

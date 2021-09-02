@@ -47,9 +47,7 @@ export class CartManagerService {
   }
 
   removeCertificate(certificateId: number): void {
-    if (certificateId == null) {
-      return;
-    }
+    if (certificateId) {
     const cart: Cart = this.storageCartService.getCart();
     const cartCertificateList = cart.certificateList;
     const index = cartCertificateList.findIndex(giftCertificate => giftCertificate.id === certificateId);
@@ -60,6 +58,7 @@ export class CartManagerService {
     this.storageCartService.saveCart(cart);
     const cart$ = of(cart);
     cart$.subscribe(updatedCart => this.userCart.next(updatedCart));
+  }
   }
 
   calculateCartCost(certificates: GiftCertificate[]): number {

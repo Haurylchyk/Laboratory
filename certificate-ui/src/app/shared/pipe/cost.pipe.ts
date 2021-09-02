@@ -11,5 +11,4 @@ export class CostPipe implements PipeTransform {
   transform(cost: string, ...args: any[]): string {
   return cost + ' (US dollars)';
   }
-
 }

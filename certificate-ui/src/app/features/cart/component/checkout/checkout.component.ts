@@ -31,12 +31,7 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.cart$.subscribe(
       (cart) => {
-        this.currentCart.certificateList = cart.certificateList;
-        console.log(cart);
-        this.currentCart.cost = cart.cost;
-        this.currentCart.count = cart.count;
-        this.currentCart.userId = cart.userId;
-        console.log('userId - ' + this.currentCart.userId);
+        this.currentCart = cart;
       });
   }
 
@@ -54,16 +49,24 @@ export class CheckoutComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        const idList: number[] = this.currentCart.certificateList.map(certificate => certificate.id);
-        this.orderService.createOrder(this.currentCart.userId, idList)
-          .subscribe(
-            (order) => {
-              console.log('The order was made successfully');
-              this.cartManager.cleanCart();
-            });
-      }
+      const idList: number[] = this.currentCart.certificateList.map(certificate => certificate.id);
+      this.orderService.createOrder(this.currentCart.userId, idList)
+        .subscribe(
+          (order) => {
+            console.log('The order was made successfully');
+            this.cartManager.cleanCart();
+          }, error => {
+            this.redirectToErrorPage();
+          });
       this.router.navigate(['/certificates']);
     });
+  }
+
+  redirectToErrorPage(): void {
+    this.router.navigate(['error'],
+      {
+        queryParams: {errorCode: 500, errorMessage: 'There was an error. Please try again later.'},
+        skipLocationChange: true
+      });
   }
 }

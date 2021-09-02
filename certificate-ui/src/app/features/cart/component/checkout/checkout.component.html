@@ -10,16 +10,16 @@
         <div class="product" *ngFor="let certificate of currentCart.certificateList">
 
           <div class="product-image">
-            <img src="/assets/images/coupons/{{certificate.id%10}}.jpg" alt="{{certificate?.name}}">
+            <img src="/assets/images/certificates/{{certificate.id%10}}.jpg" alt="{{certificate?.name}}">
           </div>
 
           <div class="product-details">
-            <div class="product-title">{{certificate?.name}}</div>
-            <p class="product-description">{{certificate?.description}}</p>
+            <div class="product-title">{{certificate.name}}</div>
+            <p class="product-description">{{certificate.description}}</p>
           </div>
 
           <div class="product-price">
-            <h3>{{certificate?.price | currency}}</h3>
+            <h3>{{certificate.price | currency}}</h3>
           </div>
 
           <div class="product-removal">

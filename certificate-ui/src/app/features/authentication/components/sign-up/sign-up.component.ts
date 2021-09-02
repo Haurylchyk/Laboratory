@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../../../../core/service/authentication.service';
 
-
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
@@ -27,7 +26,7 @@ export class SignUpComponent implements OnInit {
     this.signUpForm = this.formBuilder.group({
       login: ['', [Validators.required, Validators.pattern('^[A-z0-9_]+$'), Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.pattern('^[a-zA-z0-9!@#$%^&*]+$'), Validators.minLength(3)]],
-      name: ['', Validators.required, Validators.pattern('^[A-zА-я_]+$'), Validators.minLength(3)],
+      name: ['', [Validators.required, Validators.pattern('^[A-zА-я_]+$'), Validators.minLength(3)]]
     });
   }
 
@@ -37,12 +36,24 @@ export class SignUpComponent implements OnInit {
       password: this.signUpForm.get('password').value,
       name: this.signUpForm.get('name').value
     };
-    this.authService.signUp(signUpRequest).subscribe(data => {
-      this.redirectToLoginPage();
-    });
+    if (this.signUpForm.valid) {
+      this.authService.signUp(signUpRequest).subscribe(data => {
+        this.redirectToLoginPage();
+      }, error => {
+        this.redirectToErrorPage();
+      });
+    }
   }
 
   redirectToLoginPage(): void {
     this.router.navigateByUrl('/login');
+  }
+
+  redirectToErrorPage(): void {
+    this.router.navigate(['error'],
+      {
+        queryParams: {errorCode: 500, errorMessage: 'There was an error. Please try again later.'},
+        skipLocationChange: true
+      });
   }
 }

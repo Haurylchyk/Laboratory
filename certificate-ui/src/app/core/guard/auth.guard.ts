@@ -19,17 +19,18 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const isLoggedIn = this.authService.isLoggedIn();
-    if (isLoggedIn) {
+    let result = true;
+    if (this.authService.isLoggedIn()) {
       const currentRole = this.authService.getUserRole();
       if (route.data.role && UserRole[route.data.role].toString() !== currentRole) {
-        this.router.navigateByUrl('error/403/Access is denied!');
-        return false;
+        this.router.navigate(['error'],
+          {queryParams: {errorCode: 403, errorMessage: 'Access is denied!'}, skipLocationChange: true});
+        result = false;
       }
-      return true;
+    } else {
+      this.router.navigate(['/login']);
+      result = false;
     }
-    this.router.navigate(['/login']);
-    return false;
+    return result;
   }
-
 }

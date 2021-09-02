@@ -34,16 +34,9 @@ export class AuthenticationService {
     localStorage.clear();
   }
 
-  public hasAnyRole(): boolean {
-    return this.getUserRole() != null;
-  }
-
   public hasRole(role: string): boolean {
     const userRoleName = this.getUserRole();
-    if (userRoleName != null) {
-      return userRoleName === role;
-    }
-    return false;
+    return userRoleName ? userRoleName === role : false;
   }
 
   public saveUserId(id: number): void {
@@ -70,11 +63,7 @@ export class AuthenticationService {
   }
 
   public getUserRole(): string {
-    const role = localStorage.getItem(this.ROLE_KEY);
-    if (role) {
-      return role;
-    }
-    return null;
+    return localStorage.getItem(this.ROLE_KEY);
   }
 
   public saveToken(token: string): void {
@@ -82,11 +71,11 @@ export class AuthenticationService {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
 
-  public getToken(): string | null {
+  public getToken(): string {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
   public isLoggedIn(): boolean {
-    return this.getToken() != null;
+    return !!this.getToken();
   }
 }

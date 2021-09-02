@@ -33,18 +33,15 @@ export class AddCertificateComponent implements OnInit {
 
   onSubmit(): void {
     const giftCertificate: GiftCertificate = {
-      id: null,
       name: this.certificateForm.get('name').value,
       description: this.certificateForm.get('description').value,
       price: this.certificateForm.get('price').value,
       duration: this.certificateForm.get('duration').value,
-      createDate: null,
-      lastUpdateDate: null,
       tagNames: this.tags
     };
     this.giftCertificateService.createCertificate(giftCertificate).subscribe(certificate => {
       this.router.navigateByUrl('/certificates');
-    });
+    }, error => console.log(error));
   }
 
   redirectToAllCertificates(): void {

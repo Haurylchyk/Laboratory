@@ -13,7 +13,7 @@ import {map} from 'rxjs/operators';
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
-  badAccess: boolean;
+  invalidCredentials: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
     };
     this.authService.login(loginRequest).pipe(
       map((loginResponse) => {
-        this.badAccess = false;
+        this.invalidCredentials = false;
         this.saveUserInformation(loginResponse);
       })
     ).subscribe(
@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit {
         this.router.navigateByUrl('certificates');
       },
       (error) => {
-        this.badAccess = true;
+        this.invalidCredentials = true;
       }
     );
   }
