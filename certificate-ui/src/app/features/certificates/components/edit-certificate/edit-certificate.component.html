@@ -1,0 +1,89 @@
+<div class="certificate-form-wrapper">
+  <div class="header">
+    <div class="title">
+      <span>Update Existed Coupon</span>
+    </div>
+  </div>
+  <div class="body">
+    <form class="certificate-form" [formGroup]="certificateForm" (ngSubmit)="onSubmit()">
+
+      <div class="column">
+        <mat-form-field appearance="outline" class="hidden">
+          <mat-label>ID</mat-label>
+          <input matInput type="text" formControlName="id">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="name">
+          <mat-error *ngIf="certificateForm.get('name').hasError('required')">
+            Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Price</mat-label>
+          <input matInput type="text" formControlName="price">
+          <mat-error *ngIf="certificateForm.get('price').hasError('required')">
+            Price is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Duration In Days</mat-label>
+          <input matInput type="text" formControlName="duration">
+          <mat-error *ngIf="certificateForm.get('duration').hasError('required')">
+            Duration is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="column">
+
+        <mat-form-field appearance="outline" class="form-group">
+          <textarea matInput class="description" placeholder="Description" formControlName="description"></textarea>
+          <mat-error *ngIf="certificateForm.get('description').hasError('required')">
+            Description is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+          <mat-label>Categories</mat-label>
+          <input matInput
+                 type="text"
+                 [(ngModel)]="tagName"
+                 formControlName="category"
+                 placeholder="active_rest"
+          >
+          <button mat-button
+                  *ngIf="tagName"
+                  matSuffix
+                  mat-icon-button
+                  aria-label="Add Certificate Category"
+                  (click)="addCertificateCategory()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <div class="category-container">
+          <span class="category" *ngFor="let tag of tags">
+            <button mat-icon-button
+                    (click)="deleteCertificateCategory(tag)"><mat-icon>clear</mat-icon>
+            </button>
+            {{tag}}
+          </span>
+        </div>
+
+        <div class="btn-group">
+          <button mat-button
+                  class="btn btn-cancel"
+                  (click)="redirectToAllCertificates()">Back
+          </button>
+          <button mat-button
+                  class="btn btn-submit">Save
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

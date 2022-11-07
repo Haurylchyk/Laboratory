@@ -1,0 +1,77 @@
+<div class="content-wrapper">
+  <div class="registration-form">
+    <div class="form-header">
+      <div class="title">
+        <span>Register</span>
+      </div>
+    </div>
+    <div class="form-body">
+      <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+        <div>
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Login</mat-label>
+            <input matInput
+                   type="text"
+                   formControlName="login"
+            >
+            <mat-error
+              *ngIf=" signUpForm.get('login').hasError('pattern')">
+              Please enter a valid login
+            </mat-error>
+            <mat-error
+              *ngIf=" signUpForm.get('login').hasError('minlength')">
+              The login must be of minimum length 3 characters
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('login').hasError('required')">
+              Login is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Password</mat-label>
+            <input matInput
+                   type="password"
+                   formControlName="password"
+            >
+            <mat-error
+              *ngIf=" signUpForm.get('password').hasError('pattern')">
+              Please enter a valid password
+            </mat-error>
+            <mat-error
+              *ngIf=" signUpForm.get('password').hasError('minlength')">
+              The password must be of minimum length 3 characters
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('password').hasError('required')">
+              Password is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-group">
+            <mat-label>Name</mat-label>
+            <input matInput
+                   type="text"
+                   formControlName="name"
+            >
+            <mat-error
+              *ngIf=" signUpForm.get('name').hasError('pattern')">
+              Please enter a valid name
+            </mat-error>
+            <mat-error
+              *ngIf=" signUpForm.get('name').hasError('minlength')">
+              The name must be of minimum length 3 characters
+            </mat-error>
+            <mat-error *ngIf="signUpForm.get('name').hasError('required')">
+              Name is <strong>required</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="btn-group">
+          <button mat-button (click)="redirectToLoginPage()" class="btn btn-cancel">Cancel</button>
+          <button mat-button type="submit" class="btn btn-submit">Sign up</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

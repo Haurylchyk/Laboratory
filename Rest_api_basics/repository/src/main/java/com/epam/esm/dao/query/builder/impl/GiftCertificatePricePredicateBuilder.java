@@ -44,6 +44,12 @@ public class GiftCertificatePricePredicateBuilder implements PredicateBuilder<Gi
             case LT: {
                 return criteriaBuilder.lt(path, value);
             }
+            case GE: {
+                return criteriaBuilder.ge(path, value);
+            }
+            case LE: {
+                return criteriaBuilder.le(path, value);
+            }
             default: {
                 return criteriaBuilder.equal(path, value);
             }

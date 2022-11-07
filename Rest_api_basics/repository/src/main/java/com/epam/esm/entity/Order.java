@@ -1,8 +1,6 @@
 package com.epam.esm.entity;
 
 import org.hibernate.envers.Audited;
-
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;

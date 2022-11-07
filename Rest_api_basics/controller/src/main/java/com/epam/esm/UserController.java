@@ -49,7 +49,7 @@ public class UserController {
     @PostMapping("/auth")
     public AuthResponseDTO login(@RequestBody AuthRequestDTO authRequestDTO) {
         UserDTO user = userService.login(authRequestDTO);
-        return new AuthResponseDTO(user.getLogin(),user.getRole(),
+        return new AuthResponseDTO(user.getId(),user.getLogin(),user.getRole(),
                 jwtTokenProvider.createToken(user.getLogin()));
     }
 

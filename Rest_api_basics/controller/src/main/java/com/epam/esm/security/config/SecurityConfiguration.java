@@ -44,21 +44,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
 
-                .antMatchers(HttpMethod.GET, "/users").permitAll() //TODO temporarily
-                .antMatchers(HttpMethod.GET, "/tags").permitAll() //TODO temporarily
-
                 .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/tags").permitAll()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/auth").permitAll()
 
-                .antMatchers(HttpMethod.GET, "/tags/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                 .antMatchers(HttpMethod.GET, "/users/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/users/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name())
 
                 .antMatchers("/certificates/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/tags/**").hasRole(Role.ADMIN.name())
-
-
 
                 .antMatchers("/**").denyAll()
 

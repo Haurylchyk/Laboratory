@@ -1,0 +1,56 @@
+.registration-form {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.form-header {
+  color: white;
+  background-color: #bdbdbd;
+}
+
+.title {
+  width: 95%;
+  margin: 0 auto;
+  padding: 15px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.form-body {
+  background-color: white;
+}
+
+.form-group {
+  width: 100%;
+  padding: 5px 20px;
+  box-sizing: border-box;
+}
+
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 0 20px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.btn {
+  flex: 1 1 auto;
+}
+
+.btn-submit {
+  color: white;
+  border: none;
+  font-size: 18px;
+  background-color: #51cd51;
+}
+
+.btn-cancel {
+  color: #9a9a9a;
+  border: 1px solid #d9d9d9;
+  background-color: white;
+  margin-right: 10px;
+  font-size: 18px;
+}

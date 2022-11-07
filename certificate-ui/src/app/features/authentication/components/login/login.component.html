@@ -1,0 +1,39 @@
+<div class="content-wrapper">
+  <div class="login-form">
+    <div class="logo">
+      <img src="/assets/images/gift.jpg" alt="Logo">
+    </div>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div>
+        <mat-form-field appearance="outline" class="form-group">
+
+          <mat-label>Login</mat-label>
+          <input matInput type="text" formControlName="login">
+
+          <mat-error *ngIf="loginForm.get('login').hasError('required')">
+            Login is <strong>required</strong>
+          </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-group">
+
+          <mat-label>Password</mat-label>
+          <input matInput type="password" formControlName="password">
+
+          <mat-error *ngIf="loginForm.get('password').hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+
+        </mat-form-field>
+
+        <div class="alert alert-danger" *ngIf="invalidCredentials">Incorrect login or password</div>
+
+        <button mat-button type="submit" class="submit-btn">
+          Login
+        </button>
+
+      </div>
+    </form>
+  </div>
+</div>

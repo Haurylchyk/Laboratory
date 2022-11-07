@@ -3,6 +3,7 @@ package com.epam.esm;
 import com.epam.esm.assembler.GiftCertificateModelAssembler;
 import com.epam.esm.model.dto.GiftCertificateDTO;
 import com.epam.esm.model.dto.GiftCertificateParamDTO;
+import com.epam.esm.model.dto.StatisticGiftCertificateDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,11 +32,15 @@ import javax.validation.constraints.Min;
 public class GiftCertificateController {
 
     private final GiftCertificateService giftCertificateService;
+    private final GiftCertificateStatisticService giftCertificateStatisticService;
     private final GiftCertificateModelAssembler giftCertificateModelAssembler;
 
     @Autowired
-    public GiftCertificateController(GiftCertificateService giftCertificateService, GiftCertificateModelAssembler giftCertificateModelAssembler) {
+    public GiftCertificateController(GiftCertificateService giftCertificateService,
+                                     GiftCertificateStatisticService giftCertificateStatisticService,
+                                     GiftCertificateModelAssembler giftCertificateModelAssembler) {
         this.giftCertificateService = giftCertificateService;
+        this.giftCertificateStatisticService = giftCertificateStatisticService;
         this.giftCertificateModelAssembler = giftCertificateModelAssembler;
     }
 
@@ -70,4 +75,10 @@ public class GiftCertificateController {
         return assembler.toModel(certDTOPage);
     }
 
+    @GetMapping("/stat")
+    public StatisticGiftCertificateDTO makeStatistics() {
+        Integer maxPrice = giftCertificateStatisticService.findTopPrice();
+        Integer maxDuration = giftCertificateStatisticService.findTopDuration();
+        return new StatisticGiftCertificateDTO(maxPrice, maxDuration);
+    }
 }

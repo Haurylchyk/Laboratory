@@ -1,0 +1,29 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav-content>
+    <mat-toolbar class="navbar">
+      <a routerLink="certificates" class="company-logo">
+        <img src="/assets/images/gift.jpg" alt="Logo">
+      </a>
+      <span class="spacer"></span>
+      <ul class="navbar-nav">
+        <li *ngIf="authService.isLoggedIn() && !authService.hasRole('ADMIN')">
+          <a mat-button routerLink="cart" class="nav-link">
+            <mat-icon aria-label="Shopping cart">shopping_cart</mat-icon>
+          </a>
+          <div *ngIf="countTotal > 0" class="circle" >{{countTotal}}</div>
+        </li>
+        <li *ngIf="!authService.isLoggedIn()">
+          <a mat-button routerLink="login" class="nav-link">Login</a>
+        </li>
+        <li class="delimiter">
+        </li>
+        <li *ngIf="authService.isLoggedIn()">
+          <a mat-button routerLink="logout" class="nav-link">Logout</a>
+        </li>
+        <li *ngIf="!authService.isLoggedIn()">
+          <a mat-button routerLink="sign-up" class="nav-link">Sign Up</a>
+        </li>
+      </ul>
+    </mat-toolbar>
+  </mat-sidenav-content>
+</mat-sidenav-container>

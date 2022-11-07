@@ -1,0 +1,29 @@
+.btn-group {
+  display: flex;
+  justify-content: flex-end;
+  height: 50px;
+}
+
+.btn {
+  min-width: 64px;
+  width: 140px;
+  border-radius: 4px;
+}
+
+.btn-cancel {
+  margin-right: 5px;
+  color: #4f4f4f;
+  font-size: 18px;
+  background-color: white;
+  border: 1px solid #4f4f4f;
+  height: 38px;
+}
+
+.btn-confirm {
+  margin-left: 5px;
+  color: white;
+  font-size: 18px;
+  border: 1px solid #51cd51;
+  background-color: #51cd51;
+  height: 38px;
+}
